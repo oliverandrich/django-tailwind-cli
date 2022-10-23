@@ -64,7 +64,6 @@ addopts = """\
     --strict-config
     --strict-markers
     --ds=tests.settings
-    --cov
     """
 django_find_project = false
 
