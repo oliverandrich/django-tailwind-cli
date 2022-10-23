@@ -57,13 +57,14 @@ jobs:
         uses: actions/cache@v3
         with:
           path: .venv
-          key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
+          key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.django-version }}-${{ hashFiles('poetry.lock') }}
 
-      - name: Install dependencies
-        run: poetry install
+      - name: Install dependencies for Django ${{ matrix.django-version }}
+        run: |
+          poetry install
+          poetry run pip install django~=${{ matrix.django-version }}
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
 
       - name: Run tests
         run: |
-          poetry run pip install django~=${{ matrix.django-version }}
           poetry run pytest
