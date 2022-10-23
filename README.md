@@ -1,7 +1,7 @@
 # django-tailwind-cli
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/oliverandrich/django-tailwind-cli/CI?style=for-the-badge)
-![PyPI](https://img.shields.io/pypi/v/django-tailwind-cli.svg?style=for-the-badge)
+[![PyPI](https://img.shields.io/pypi/v/django-tailwind-cli.svg?style=for-the-badge)](https://pypi.org/project/django-tailwind-cli/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=for-the-badge)](https://github.com/psf/black)
 ![GitHub](https://img.shields.io/github/license/oliverandrich/django-tailwind-cli?style=for-the-badge)
 
