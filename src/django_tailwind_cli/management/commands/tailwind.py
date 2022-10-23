@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import subprocess
-import urllib.request
 from typing import Any
 
+import httpx
 from django.core.management.base import CommandError, LabelCommand
 from django_rich.management import RichCommand
 
@@ -51,9 +51,9 @@ class Command(RichCommand, LabelCommand):
         download_url = get_download_url()
 
         # download cli
-        response = urllib.request.urlopen(download_url)
+        response = httpx.get(download_url, follow_redirects=True)
         with dest_file.open(mode="wb") as f:
-            f.write(response.read())
+            f.write(response.content)
             dest_file.chmod(0o755)
 
         # print success message
