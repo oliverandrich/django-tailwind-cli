@@ -115,6 +115,7 @@ class Command(RichCommand, LabelCommand):
                 "--watch",
             ],
             cwd=get_theme_app_path(),
+            capture_output=True,
         ).check_returncode()
 
     def build_css(self, minify: bool = False):
@@ -133,6 +134,7 @@ class Command(RichCommand, LabelCommand):
                 "--minify" if minify else "",
             ],
             cwd=get_theme_app_path(),
+            capture_output=True,
         ).check_returncode()
 
         # print success message
