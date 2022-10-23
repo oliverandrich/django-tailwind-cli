@@ -5,7 +5,7 @@ from pathlib import Path
 
 from django.conf import settings
 
-DEFAULT_TAILWIND_VERSION = "3.1.8"
+DEFAULT_TAILWIND_VERSION = "3.2.1"
 
 
 def get_config() -> dict[str, str]:
@@ -35,7 +35,12 @@ def get_executable_path() -> Path:
     version = config["TAILWIND_VERSION"]
     machine = platform.machine().lower()
     system = platform.system().lower()
-    system = "macos" if system == "darwin" else system
+
+    if system == "darwin":
+        system = "macos"
+    elif system == "x86_64":
+        system = "x64"
+
     return (
         Path(config["TAILWIND_CLI_PATH"]).expanduser() / f"tailwindcss-{system}-{machine}-{version}"
     )

@@ -52,6 +52,13 @@ class Command(RichCommand, LabelCommand):
 
         # download cli
         response = httpx.get(download_url, follow_redirects=True)
+
+        if response.is_error:
+            raise CommandError(
+                f"Unable to download {download_url}. "
+                f"HTTP Status: {response.status_code} {response.reason_phrase}"
+            )
+
         with dest_file.open(mode="wb") as f:
             f.write(response.content)
             dest_file.chmod(0o755)
