@@ -5,7 +5,6 @@ from typing import Any
 
 import httpx
 from django.core.management.base import CommandError, LabelCommand
-from django_rich.management import RichCommand
 
 from django_tailwind_cli.utils import (
     get_dist_css_path,
@@ -17,7 +16,7 @@ from django_tailwind_cli.utils import (
 )
 
 
-class Command(RichCommand, LabelCommand):
+class Command(LabelCommand):
     # TODO: document command
     def handle_label(self, label: str, **options: Any) -> None:
         if label not in ["init", "installcli", "startwatcher", "build"]:
@@ -40,8 +39,7 @@ class Command(RichCommand, LabelCommand):
 
         # check if cli is already installed
         if dest_file.exists():
-            self.console.print("[yellow]Warning.[/yellow] CLI is already installed.")
-            return
+            raise CommandError("CLI is already installed.")
 
         # create parent directory for cli
         if not dest_file.parent.exists():
@@ -64,9 +62,7 @@ class Command(RichCommand, LabelCommand):
             dest_file.chmod(0o755)
 
         # print success message
-        self.console.print(
-            f"[green]Success![/green] Downloaded Tailwind CSS CLI to [yellow]{dest_file}[/yellow]."
-        )
+        self.stdout.write(self.style.SUCCESS(f"Downloaded Tailwind CSS CLI to `{dest_file}`.\n"))
 
     def init_project(self) -> None:
         """Creates a new theme with tailwind config and a base stylesheet."""
@@ -74,11 +70,7 @@ class Command(RichCommand, LabelCommand):
         # check if theme app is already initialized
         theme_path = get_theme_app_path()
         if theme_path.exists():
-            self.console.print(
-                "[yellow]Warning.[/yellow] Theme app "
-                f"[yellow]{theme_path}[/yellow] is already initialized."
-            )
-            return
+            raise CommandError("Theme app {} is already initialized.")
 
         # create directory structure for theme app
         get_src_css_path().parent.mkdir(parents=True)
@@ -104,7 +96,7 @@ class Command(RichCommand, LabelCommand):
         self.build_css()
 
         # print success message
-        self.console.print(f"[green]Success![/green] Initialized the theme app in `{theme_path}`.")
+        self.stdout.write(self.style.SUCCESS(f"Initialized the theme app in `{theme_path}`.\n"))
 
     def start_watcher(self):
         if not get_executable_path().exists():
@@ -122,8 +114,8 @@ class Command(RichCommand, LabelCommand):
                 "--watch",
             ],
             cwd=get_theme_app_path(),
-            capture_output=True,
-        ).check_returncode()
+            check=True,
+        )
 
     def build_css(self, minify: bool = False):
         if not get_executable_path().exists():
@@ -141,11 +133,11 @@ class Command(RichCommand, LabelCommand):
                 "--minify" if minify else "",
             ],
             cwd=get_theme_app_path(),
-            capture_output=True,
-        ).check_returncode()
+            check=True,
+        )
 
         # print success message
-        self.console.print("[green]Success![/green] Built production stylesheet.")
+        self.stdout.write(self.style.SUCCESS("Built production stylesheet.\n"))
 
 
 DEFAULT_TAILWIND_CONFIG = """/** @type {import('tailwindcss').Config} */

@@ -28,11 +28,10 @@ def test_install_cli():
     assert cli.is_file()
 
 
-def test_install_cli_twice(capsys: Any):
+def test_install_cli_twice():
     call_command("tailwind", "installcli")
-    call_command("tailwind", "installcli")
-    captured = capsys.readouterr()
-    assert "Warning. CLI is already installed." in captured.out.replace("\n", "")
+    with pytest.raises(CommandError):
+        call_command("tailwind", "installcli")
 
 
 @pytest.mark.parametrize("theme_app_name", ["theme", "snake_case_theme"])
@@ -53,15 +52,11 @@ def test_init_project(settings: Any, theme_app_name: str):
     assert f'name = "{theme_app_name}"' in apps_py
 
 
-def test_init_twice(capsys: Any):
+def test_init_twice():
     call_command("tailwind", "installcli")
     call_command("tailwind", "init")
-    call_command("tailwind", "init")
-    theme_path = get_theme_app_path()
-    captured = capsys.readouterr()
-    assert f"Warning. Theme app {theme_path} is already initialized." in captured.out.replace(
-        "\n", ""
-    )
+    with pytest.raises(CommandError):
+        call_command("tailwind", "init")
 
 
 def test_build():
