@@ -1,0 +1,8 @@
+{% load static %}
+
+{% if debug %}
+  <link rel="stylesheet" href="{% static tailwind_dist_css %}">
+{% else %}
+  <link rel="preload" href="{% static tailwind_dist_css %}" as="style">
+  <link rel="stylesheet" href="{% static tailwind_dist_css %}">
+{% endif %}
