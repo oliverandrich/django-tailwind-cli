@@ -1,5 +1,10 @@
 # django-tailwind-cli
 
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/oliverandrich/django-tailwind-cli/CI?style=for-the-badge)
+![PyPI](https://img.shields.io/pypi/v/django-tailwind-cli?style=for-the-badge)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=for-the-badge)](https://github.com/psf/black)
+![GitHub](https://img.shields.io/github/license/oliverandrich/django-tailwind-cli?style=for-the-badge)
+
 This project provides an integration of Tailwind CSS for Django that is based on the precompiled versions of the [Tailwind CSS CLI](https://tailwindcss.com/blog/standalone-cli).
 
 It is inspired by the implementation of the [Tailwind integration for Phoenix](https://github.com/phoenixframework/tailwind) which completely skips the neccesity of a node installation. So it is a perfect match, if you are a user of [htmx](https://htmx.org) or any other framework that tries to avoid JavaScript coding in your web app. My personal motivation was, that I discovered that I never needed any other plugin besides the official plugins, which are already included in the CLI.
