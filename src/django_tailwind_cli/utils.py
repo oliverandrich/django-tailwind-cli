@@ -21,9 +21,15 @@ def get_config() -> dict[str, str]:
 def get_download_url() -> str:
     config = get_config()
     version = config["TAILWIND_VERSION"]
-    machine = platform.machine().lower()
+
     system = platform.system().lower()
-    system = "macos" if system == "darwin" else system
+    if system == "darwin":
+        system = "macos"
+
+    machine = platform.machine().lower()
+    if machine == "x86_64":
+        machine = "x64"
+
     return (
         "https://github.com/tailwindlabs/tailwindcss/releases/download/"
         f"v{version}/tailwindcss-{system}-{machine}"
@@ -33,12 +39,12 @@ def get_download_url() -> str:
 def get_executable_path() -> Path:
     config = get_config()
     version = config["TAILWIND_VERSION"]
-    machine = platform.machine().lower()
-    system = platform.system().lower()
 
+    system = platform.system().lower()
     if system == "darwin":
         system = "macos"
 
+    machine = platform.machine().lower()
     if machine == "x86_64":
         machine = "x64"
 
