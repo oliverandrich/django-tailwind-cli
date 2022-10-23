@@ -38,8 +38,9 @@ def get_executable_path() -> Path:
 
     if system == "darwin":
         system = "macos"
-    elif system == "x86_64":
-        system = "x64"
+
+    if machine == "x86_64":
+        machine = "x64"
 
     return (
         Path(config["TAILWIND_CLI_PATH"]).expanduser() / f"tailwindcss-{system}-{machine}-{version}"
