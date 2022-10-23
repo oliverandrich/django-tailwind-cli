@@ -32,8 +32,12 @@ def get_download_url() -> str:
 
 def get_executable_path() -> Path:
     config = get_config()
+    version = config["TAILWIND_VERSION"]
+    machine = platform.machine().lower()
+    system = platform.system().lower()
+    system = "macos" if system == "darwin" else system
     return (
-        Path(config["TAILWIND_CLI_PATH"]).expanduser() / f"tailwindcss-{config['TAILWIND_VERSION']}"
+        Path(config["TAILWIND_CLI_PATH"]).expanduser() / f"tailwindcss-{system}-{machine}-{version}"
     )
 
 

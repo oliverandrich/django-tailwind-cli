@@ -35,10 +35,10 @@ def test_get_executable_path(settings: Any):
     p = get_executable_path()
     assert p.is_absolute()
     assert p.relative_to(Path.home())
-    assert str(p).endswith(f"tailwindcss-{DEFAULT_TAILWIND_VERSION}")
+    assert str(p).endswith(f"-{DEFAULT_TAILWIND_VERSION}")
     settings.TAILWIND_CLI_PATH = "/tmp/"
     p = get_executable_path()
-    assert str(p) == f"/tmp/tailwindcss-{DEFAULT_TAILWIND_VERSION}"
+    assert str(p).startswith("/tmp/tailwindcss-")
 
 
 def test_get_theme_app_name(settings: Any):
