@@ -123,14 +123,14 @@ This package provides a single template tag to include the Tailwind CSS. Dependi
 </head>
 ```
 
-`DEBUG == True` creates the following output:
+`DEBUG == False` creates the following output:
 
 ```html
 <link rel="preload" href="/static/css/styles.css" as="style">
 <link rel="stylesheet" href="/static/css/styles.css">
 ```
 
-`DEBUG == False` creates this output:
+`DEBUG == True` creates this output:
 
 ```html
 <link rel="stylesheet" href="/static/css/styles.css">
