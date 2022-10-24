@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+import shutil
+import ssl
 import subprocess
+import urllib.request
 from typing import Any
 
-import httpx
+import certifi
 from django.core.management.base import CommandError, LabelCommand
 
 from django_tailwind_cli.utils import (
@@ -45,21 +48,16 @@ class Command(LabelCommand):
         if not dest_file.parent.exists():
             dest_file.parent.mkdir(parents=True)
 
-        # build download_url
+        # download cli to dest_file
         download_url = get_download_url()
+        certifi_context = ssl.create_default_context(cafile=certifi.where())
+        with urllib.request.urlopen(download_url, context=certifi_context) as input, dest_file.open(
+            mode="wb"
+        ) as output:
+            shutil.copyfileobj(input, output)
 
-        # download cli
-        response = httpx.get(download_url, follow_redirects=True)
-
-        if response.is_error:
-            raise CommandError(
-                f"Unable to download {download_url}. "
-                f"HTTP Status: {response.status_code} {response.reason_phrase}"
-            )
-
-        with dest_file.open(mode="wb") as f:
-            f.write(response.content)
-            dest_file.chmod(0o755)
+        # make cli executable
+        dest_file.chmod(0o755)
 
         # print success message
         self.stdout.write(self.style.SUCCESS(f"Downloaded Tailwind CSS CLI to `{dest_file}`.\n"))
