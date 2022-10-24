@@ -98,9 +98,7 @@ class Command(LabelCommand):
 
     def start_watcher(self):
         if not get_executable_path().exists():
-            raise CommandError(
-                "CLI is not installed. Please run [yellow]manage.py tailwind installcli[/yellow]."
-            )
+            raise CommandError("CLI is not installed. Please run `manage.py tailwind installcli`.")
 
         subprocess.run(
             [
@@ -117,9 +115,7 @@ class Command(LabelCommand):
 
     def build_css(self, minify: bool = False):
         if not get_executable_path().exists():
-            raise CommandError(
-                "CLI is not installed. Please run [yellow]manage.py tailwind installcli[/yellow]."
-            )
+            raise CommandError("CLI is not installed. Please run `manage.py tailwind installcli`.")
 
         subprocess.run(
             [
