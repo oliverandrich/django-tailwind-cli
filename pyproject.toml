@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-tailwind-cli"
-version = "0.9.1"
+version = "0.9.2"
 description = "Django and Tailwind integration based on the prebuilt Tailwind CSS CLI."
 license = "MIT"
 authors = ["Oliver Andrich <oliver@andrich.me>"]
@@ -71,3 +71,5 @@ omit = [
     "*/tests/*",
     "conftest.py",
 ]
+
+[tool.poetry_bumpversion.file."src/django_tailwind_cli/__init__.py"]
