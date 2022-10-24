@@ -38,7 +38,7 @@ Python 3.8 or newer with Django >= 3.2.
     ```python
     INSTALLED_APPS = [
         # other Django apps
-        "django_tailind_cli",
+        "django_tailwind_cli",
     ]
     ```
 
@@ -56,7 +56,7 @@ Python 3.8 or newer with Django >= 3.2.
     ```python
     INSTALLED_APPS = [
         # other Django apps
-        "django_tailind_cli",
+        "django_tailwind_cli",
         "theme",
     ]
     ```
