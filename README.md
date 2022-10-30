@@ -106,7 +106,7 @@ The default configuration for this package is.
 | ----------------------- | ------------------------------------------------------------------- |
 | `tailwind installcli`   | Download the CLI version `TAILWIND_VERSION` to `TAILWIND_CLI_PATH`. |
 | `tailwind init`         | Create a new theme app with the name `TAILWIND_THEME_APP` inside the `settings.BASE_DIR` of your project. |
-| `tailwind startwatcher` | Start the CLI in watch and incremental compilation mode.            |
+| `tailwind watch`        | Start the CLI in watch and incremental compilation mode.            |
 | `tailwind build`        | Create a production ready build of the Tailwind stylesheet. You have to run this before calling the `collectstatic` command. |
 
 ## Template Tags
