@@ -7,25 +7,22 @@ from django.template import Context, Template
 
 def test_tailwind_css_in_production(settings: Any):
     settings.DEBUG = False
-    output = Template(
-        """
-        {% load tailwind_cli %}
-        {% tailwind_css %}
-        """
-    ).render(Context({}))
-
-    assert '<link rel="preload" href="/static/css/styles.css" as="style">' in output
-    assert '<link rel="stylesheet" href="/static/css/styles.css">' in output
+    h = render_template()
+    assert '<link rel="preload" href="/static/css/styles.css" as="style">' in h
+    assert '<link rel="stylesheet" href="/static/css/styles.css">' in h
 
 
-def test_tailwind_css_in_sebug(settings: Any):
+def test_tailwind_css_in_devmode(settings: Any):
     settings.DEBUG = True
-    output = Template(
+    h = render_template()
+    assert '<link rel="preload" href="/static/css/styles.css" as="style">' not in h
+    assert '<link rel="stylesheet" href="/static/css/styles.css">' in h
+
+
+def render_template():
+    return Template(
         """
         {% load tailwind_cli %}
         {% tailwind_css %}
         """
     ).render(Context({}))
-
-    assert '<link rel="preload" href="/static/css/styles.css" as="style">' not in output
-    assert '<link rel="stylesheet" href="/static/css/styles.css">' in output
