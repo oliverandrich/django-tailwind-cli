@@ -9,7 +9,7 @@ homepage = "https://github.com/oliverandrich/django-tailwind-cli"
 repository = "https://github.com/oliverandrich/django-tailwind-cli"
 keywords = ["django", "tailwind", "css"]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3.8",
@@ -25,6 +25,10 @@ classifiers = [
     "Framework :: Django :: 4.1"
 ]
 packages = [{include = "django_tailwind_cli", from = "src"}]
+
+[tool.poetry.urls]
+"Twitter" = "https://twitter.com/oliverandrich"
+"Mastodon" = "https://2pxnl.de/@oliver"
 
 [tool.poetry.dependencies]
 python = "^3.8"
