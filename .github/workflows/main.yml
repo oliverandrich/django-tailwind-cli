@@ -8,37 +8,16 @@ on:
 
 jobs:
   tests:
+    name: Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        include:
-          # Django 3.2
-          - django-version: "3.2.0"
-            python-version: "3.8"
-          - django-version: "3.2.0"
-            python-version: "3.9"
-          - django-version: "3.2.0"
-            python-version: "3.10"
-          # Django 4.0
-          - django-version: "4.0.0"
-            python-version: "3.8"
-          - django-version: "4.0.0"
-            python-version: "3.9"
-          - django-version: "4.0.0"
-            python-version: "3.10"
-          - django-version: "4.0.0"
-            python-version: "3.11-dev"
-          # Django 4.1
-          - django-version: "4.1.0"
-            python-version: "3.8"
-          - django-version: "4.1.0"
-            python-version: "3.9"
-          - django-version: "4.1.0"
-            python-version: "3.10"
-          - django-version: "4.1.0"
-            python-version: "3.11-dev"
-
+        python-version:
+          - 3.8
+          - 3.9
+          - "3.10"
+          - "3.11"
     steps:
       - uses: actions/checkout@v3
 
@@ -47,24 +26,10 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install and configure Poetry
-        uses: snok/install-poetry@v1
-        with:
-          virtualenvs-in-project: true
-
-      - name: Load cached venv
-        id: cached-poetry-dependencies
-        uses: actions/cache@v3
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.django-version }}-${{ hashFiles('poetry.lock') }}
-
-      - name: Install dependencies for Django ${{ matrix.django-version }}
+      - name: Install dependencies
         run: |
-          poetry install
-          poetry run pip install django~=${{ matrix.django-version }}
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install --upgrade tox tox-py
 
-      - name: Run tests
-        run: |
-          poetry run pytest
+      - name: Run tox targets for ${{ matrix.python-version }}
+        run: tox --py current
