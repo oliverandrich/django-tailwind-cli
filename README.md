@@ -76,7 +76,7 @@ Python 3.8 or newer with Django >= 3.2.
 6. Start the Tailwind CLI in watch mode.
 
     ```shell
-    python manage.py tailwind startwatcher
+    python manage.py tailwind watch
     ```
 
 7. (Optional) Add [django-browser-reload](https://github.com/adamchainz/django-browser-reload) if you enjoy automatic reloading during development.
