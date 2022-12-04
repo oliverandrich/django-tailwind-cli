@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0
+
+- Fixes for documentation.
+- Bumped Tailwind CSS default version to 3.2.4.
+- Updated dependencies.
+
 ## 1.0.0
 
 - Introduced django-click to the project.

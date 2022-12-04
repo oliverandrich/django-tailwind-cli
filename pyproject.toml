@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-tailwind-cli"
-version = "1.0.1"
+version = "1.1.0"
 description = "Django and Tailwind integration based on the prebuilt Tailwind CSS CLI."
 license = "MIT"
 authors = ["Oliver Andrich <oliver@andrich.me>"]
