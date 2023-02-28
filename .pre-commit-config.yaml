@@ -22,19 +22,19 @@ repos:
         args: [--py38-plus]
 
   - repo: https://github.com/psf/black
-    rev: 22.12.0
+    rev: 23.1.0
     hooks:
       - id: black
 
   - repo: https://github.com/asottile/blacken-docs
-    rev: v1.12.1
+    rev: 1.13.0
     hooks:
       - id: blacken-docs
         additional_dependencies:
           - black==22.10.0
 
   - repo: https://github.com/pycqa/isort
-    rev: 5.10.1
+    rev: 5.12.0
     hooks:
       - id: isort
 
@@ -51,12 +51,12 @@ repos:
           - flake8-typing-imports
 
   - repo: https://github.com/RobertCraigie/pyright-python
-    rev: v1.1.283
+    rev: v1.1.296
     hooks:
       - id: pyright
 
   - repo: https://github.com/rtts/djhtml
-    rev: v1.5.2
+    rev: 3.0.2
     hooks:
       - id: djhtml
         args:
@@ -68,7 +68,7 @@ repos:
       - id: curlylint
 
   - repo: https://github.com/PyCQA/docformatter
-    rev: v1.5.0
+    rev: v1.5.1
     hooks:
       - id: docformatter
         args: [--in-place]
