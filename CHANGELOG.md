@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.1
+
+- Bumped default tailwind version to 3.2.7.
+
 ## 1.2.0
 
 - Added support for Django 4.2.

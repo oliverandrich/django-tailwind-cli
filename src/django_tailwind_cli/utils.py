@@ -9,7 +9,7 @@ from pathlib import Path
 import certifi
 from django.conf import settings
 
-DEFAULT_TAILWIND_VERSION = "3.2.4"
+DEFAULT_TAILWIND_VERSION = "3.2.7"
 
 
 def get_config() -> dict[str, str]:
