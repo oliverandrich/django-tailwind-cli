@@ -81,9 +81,9 @@ def get_dist_css_path() -> Path:
 
 def download_file(src: str, destination: Path):
     certifi_context = ssl.create_default_context(cafile=certifi.where())
-    with urllib.request.urlopen(src, context=certifi_context) as input, destination.open(
+    with urllib.request.urlopen(src, context=certifi_context) as source, destination.open(
         mode="wb"
-    ) as output:
-        shutil.copyfileobj(input, output)
+    ) as dest:
+        shutil.copyfileobj(source, dest)
     # make cli executable
     destination.chmod(0o755)

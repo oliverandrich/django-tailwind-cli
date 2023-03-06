@@ -7,7 +7,6 @@ from typing import Any
 
 import pytest
 from django.core.management import call_command
-
 from django_tailwind_cli.utils import (
     download_file,
     get_download_url,

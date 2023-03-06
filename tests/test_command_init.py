@@ -5,7 +5,6 @@ from typing import Any
 import pytest
 from click import ClickException  # type: ignore
 from django.core.management import call_command
-
 from django_tailwind_cli.utils import get_theme_app_path
 
 
