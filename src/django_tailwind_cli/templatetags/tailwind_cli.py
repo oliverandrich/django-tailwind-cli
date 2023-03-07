@@ -1,5 +1,4 @@
-from __future__ import annotations
-
+"""Tailwind template tags."""
 from django import template
 from django.conf import settings
 
@@ -10,6 +9,7 @@ register = template.Library()
 
 @register.inclusion_tag("tailwind_cli/tags/tailwind_css.html")
 def tailwind_css():
+    """Template tag to include the css files into the html templates."""
     config = get_config()
     return {
         "debug": settings.DEBUG,

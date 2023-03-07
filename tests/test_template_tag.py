@@ -1,11 +1,11 @@
-from __future__ import annotations
-
 from typing import Any
 
 from django.template import Context, Template
 
 
 def test_tailwind_css_in_production(settings: Any):
+    """In production mode a stylesheet preloading directive is injected into the html."""
+
     settings.DEBUG = False
     h = render_template()
     assert '<link rel="preload" href="/static/css/styles.css" as="style">' in h
@@ -13,6 +13,8 @@ def test_tailwind_css_in_production(settings: Any):
 
 
 def test_tailwind_css_in_devmode(settings: Any):
+    """In development mode no stylesheet preloading directive is injected into the html."""
+
     settings.DEBUG = True
     h = render_template()
     assert '<link rel="preload" href="/static/css/styles.css" as="style">' not in h
@@ -20,6 +22,8 @@ def test_tailwind_css_in_devmode(settings: Any):
 
 
 def render_template():
+    """Render stylesheet tags."""
+
     return Template(
         """
         {% load tailwind_cli %}

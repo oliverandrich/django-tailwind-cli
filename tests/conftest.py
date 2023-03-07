@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import shutil
 import tempfile
 from pathlib import Path
@@ -17,6 +15,8 @@ from django_tailwind_cli.utils import (
 
 @pytest.fixture(scope="session")
 def installed_cli_path():
+    """Install the Tailwind CSS cli."""
+
     tmpdir = tempfile.mkdtemp()
 
     # Download CLI
@@ -33,6 +33,8 @@ def installed_cli_path():
 
 @pytest.fixture()
 def theme_app_path(settings: Any, installed_cli_path: str, tmpdir: str):
+    """Create the tailwind theme app to use during tests."""
+
     settings.BASE_DIR = tmpdir
     settings.TAILWIND_CLI_PATH = installed_cli_path
 

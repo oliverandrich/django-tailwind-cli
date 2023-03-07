@@ -1,10 +1,16 @@
-from __future__ import annotations
+"""
+Utility functions.
+
+This module contains utility functions to read the configuration, download the CLI and determine
+the various paths.
+"""
 
 import platform
 import shutil
 import ssl
 import urllib.request
 from pathlib import Path
+from typing import Dict
 
 import certifi
 from django.conf import settings
@@ -12,7 +18,8 @@ from django.conf import settings
 DEFAULT_TAILWIND_VERSION = "3.2.7"
 
 
-def get_config() -> dict[str, str]:
+def get_config() -> Dict[str, str]:
+    """Extract configuration from settings."""
     return {
         "TAILWIND_VERSION": getattr(settings, "TAILWIND_VERSION", DEFAULT_TAILWIND_VERSION),
         "TAILWIND_CLI_PATH": getattr(settings, "TAILWIND_CLI_PATH", "~/.local/bin/"),
@@ -23,6 +30,7 @@ def get_config() -> dict[str, str]:
 
 
 def get_download_url() -> str:
+    """Build download url for the Tailwind CSS CLI."""
     config = get_config()
     version = config["TAILWIND_VERSION"]
 
@@ -41,6 +49,7 @@ def get_download_url() -> str:
 
 
 def get_executable_name() -> str:
+    """Build the executable for the current architecture and the requests Tailwind CSS version."""
     config = get_config()
     version = config["TAILWIND_VERSION"]
 
@@ -56,30 +65,36 @@ def get_executable_name() -> str:
 
 
 def get_executable_path() -> Path:
+    """Build path where to store the Tailwind CSS CLI locally."""
     config = get_config()
     return Path(config["TAILWIND_CLI_PATH"]).expanduser() / get_executable_name()
 
 
 def get_theme_app_name() -> str:
+    """Build name for the theme app."""
     config = get_config()
     return config["TAILWIND_THEME_APP"]
 
 
 def get_theme_app_path() -> Path:
+    """Build path for the theme app."""
     return Path(settings.BASE_DIR) / get_theme_app_name()
 
 
 def get_src_css_path() -> Path:
+    """Build path to the source css."""
     config = get_config()
     return get_theme_app_path() / config["TAILWIND_SRC_CSS"]
 
 
 def get_dist_css_path() -> Path:
+    """Build path to the compiled css."""
     config = get_config()
     return get_theme_app_path() / "static" / config["TAILWIND_DIST_CSS"]
 
 
 def download_file(src: str, destination: Path):
+    """Download Tailwind CSS CLI to executable path."""
     certifi_context = ssl.create_default_context(cafile=certifi.where())
     with urllib.request.urlopen(src, context=certifi_context) as source, destination.open(
         mode="wb"

@@ -48,9 +48,3 @@ repos:
     rev: v0.13.1
     hooks:
       - id: curlylint
-
-  - repo: https://github.com/PyCQA/docformatter
-    rev: v1.5.1
-    hooks:
-      - id: docformatter
-        args: [--in-place]

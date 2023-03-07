@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from typing import Any
 
 import pytest
@@ -10,6 +8,8 @@ from django_tailwind_cli.utils import get_theme_app_path
 
 @pytest.mark.parametrize("theme_app_name", ["theme", "snake_case_theme"])
 def test_init_project(settings: Any, theme_app_name: str, installed_cli_path: str, tmpdir: str):
+    """`tailwind init` creates a theme app inside the project."""
+
     settings.BASE_DIR = tmpdir
     settings.TAILWIND_CLI_PATH = installed_cli_path
     settings.TAILWIND_THEME_APP = theme_app_name
@@ -28,6 +28,8 @@ def test_init_project(settings: Any, theme_app_name: str, installed_cli_path: st
 
 
 def test_init_when_already_initialized(settings: Any, installed_cli_path: str, tmpdir: str):
+    """`tailwind init` raises a `ClickException` when a theme is already created."""
+
     settings.BASE_DIR = tmpdir
     settings.TAILWIND_CLI_PATH = installed_cli_path
 

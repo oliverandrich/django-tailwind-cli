@@ -1,4 +1,4 @@
-from __future__ import annotations
+"""`tailwind` management command."""
 
 import subprocess
 
@@ -19,14 +19,13 @@ from django_tailwind_cli.utils import (
 
 @djclick.group()  # type: ignore
 def tailwind():
-    """A management to create and manage a Tailwind CSS theme."""
+    """Create and manage a Tailwind CSS theme."""
     pass
 
 
 @tailwind.command()  # type: ignore
 def installcli():
-    """Install the Tailwind CSS cli in the version defined by
-    TAILWIND_VERSION."""
+    """Install the Tailwind CSS cli in the version defined by TAILWIND_VERSION."""
 
     # build path for cli
     dest_file = get_executable_path()
@@ -49,8 +48,7 @@ def installcli():
 
 @tailwind.command()  # type: ignore
 def init():
-    """Creates a new theme app with a tailwind config and a base stylesheet."""
-
+    """Create a new theme app with a tailwind config and a base stylesheet."""
     # check if theme app is already initialized
     theme_app_name = get_theme_app_name()
     theme_path = get_theme_app_path()
@@ -81,8 +79,7 @@ def init():
 
 @tailwind.command()  # type: ignore
 def build():
-    """Builds a minified production ready CSS file."""
-
+    """Build a minified production ready CSS file."""
     if not get_executable_path().exists():
         raise click.ClickException(
             "CLI is not installed. Please run `manage.py tailwind installcli`."
@@ -107,8 +104,7 @@ def build():
 
 @tailwind.command()  # type: ignore
 def watch():
-    """Starts Tailwind CLI in watch mode during development."""
-
+    """Start Tailwind CLI in watch mode during development."""
     if not get_executable_path().exists():
         raise click.ClickException(
             "CLI is not installed. Please run `manage.py tailwind installcli`."
