@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.2
+
+- Fixed docstrings.
+- Extended ruff configuration.
+
 ## 1.2.1
 
 - Bumped default tailwind version to 3.2.7.
