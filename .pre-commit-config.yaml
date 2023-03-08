@@ -33,12 +33,12 @@ repos:
       - id: ruff
 
   - repo: https://github.com/RobertCraigie/pyright-python
-    rev: v1.1.296
+    rev: v1.1.297
     hooks:
       - id: pyright
 
   - repo: https://github.com/rtts/djhtml
-    rev: 3.0.3
+    rev: 3.0.4
     hooks:
       - id: djhtml
         args:
