@@ -39,7 +39,6 @@ classifiers = [
 text = "MIT"
 
 [project.urls]
-Twitter = "https://twitter.com/oliverandrich"
 Mastodon = "https://2pxnl.de/@oliver"
 homepage = "https://github.com/oliverandrich/django-tailwind-cli"
 repository = "https://github.com/oliverandrich/django-tailwind-cli"
