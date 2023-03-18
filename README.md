@@ -4,6 +4,7 @@
 [![PyPI](https://img.shields.io/pypi/v/django-tailwind-cli.svg?style=for-the-badge)](https://pypi.org/project/django-tailwind-cli/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=for-the-badge)](https://github.com/psf/black)
 ![GitHub](https://img.shields.io/github/license/oliverandrich/django-tailwind-cli?style=for-the-badge)
+[![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet?style=for-the-badge)](https://pdm.fming.dev)
 
 This project provides an integration of Tailwind CSS for Django that is based on the precompiled versions of the [Tailwind CSS CLI](https://tailwindcss.com/blog/standalone-cli).
 
