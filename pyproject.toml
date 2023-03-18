@@ -2,9 +2,7 @@
 name = "django-tailwind-cli"
 version = "1.3.0"
 description = "Django and Tailwind integration based on the prebuilt Tailwind CSS CLI."
-authors = [
-    { name = "Oliver Andrich", email = "oliver@andrich.me" },
-]
+authors = [{ name = "Oliver Andrich", email = "oliver@andrich.me" }]
 requires-python = ">=3.8,<4.0"
 dependencies = [
     "django>=3.2",
@@ -12,11 +10,7 @@ dependencies = [
     "django-click<3.0.0,>=2.3.0",
 ]
 readme = "README.md"
-keywords = [
-    "django",
-    "tailwind",
-    "css",
-]
+keywords = ["django", "tailwind", "css"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
@@ -54,14 +48,10 @@ dev = [
 ]
 
 [tool.pdm.build]
-includes = [
-    "src/django_tailwind_cli",
-]
+includes = ["src/django_tailwind_cli"]
 
 [tool.black]
-target-version = [
-    "py38",
-]
+target-version = ["py38"]
 line-length = 100
 
 [tool.pyright]
@@ -70,50 +60,17 @@ venv = ".venv"
 typeCheckingMode = "strict"
 
 [tool.pytest.ini_options]
-pythonpath = [
-    ".",
-    "src",
-]
+pythonpath = [".", "src"]
 addopts = "--strict-config\n    --strict-markers\n    --ds=tests.settings\n    "
 django_find_project = false
 
 [tool.coverage.run]
-omit = [
-    "*/tests/*",
-    "conftest.py",
-]
+omit = ["*/tests/*", "conftest.py"]
 
 [tool.ruff]
-select = [
-    "A",
-    "B",
-    "C4",
-    "D",
-    "E",
-    "F",
-    "I",
-    "DJ",
-    "INP",
-    "TID",
-    "UP",
-    "YTT",
-]
-ignore = [
-    "D202",
-    "D203",
-    "D212",
-]
-fixable = [
-    "A",
-    "B",
-    "C4",
-    "D",
-    "E",
-    "F",
-    "I",
-    "TID",
-    "UP",
-]
+select = ["A", "B", "C4", "D", "E", "F", "I", "DJ", "INP", "TID", "UP", "YTT"]
+ignore = ["D202", "D203", "D212"]
+fixable = ["A", "B", "C4", "D", "E", "F", "I", "TID", "UP"]
 unfixable = []
 exclude = [
     ".bzr",
@@ -142,25 +99,12 @@ target-version = "py38"
 max-complexity = 10
 
 [tool.ruff.per-file-ignores]
-"__init__.py" = [
-    "D104",
-]
-"apps.py" = [
-    "D100",
-    "D101",
-]
-"conftest.py" = [
-    "D100",
-]
-"settings.py" = [
-    "D100",
-]
-"test_*.py" = [
-    "D100",
-]
+"__init__.py" = ["D104"]
+"apps.py" = ["D100", "D101"]
+"conftest.py" = ["D100"]
+"settings.py" = ["D100"]
+"test_*.py" = ["D100"]
 
 [build-system]
-requires = [
-    "pdm-pep517>=1.0.0",
-]
+requires = ["pdm-pep517>=1.0.0"]
 build-backend = "pdm.pep517.api"
