@@ -11,33 +11,24 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up Python 3.10
+      - name: Set up Python 3.11
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.11"
 
-      - name: Install and configure Poetry
-        uses: snok/install-poetry@v1
+      - name: Setup PDM
+        uses: pdm-project/setup-pdm@v3
         with:
-          virtualenvs-in-project: true
-
-      - name: Set up cache
-        uses: actions/cache@v3
-        id: cache
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ steps.full-python-version.outputs.version }}-${{ hashFiles('**/poetry.lock') }}
-
-      - name: Ensure cache is healthy
-        if: steps.cache.outputs.cache-hit == 'true'
-        run: poetry run pip --version >/dev/null 2>&1 || rm -rf .venv
+          cache: true
+          cache-dependency-path: "**/pdm.lock"
 
       - name: Install Dependencies
-        run: poetry install
+        run: pdm install
 
       - name: Publish
         env:
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
         run: |
-          poetry config pypi-token.pypi $PYPI_TOKEN
-          poetry publish --build
+          pdm config repository.pypi.username "__token__"
+          pdm config repository.pypi.password $PYPI_TOKEN
+          pdm publish
