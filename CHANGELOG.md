@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.0
+
+- Switched from poetry to pdm.
+
 ## 1.2.2
 
 - Fixed docstrings.
