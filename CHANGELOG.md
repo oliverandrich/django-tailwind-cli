@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.1
+
+- Switched back to poetry after a long discussion.
+
 ## 1.3.0
 
 - Switched from poetry to pdm.
