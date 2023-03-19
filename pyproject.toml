@@ -1,15 +1,12 @@
-[project]
+[tool.poetry]
 name = "django-tailwind-cli"
 version = "1.3.0"
 description = "Django and Tailwind integration based on the prebuilt Tailwind CSS CLI."
-authors = [{ name = "Oliver Andrich", email = "oliver@andrich.me" }]
-requires-python = ">=3.8,<4.0"
-dependencies = [
-    "django>=3.2",
-    "certifi<2023.0.0,>=2022.9.24",
-    "django-click<3.0.0,>=2.3.0",
-]
+license = "MIT"
+authors = ["Oliver Andrich <oliver@andrich.me>"]
 readme = "README.md"
+homepage = "https://github.com/oliverandrich/django-tailwind-cli"
+repository = "https://github.com/oliverandrich/django-tailwind-cli"
 keywords = ["django", "tailwind", "css"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -28,27 +25,29 @@ classifiers = [
     "Framework :: Django :: 4.1",
     "Framework :: Django :: 4.2",
 ]
+packages = [{ include = "django_tailwind_cli", from = "src" }]
 
-[project.license]
-text = "MIT"
+[tool.poetry.urls]
+"Twitter" = "https://twitter.com/oliverandrich"
+"Mastodon" = "https://2pxnl.de/@oliver"
 
-[project.urls]
-Mastodon = "https://2pxnl.de/@oliver"
-homepage = "https://github.com/oliverandrich/django-tailwind-cli"
-repository = "https://github.com/oliverandrich/django-tailwind-cli"
+[tool.poetry.dependencies]
+python = "^3.8"
+django = ">=3.2"
+certifi = "^2022.9.24"
+django-click = "^2.3.0"
 
-[tool.pdm.dev-dependencies]
-dev = [
-    "pytest>=7.2.2",
-    "pytest-cov>=4.0.0",
-    "pytest-django>=4.5.2",
-    "django-types>=0.17.0",
-    "pytest-randomly>=3.12.0",
-    "pytest-timeout>=2.1.0",
-]
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.0"
+pytest-cov = "^4.0.0"
+pytest-django = "^4.5.2"
+django-types = "^0.17.0"
+pytest-randomly = "^3.12.0"
+pytest-timeout = "^2.1.0"
 
-[tool.pdm.build]
-includes = ["src/django_tailwind_cli"]
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
 
 [tool.black]
 target-version = ["py38"]
@@ -104,7 +103,3 @@ max-complexity = 10
 "conftest.py" = ["D100"]
 "settings.py" = ["D100"]
 "test_*.py" = ["D100"]
-
-[build-system]
-requires = ["pdm-pep517>=1.0.0"]
-build-backend = "pdm.pep517.api"
