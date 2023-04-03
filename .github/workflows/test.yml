@@ -37,13 +37,13 @@ jobs:
           - django-version: "4.1"
             python-version: "3.11"
           # Django 4.2
-          - django-version: "4.2b1"
+          - django-version: "4.2"
             python-version: "3.8"
-          - django-version: "4.2b1"
+          - django-version: "4.2"
             python-version: "3.9"
-          - django-version: "4.2b1"
+          - django-version: "4.2"
             python-version: "3.10"
-          - django-version: "4.2b1"
+          - django-version: "4.2"
             python-version: "3.11"
 
     steps:
@@ -75,7 +75,7 @@ jobs:
 
       - name: Upgrade django version
         run: |
-          poetry run pip install --pre "Django~=${{ matrix.django-version }}"
+          poetry run pip install "Django~=${{ matrix.django-version }}"
 
       - name: Run tests
         run: |
