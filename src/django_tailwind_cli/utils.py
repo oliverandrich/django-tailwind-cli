@@ -15,7 +15,7 @@ from typing import Dict, Union
 import certifi
 from django.conf import settings
 
-DEFAULT_TAILWIND_VERSION = "3.2.7"
+DEFAULT_TAILWIND_VERSION = "3.3.1"
 
 
 def get_config() -> Dict[str, str]:
