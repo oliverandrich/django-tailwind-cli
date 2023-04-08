@@ -5,7 +5,7 @@ description = "Django and Tailwind integration based on the prebuilt Tailwind CS
 license = "MIT"
 authors = ["Oliver Andrich <oliver@andrich.me>"]
 readme = "README.md"
-homepage = "https://github.com/oliverandrich/django-tailwind-cli"
+homepage = "https://oliverandrich.github.io/django-tailwind-cli/"
 repository = "https://github.com/oliverandrich/django-tailwind-cli"
 keywords = ["django", "tailwind", "css"]
 classifiers = [
@@ -28,7 +28,6 @@ classifiers = [
 packages = [{ include = "django_tailwind_cli", from = "src" }]
 
 [tool.poetry.urls]
-"Twitter" = "https://twitter.com/oliverandrich"
 "Mastodon" = "https://2pxnl.de/@oliver"
 
 [tool.poetry.dependencies]
