@@ -42,6 +42,7 @@ jobs:
           poetry config pypi-token.pypi $PYPI_TOKEN
           poetry publish --build
 
-      - name: Publish documentation
-        run: |
-          poetry run mkdocs gh-deploy
+      - name: Deploy docs
+        uses: mhausenblas/mkdocs-deploy-gh-pages@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
