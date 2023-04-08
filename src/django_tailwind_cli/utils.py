@@ -10,7 +10,7 @@ import shutil
 import ssl
 import urllib.request
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Union
 
 import certifi
 from django.conf import settings
@@ -42,15 +42,13 @@ def get_download_url() -> str:
     if machine == "x86_64":  # pragma: no cover
         machine = "x64"
 
-    return (
-        "https://github.com/tailwindlabs/tailwindcss/releases/download/"
-        f"v{version}/tailwindcss-{system}-{machine}"
-    )
+    return "https://github.com/tailwindlabs/tailwindcss/releases/download/" f"v{version}/tailwindcss-{system}-{machine}"
 
 
-def get_executable_name() -> str:
-    """Build the executable for the current architecture and the requests Tailwind CSS version."""
+def get_executable_path(basepath: Union[Path, str, None] = None) -> Path:
+    """Build path where to store the Tailwind CSS CLI locally."""
     config = get_config()
+
     version = config["TAILWIND_VERSION"]
 
     system = platform.system().lower()
@@ -61,24 +59,18 @@ def get_executable_name() -> str:
     if machine == "x86_64":  # pragma: no cover
         machine = "x64"
 
-    return f"tailwindcss-{system}-{machine}-{version}"
+    executable_name = f"tailwindcss-{system}-{machine}-{version}"
 
-
-def get_executable_path() -> Path:
-    """Build path where to store the Tailwind CSS CLI locally."""
-    config = get_config()
-    return Path(config["TAILWIND_CLI_PATH"]).expanduser() / get_executable_name()
-
-
-def get_theme_app_name() -> str:
-    """Build name for the theme app."""
-    config = get_config()
-    return config["TAILWIND_THEME_APP"]
+    if basepath is not None:
+        return Path(basepath).expanduser() / executable_name
+    else:
+        return Path(config["TAILWIND_CLI_PATH"]).expanduser() / executable_name
 
 
 def get_theme_app_path() -> Path:
     """Build path for the theme app."""
-    return Path(settings.BASE_DIR) / get_theme_app_name()
+    config = get_config()
+    return Path(settings.BASE_DIR) / config["TAILWIND_THEME_APP"]
 
 
 def get_src_css_path() -> Path:
@@ -96,9 +88,7 @@ def get_dist_css_path() -> Path:
 def download_file(src: str, destination: Path):
     """Download Tailwind CSS CLI to executable path."""
     certifi_context = ssl.create_default_context(cafile=certifi.where())
-    with urllib.request.urlopen(src, context=certifi_context) as source, destination.open(
-        mode="wb"
-    ) as dest:
+    with urllib.request.urlopen(src, context=certifi_context) as source, destination.open(mode="wb") as dest:
         shutil.copyfileobj(source, dest)
     # make cli executable
     destination.chmod(0o755)

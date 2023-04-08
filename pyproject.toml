@@ -32,11 +32,10 @@ packages = [{ include = "django_tailwind_cli", from = "src" }]
 "Mastodon" = "https://2pxnl.de/@oliver"
 
 [tool.poetry.dependencies]
-python = "^3.8"
-django = ">=3.2"
-certifi = "^2022.9.24"
-django-click = "^2.3.0"
-importlib-metadata = { version = "^6.1.0", python = "<3.8" }
+python = ">=3.8.1,<4"
+django = ">=3.2,<5"
+django-rich = "^1.5.0"
+certifi = "*"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.0"
@@ -45,6 +44,8 @@ pytest-django = "^4.5.2"
 django-types = "^0.17.0"
 pytest-randomly = "^3.12.0"
 pytest-timeout = "^2.1.0"
+mkdocs-material = "^9.1.5"
+syrupy = "^4.0.1"
 
 [build-system]
 requires = ["poetry-core"]
@@ -52,7 +53,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.black]
 target-version = ["py38"]
-line-length = 100
+line-length = 120
 
 [tool.pyright]
 venvPath = "."
@@ -61,8 +62,9 @@ typeCheckingMode = "strict"
 
 [tool.pytest.ini_options]
 pythonpath = [".", "src"]
-addopts = "--strict-config\n    --strict-markers\n    --ds=tests.settings\n    "
+addopts = "--strict-config --strict-markers --ds=tests.settings"
 django_find_project = false
+filterwarnings = ["ignore::DeprecationWarning"]
 
 [tool.coverage.run]
 omit = ["*/tests/*", "conftest.py"]
@@ -91,7 +93,7 @@ exclude = [
     "node_modules",
     "static",
 ]
-line-length = 100
+line-length = 120
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 target-version = "py38"
 

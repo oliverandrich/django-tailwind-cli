@@ -13,6 +13,7 @@ ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     "django.contrib.staticfiles",
+    "django.contrib.messages",
     "django_tailwind_cli",
 ]
 
@@ -20,6 +21,8 @@ DATABASES: dict[str, Any] = {}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -34,6 +37,7 @@ TEMPLATES: list[dict[str, Any]] = [
             "context_processors": [
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },

@@ -1,8 +1,9 @@
+from pathlib import Path
 from typing import Any
 
 import pytest
-from click import ClickException  # type: ignore
 from django.core.management import call_command
+from django.core.management.base import CommandError
 from django_tailwind_cli.utils import get_theme_app_path
 
 
@@ -10,7 +11,7 @@ from django_tailwind_cli.utils import get_theme_app_path
 def test_init_project(settings: Any, theme_app_name: str, installed_cli_path: str, tmpdir: str):
     """`tailwind init` creates a theme app inside the project."""
 
-    settings.BASE_DIR = tmpdir
+    settings.BASE_DIR = Path(tmpdir)
     settings.TAILWIND_CLI_PATH = installed_cli_path
     settings.TAILWIND_THEME_APP = theme_app_name
 
@@ -20,19 +21,15 @@ def test_init_project(settings: Any, theme_app_name: str, installed_cli_path: st
     assert theme_path.exists()
     assert theme_path.joinpath("tailwind.config.js").exists()
     assert theme_path.joinpath("src/styles.css").exists()
-    assert theme_path.joinpath("apps.py").exists()
-
-    apps_py = theme_path.joinpath("apps.py").read_text()
-    assert theme_app_name.replace("_", " ").title().replace(" ", "") + "Config" in apps_py
-    assert f'name = "{theme_app_name}"' in apps_py
+    assert theme_path.joinpath("templates/tailwind_cli/tailwind_css.html").exists()
 
 
 def test_init_when_already_initialized(settings: Any, installed_cli_path: str, tmpdir: str):
     """`tailwind init` raises a `ClickException` when a theme is already created."""
 
-    settings.BASE_DIR = tmpdir
+    settings.BASE_DIR = Path(tmpdir)
     settings.TAILWIND_CLI_PATH = installed_cli_path
 
     call_command("tailwind", "init")
-    with pytest.raises(ClickException):
+    with pytest.raises(CommandError):
         call_command("tailwind", "init")

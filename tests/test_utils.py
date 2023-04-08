@@ -8,7 +8,6 @@ from django_tailwind_cli.utils import (
     get_download_url,
     get_executable_path,
     get_src_css_path,
-    get_theme_app_name,
     get_theme_app_path,
 )
 
@@ -45,21 +44,14 @@ def test_get_executable_path(settings: Any):
     assert str(p).startswith("/tmp/tailwindcss-")
 
 
-def test_get_theme_app_name(settings: Any):
-    """`get_theme_app_name()` returns the correct theme app name."""
-
-    assert get_theme_app_name() == "theme"
-    settings.TAILWIND_THEME_APP = "another_theme"
-    assert get_theme_app_name() == "another_theme"
-
-
 def test_get_theme_app_path():
     """`get_theme_app_path()` returns the correct path to the theme app."""
 
+    config = get_config()
     p = get_theme_app_path()
     assert p is not None
     assert p.is_absolute()
-    assert str(p).endswith(get_theme_app_name())
+    assert str(p).endswith(config["TAILWIND_THEME_APP"])
 
 
 def test_get_src_path(settings: Any):

@@ -1,0 +1,28 @@
+# serializer version: 1
+# name: test_tailwind_css_in_devmode
+  '''
+
+
+
+
+
+    <link rel="stylesheet" href="/static/css/styles.css">
+
+
+
+  '''
+# ---
+# name: test_tailwind_css_in_production
+  '''
+
+
+
+
+
+    <link rel="preload" href="/static/css/styles.css" as="style">
+    <link rel="stylesheet" href="/static/css/styles.css">
+
+
+
+  '''
+# ---

@@ -2,8 +2,8 @@ import shutil
 from typing import Any
 
 import pytest
-from click import ClickException  # type: ignore
 from django.core.management import call_command
+from django.core.management.base import CommandError
 from django_tailwind_cli.utils import get_executable_path
 
 
@@ -20,7 +20,7 @@ def test_install_cli_if_already_installed_cli(settings: Any, tmpdir: str):
 
     settings.TAILWIND_CLI_PATH = tmpdir
     call_command("tailwind", "installcli")
-    with pytest.raises(ClickException):
+    with pytest.raises(CommandError):
         call_command("tailwind", "installcli")
 
 

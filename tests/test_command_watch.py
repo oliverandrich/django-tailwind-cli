@@ -1,8 +1,8 @@
 from typing import Any
 
 import pytest
-from click import ClickException  # type: ignore
 from django.core.management import call_command
+from django.core.management.base import CommandError
 
 
 def test_watch_without_installed_cli(theme_app_path: Any, settings: Any, tmpdir: str):
@@ -10,5 +10,5 @@ def test_watch_without_installed_cli(theme_app_path: Any, settings: Any, tmpdir:
 
     # This just changes the tailwind cli path without actually deleting the session scoped cli
     settings.TAILWIND_CLI_PATH = tmpdir
-    with pytest.raises(ClickException):
+    with pytest.raises(CommandError):
         call_command("tailwind", "watch")
