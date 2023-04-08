@@ -4,4 +4,16 @@ repo_url: https://github.com/oliverandrich/django-tailwind-cli
 theme:
   name: material
   palette:
-    primary: "blue grey"
+    primary: "purple"
+nav:
+  - Home: "index.md"
+  - "installation.md"
+  - "usage.md"
+  - "settings.md"
+  - "template_tags.md"
+  - "management_commands.md"
+  - "base_template.md"
+markdown_extensions:
+  - def_list
+  - pymdownx.highlight
+  - pymdownx.superfences

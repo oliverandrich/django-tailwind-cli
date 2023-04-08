@@ -102,9 +102,9 @@ class Command(RichCommand, LabelCommand):
         subprocess.run(
             [
                 str(get_executable_path()),
-                "-i",
+                "--input",
                 str(get_src_css_path()),
-                "-o",
+                "--output",
                 str(get_dist_css_path()),
                 "--minify",
             ],
@@ -123,9 +123,9 @@ class Command(RichCommand, LabelCommand):
         subprocess.run(
             [
                 str(get_executable_path()),
-                "-i",
+                "--input",
                 str(get_src_css_path()),
-                "-o",
+                "--output",
                 str(get_dist_css_path()),
                 "--watch",
             ],
