@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.0
+
+- Refactored the project for future extensions.
+- Added proper documetation which is hosted at <https://oliverandrich.github.io/django-tailwind-cli/>.
+- Swichted from django-click to django-rich to implement the management commands.
+
 ## 1.3.1
 
 - Switched back to poetry after a long discussion.
