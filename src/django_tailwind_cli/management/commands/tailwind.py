@@ -82,7 +82,7 @@ class Command(RichCommand, LabelCommand):
         src_css_path = (theme_app_path / config["TAILWIND_SRC_CSS"]).parent
         src_css_path.mkdir(parents=True)
 
-        dist_css_path = (theme_app_path / config["TAILWIND_DIST_CSS"]).parent
+        dist_css_path = (theme_app_path / "static" / config["TAILWIND_DIST_CSS"]).parent
         dist_css_path.mkdir(parents=True)
 
         # create files of the theme app
