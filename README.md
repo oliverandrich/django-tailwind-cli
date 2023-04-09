@@ -28,7 +28,7 @@ Python 3.8 or newer with Django >= 3.2.
 
 ## Documentation
 
-The documentation can be found at <https://django-tailwind-cli.readthedocs.io>.
+The documentation can be found at <https://oliverandrich.github.io/django-tailwind-cli/>.
 
 ## Installation
 
