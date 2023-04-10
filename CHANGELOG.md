@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.3
+
+- Fixed broken links in the documentation and README.
+
 ## 1.4.0
 
 - Refactored the project for future extensions.
