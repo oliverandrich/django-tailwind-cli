@@ -28,7 +28,7 @@ Python 3.8 or newer with Django >= 3.2.
 
 ## Installation
 
-Follow the [installation instructions](/installation/) to set up the app in your project.
+Follow the [installation instructions](/django-tailwind-cli/installation/) to set up the app in your project.
 
 ## License
 

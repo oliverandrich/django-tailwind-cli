@@ -48,7 +48,7 @@
     </head>
     ```
 
-    Or use the [base template](/base_template/) provided by this package.
+    Or use the [base template](/django-tailwind-cli/base_template/) provided by this package.
 
 6. Start the Tailwind CLI in watch mode.
 

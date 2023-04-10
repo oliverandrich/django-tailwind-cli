@@ -36,7 +36,7 @@ The documentation can be found at <https://oliverandrich.github.io/django-tailwi
 python -m pip install django-tailwind-cli
 ```
 
-Check the docs for detailed [installation instructions](https://django-tailwind-cli.readthedocs.io/installation/).
+Check the docs for detailed [installation instructions](https://oliverandrich.github.io/django-tailwind-cli/installation/).
 
 ## Bugs and suggestions
 
