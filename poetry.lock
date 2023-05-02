@@ -951,14 +951,14 @@ files = [
 
 [[package]]
 name = "syrupy"
-version = "4.0.1"
+version = "4.0.2"
 description = "Pytest Snapshot Test Utility"
 category = "dev"
 optional = false
 python-versions = ">=3.8.1,<4"
 files = [
-    {file = "syrupy-4.0.1-py3-none-any.whl", hash = "sha256:53d3107cc5e18a5def189c721879cea2cdafdee34b879f602133ca08837d0e4b"},
-    {file = "syrupy-4.0.1.tar.gz", hash = "sha256:60e3e94782444e0f978cd3b207de32f6da3199b15a2db32eab02f83cebb63ae8"},
+    {file = "syrupy-4.0.2-py3-none-any.whl", hash = "sha256:dfd1f0fad298eee753de4f2471d4346412c4435885c4b7beea648d4934c6620a"},
+    {file = "syrupy-4.0.2.tar.gz", hash = "sha256:3c75ab6866580679b2cb9abe78e74c3e2011fffc6333651c6beb2a78a716ab80"},
 ]
 
 [package.dependencies]
