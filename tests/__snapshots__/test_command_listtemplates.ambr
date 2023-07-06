@@ -1,0 +1,10 @@
+# serializer version: 1
+# name: test_listtemplates
+  '''
+  /Users/oa/Projekte/privat/django-tailwind-cli/src/django_tailwind_cli/templates/
+  tailwind_cli/tailwind_css.html 
+  /Users/oa/Projekte/privat/django-tailwind-cli/src/django_tailwind_cli/templates/
+  tailwind_cli/base.html
+  
+  '''
+# ---

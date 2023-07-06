@@ -11,3 +11,6 @@
 
 `tailwind build`
 :   Create a production ready build of the Tailwind stylesheet. You have to run this before calling the `collectstatic` command.
+
+`tailwind runserver`
+:   Start the CLI in watch mode and the Django runserver in parallel.

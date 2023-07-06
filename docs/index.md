@@ -19,6 +19,7 @@ It is inspired by the implementation of the [Tailwind integration for Phoenix](h
   - ...to start the CLI in watch mode to incrementally compile your style sheet.
   - ...to create a theme app which includes a basic stylesheet and a tailwind configuration which you can extend.
   - ...to build the production ready CSS file.
+  - ...to run the Django runserver and the tailwind watcher in the same process.
 - A template tag to include the CSS file in your base template.
 - All the official plugins (typography, form, line-clamp, container queries, and aspect-ratio) integrated in the CLI are activated in the default configuration.
 
