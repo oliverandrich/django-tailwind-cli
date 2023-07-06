@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.0
+
+- Added new management command "tailwind runserver" to run the normal runserver and tailwind watcher in a single window.
+
 ## 1.4.3
 
 - Fixed broken links in the documentation and README.
