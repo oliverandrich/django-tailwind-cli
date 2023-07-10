@@ -273,13 +273,13 @@ bcrypt = ["bcrypt"]
 
 [[package]]
 name = "django-rich"
-version = "1.6.0"
+version = "1.7.0"
 description = "Extensions for using Rich with Django."
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "django_rich-1.6.0-py3-none-any.whl", hash = "sha256:0f55575f6c45cbf70fc45d42512f595fc44873d94e7aa43acf3173fa72061b8c"},
-    {file = "django_rich-1.6.0.tar.gz", hash = "sha256:2eaa70b07b76d84d305699f1a522f9f4a026286e33f0928fc6716f45ed5e0f64"},
+    {file = "django_rich-1.7.0-py3-none-any.whl", hash = "sha256:085f2776b2318a7bf48fdad337e93c0fa6081a5e660e79c747bac8435c16a910"},
+    {file = "django_rich-1.7.0.tar.gz", hash = "sha256:a21d92db4cf9b8e84b69df48f04337df90620758b92f0a07e8e60066c2fd6bdc"},
 ]
 
 [package.dependencies]
