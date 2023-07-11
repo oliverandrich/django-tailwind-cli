@@ -6,7 +6,7 @@ import sys
 from importlib.util import find_spec
 from multiprocessing import Process, Queue
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any
 
 from django.conf import settings
 from django.core.management.base import CommandError, LabelCommand
@@ -23,7 +23,7 @@ from django_tailwind_cli.utils import (
 )
 
 
-def _run_process(cmd: Sequence[str], queue: "Queue[str]") -> None:
+def _run_process(cmd: list[str], queue: Queue[str]):
     with subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True) as process:
         if process.stdout is not None:
             for line in process.stdout:
