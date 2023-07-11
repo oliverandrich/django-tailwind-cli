@@ -53,10 +53,8 @@
 6. Start the Tailwind CLI in watch mode.
 
     ```shell
-    python manage.py tailwind runserver
+    python manage.py tailwind watch
     ```
-
-    Alternatively you can run `python manage.py runserver` and `python manage.py tailwind watch` in seperate processes. What ever fits your workflow best.
 
 ## Optional steps
 

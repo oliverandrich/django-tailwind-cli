@@ -2,13 +2,13 @@
 
 import shutil
 import subprocess
-import sys
 from importlib.util import find_spec
-from multiprocessing import Process, Queue
 from pathlib import Path
 from typing import Any
 
 from django.conf import settings
+
+# We need to import click and djclick to make pyright happy
 from django.core.management.base import CommandError, LabelCommand
 from django_rich.management import RichCommand
 
@@ -21,14 +21,6 @@ from django_tailwind_cli.utils import (
     get_src_css_path,
     get_theme_app_path,
 )
-
-
-def _run_process(cmd: list[str], queue: Queue[str]):
-    with subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True) as process:
-        if process.stdout is not None:
-            for line in process.stdout:
-                if line:
-                    queue.put(line)
 
 
 class Command(RichCommand, LabelCommand):
@@ -44,8 +36,6 @@ class Command(RichCommand, LabelCommand):
             self.build()
         elif label == "watch":
             self.watch()
-        elif label == "runserver":
-            self.runserver()
         else:
             raise CommandError(f"Unsupported subcommand `{label}` called.")
 
@@ -142,23 +132,3 @@ class Command(RichCommand, LabelCommand):
             cwd=get_theme_app_path(),
             check=True,
         )
-
-    def runserver(self):
-        """Start the Django development server and the tailwind cli in watch mode."""
-
-        q: Queue[str] = Queue()
-
-        p1 = Process(target=_run_process, args=([sys.executable, "manage.py", "runserver", "--no-color"], q))
-        p1.start()
-        p2 = Process(target=_run_process, args=([sys.executable, "manage.py", "tailwind", "watch"], q))
-        p2.start()
-
-        while True:
-            line = q.get()
-            if line:
-                self.console.print(line.strip())
-            if not p1.is_alive() or not p2.is_alive():
-                break
-
-        p1.join()
-        p2.join()
