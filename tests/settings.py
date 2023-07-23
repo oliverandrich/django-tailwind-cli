@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import pathlib
+from tempfile import mkdtemp
 from typing import Any
 
-BASE_DIR = pathlib.Path(__file__).resolve(strict=True).parent.parent
+BASE_DIR = pathlib.Path(mkdtemp())
 
 DEBUG = False
 
@@ -44,5 +45,6 @@ TEMPLATES: list[dict[str, Any]] = [
 ]
 
 STATIC_URL = "/static/"
+STATICFILES_DIRS = (BASE_DIR / "assets",)
 
 USE_TZ = True

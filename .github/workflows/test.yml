@@ -1,50 +1,15 @@
 name: Test
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  - push
+  - pull_request
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
       matrix:
-        include:
-          # Django 3.2
-          - django-version: "3.2"
-            python-version: "3.8"
-          - django-version: "3.2"
-            python-version: "3.9"
-          - django-version: "3.2"
-            python-version: "3.10"
-          # Django 4.0
-          - django-version: "4.0"
-            python-version: "3.8"
-          - django-version: "4.0"
-            python-version: "3.9"
-          - django-version: "4.0"
-            python-version: "3.10"
-          # Django 4.1
-          - django-version: "4.1"
-            python-version: "3.8"
-          - django-version: "4.1"
-            python-version: "3.9"
-          - django-version: "4.1"
-            python-version: "3.10"
-          - django-version: "4.1"
-            python-version: "3.11"
-          # Django 4.2
-          - django-version: "4.2"
-            python-version: "3.8"
-          - django-version: "4.2"
-            python-version: "3.9"
-          - django-version: "4.2"
-            python-version: "3.10"
-          - django-version: "4.2"
-            python-version: "3.11"
+        python-version: ["3.9", "3.10", "3.11"]
 
     steps:
       - uses: actions/checkout@v3
@@ -59,24 +24,8 @@ jobs:
         with:
           virtualenvs-in-project: true
 
-      - name: Set up cache
-        uses: actions/cache@v3
-        id: cache
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ steps.full-python-version.outputs.version }}-${{ hashFiles('**/poetry.lock') }}
-
-      - name: Ensure cache is healthy
-        if: steps.cache.outputs.cache-hit == 'true'
-        run: poetry run pip --version >/dev/null 2>&1 || rm -rf .venv
-
-      - name: Install Dependencies
+      - name: Install dependencies
         run: poetry install
 
-      - name: Upgrade django version
-        run: |
-          poetry run pip install "Django~=${{ matrix.django-version }}"
-
-      - name: Run tests
-        run: |
-          poetry run pytest
+      - name: Test with tox
+        run: poetry run tox

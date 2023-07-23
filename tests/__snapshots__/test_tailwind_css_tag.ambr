@@ -6,7 +6,7 @@
           
   
   
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/tailwind.css">
   
   
           
@@ -19,8 +19,8 @@
           
   
   
-    <link rel="preload" href="/static/css/styles.css" as="style">
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="preload" href="/static/css/tailwind.css" as="style">
+    <link rel="stylesheet" href="/static/css/tailwind.css">
   
   
           

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-tailwind-cli"
-version = "1.4.3"
+version = "2.0.0"
 description = "Django and Tailwind integration based on the prebuilt Tailwind CSS CLI."
 license = "MIT"
 authors = ["Oliver Andrich <oliver@andrich.me>"]
@@ -12,7 +12,6 @@ classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -31,9 +30,8 @@ packages = [{ include = "django_tailwind_cli", from = "src" }]
 "Mastodon" = "https://2pxnl.de/@oliver"
 
 [tool.poetry.dependencies]
-python = ">=3.8.1,<4"
+python = ">=3.9,<4"
 django = ">=3.2,<5"
-django-rich = "^1.5.0"
 certifi = "*"
 
 [tool.poetry.group.dev.dependencies]
@@ -42,16 +40,17 @@ pytest-cov = "^4.0.0"
 pytest-django = "^4.5.2"
 django-types = "^0.17.0"
 pytest-randomly = "^3.12.0"
-pytest-timeout = "^2.1.0"
 mkdocs-material = "^9.1.5"
 syrupy = "^4.0.1"
+tox = "^4.6.4"
+tox-gh-actions = "^3.1.3"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.black]
-target-version = ["py38"]
+target-version = ["py39"]
 line-length = 120
 
 [tool.pyright]
@@ -94,7 +93,7 @@ exclude = [
 ]
 line-length = 120
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
-target-version = "py38"
+target-version = "py39"
 
 [tool.ruff.mccabe]
 max-complexity = 10

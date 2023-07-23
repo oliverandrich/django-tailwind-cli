@@ -1,70 +1,74 @@
-from pathlib import Path
 from typing import Any
 
-from django_tailwind_cli.utils import (
-    DEFAULT_TAILWIND_VERSION,
-    get_config,
-    get_dist_css_path,
-    get_download_url,
-    get_executable_path,
-    get_src_css_path,
-    get_theme_app_path,
-)
+import pytest
+from django_tailwind_cli.utils import Config
 
 
-def test_get_config():
-    """`get_config` returns the config dict from the settings."""
-
-    assert get_config() == {
-        "TAILWIND_CLI_PATH": "~/.local/bin/",
-        "TAILWIND_DIST_CSS": "css/styles.css",
-        "TAILWIND_SRC_CSS": "src/styles.css",
-        "TAILWIND_THEME_APP": "theme",
-        "TAILWIND_VERSION": DEFAULT_TAILWIND_VERSION,
-    }
-
-
-def test_get_download_url(settings: Any):
-    """Download url includes correct version number."""
-
-    assert DEFAULT_TAILWIND_VERSION in get_download_url()
-    settings.TAILWIND_VERSION = "3.1.9"
-    assert "3.1.9" in get_download_url()
+def test_defaults(tailwind_config: Config, settings: Any):
+    """Default settings are correct."""
+    assert tailwind_config.tailwind_version == "3.3.3"
+    assert tailwind_config.cli_path is None
+    assert tailwind_config.src_css is None
+    assert tailwind_config.dist_css == "css/tailwind.css"
+    assert tailwind_config.config_file == "tailwind.config.js"
+    assert "3.3.3" in tailwind_config.get_download_url()
+    assert "3.3.3" in str(tailwind_config.get_full_cli_path())
 
 
-def test_get_executable_path(settings: Any):
-    """CLI path includes correct version number."""
+def test_validate_settings(settings: Any):
+    """Test that validate_settings raises an exception when STATICFILES_DIRS is empty."""
 
-    p = get_executable_path()
-    assert p.is_absolute()
-    assert p.relative_to(Path.home())
-    assert str(p).endswith(f"-{DEFAULT_TAILWIND_VERSION}")
-    settings.TAILWIND_CLI_PATH = "/tmp/"
-    p = get_executable_path()
-    assert str(p).startswith("/tmp/tailwindcss-")
+    settings.STATICFILES_DIRS = []
+    config = Config()
+    with pytest.raises(ValueError):
+        config.validate_settings()
 
 
-def test_get_theme_app_path():
-    """`get_theme_app_path()` returns the correct path to the theme app."""
+def test_get_full_config_file_path(settings: Any):
+    """Test that get_full_config_path returns the correct path."""
 
-    config = get_config()
-    p = get_theme_app_path()
-    assert p is not None
-    assert p.is_absolute()
-    assert str(p).endswith(config["TAILWIND_THEME_APP"])
+    settings.BASE_DIR = "/home/user/project"
+    config = Config()
+    assert str(config.get_full_config_file_path()) == "/home/user/project/tailwind.config.js"
 
-
-def test_get_src_path(settings: Any):
-    """`get_src_css_path()` returns the correct path to the input stylesheet."""
-
-    assert str(get_src_css_path()).endswith("src/styles.css")
-    settings.TAILWIND_SRC_CSS = "base.css"
-    assert str(get_src_css_path()).endswith("base.css")
+    settings.TAILWIND_CLI_CONFIG_FILE = "config/tailwind.config.js"
+    config = Config()
+    assert str(config.get_full_config_file_path()) == "/home/user/project/config/tailwind.config.js"
 
 
-def test_get_dist_path(settings: Any):
-    """`get_src_css_path()` returns the correct path to the compiled stylesheet."""
+def test_get_full_dist_css_path(settings: Any):
+    """Test that get_full_dist_css_path returns the correct path."""
 
-    assert str(get_dist_css_path()).endswith("static/css/styles.css")
-    settings.TAILWIND_DIST_CSS = "built.css"
-    assert str(get_dist_css_path()).endswith("static/built.css")
+    settings.STATICFILES_DIRS = []
+    config = Config()
+    with pytest.raises(ValueError):
+        config.get_full_dist_css_path()
+
+    settings.STATICFILES_DIRS = ["/home/user/project"]
+    config = Config()
+    assert str(config.get_full_dist_css_path()) == "/home/user/project/css/tailwind.css"
+
+
+def test_get_full_src_css_path(settings: Any):
+    """Test that get_full_src_css_path returns the correct path."""
+
+    config = Config()
+    with pytest.raises(ValueError):
+        config.get_full_src_css_path()
+
+    settings.BASE_DIR = "/home/user/project"
+    settings.TAILWIND_CLI_SRC_CSS = "css/source.css"
+    config = Config()
+    assert str(config.get_full_src_css_path()) == "/home/user/project/css/source.css"
+
+
+def test_get_full_cli_path(settings: Any):
+    """Test that get_full_cli_path returns the correct path."""
+
+    settings.BASE_DIR = "/home/user/project"
+    config = Config()
+    assert str(config.get_full_cli_path()).startswith("/home/user/project/tailwindcss-")
+
+    settings.TAILWIND_CLI_PATH = "/opt/bin"
+    config = Config()
+    assert str(config.get_full_cli_path()).startswith("/opt/bin/tailwindcss-")

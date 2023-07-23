@@ -1,8 +1,13 @@
+---
+hide:
+    - navigation
+---
+
 # Installation
 
 ## Install `django-tailwind-cli`
 
-1. Install the package inside your Django project.
+1. Install the library.
 
     ```shell
     python -m pip install django-tailwind-cli
@@ -17,26 +22,13 @@
     ]
     ```
 
-3. Run the management command to install the cli and initialize the theme app.
-
-    ```shell
-    python manage.py tailwind installcli
-    python manage.py tailwind init
-    ```
-
-    This installs the CLI to `$HOME/.local/bin/` and creates a new app in your project with the name `theme`.
-
-4. Add the new theme app to `INSTALLED_APPS` in `settings.py`.
+3. Configure the `STATICFILES_DIRS` parameter in your `settings.py` if not already configured.
 
     ```python
-    INSTALLED_APPS = [
-        # other Django apps
-        "django_tailwind_cli",
-        "theme",
-    ]
+    STATICFILES_DIRS = [BASE_DIR / "assets"]
     ```
 
-5. Edit your base template to include Tailwind's stylesheet.
+4. Add template code.
 
     ```htmldjango
     {% load tailwind_cli %}
@@ -48,13 +40,19 @@
     </head>
     ```
 
-    Or use the [base template](/django-tailwind-cli/base_template/) provided by this package.
+5. Start the debug server or start the Tailwind CLI in watch mode.
 
-6. Start the Tailwind CLI in watch mode.
+    ```shell
+    python manage.py tailwind runserver
+    ```
+
+    Or
 
     ```shell
     python manage.py tailwind watch
     ```
+
+    If you only start the Tailwind CLI in watch mode, you have to start the debug server with the standard command `python manage.py runserver` seperately.
 
 ## Optional steps
 
@@ -101,6 +99,6 @@ If you enjoy automatic reloading during development. Install the [django-browser
     ]
     ```
 
-    The middleware should be listed after any that encode the response, such as Django’s GZipMiddleware.
+    The middleware should be listed after any that encodes the response, such as Django’s GZipMiddleware.
 
     The middleware automatically inserts the required script tag on HTML responses before </body> when DEBUG is True. It does so to every HTML response, meaning it will be included on Django’s debug pages, admin pages, etc. If you want more control, you can instead insert the script tag in your templates—see below.

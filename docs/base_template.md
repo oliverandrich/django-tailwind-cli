@@ -1,8 +1,13 @@
+---
+hide:
+    - navigation
+---
+
 # Base Template
 
-The package also includes a minimal base template, which you can use as a starting point for your own project. It is located in the `theme` app and is called `tailwind_cli/base.html`. It is a very simple template, which only includes the CSS stylesheets and the `tailwind_css` template tag.
+The package also includes a minimal base template, which you can use as a starting point for your own project. It is a very simple template, which only includes the CSS stylesheets and the `tailwind_css` template tag. You can use by putting `{% extends "tailwind_cli/base.html" %}` into your template files.
 
-```htmldjango
+```htmldjango title="tailwind_cli/base.html"
 {% load tailwind_cli %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">

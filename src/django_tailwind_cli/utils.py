@@ -6,89 +6,69 @@ the various paths.
 """
 
 import platform
-import shutil
-import ssl
-import urllib.request
 from pathlib import Path
-from typing import Dict, Union
 
-import certifi
 from django.conf import settings
 
-DEFAULT_TAILWIND_VERSION = "3.3.1"
 
+class Config:
+    """Configuration for the Tailwind CSS CLI."""
 
-def get_config() -> Dict[str, str]:
-    """Extract configuration from settings."""
-    return {
-        "TAILWIND_VERSION": getattr(settings, "TAILWIND_VERSION", DEFAULT_TAILWIND_VERSION),
-        "TAILWIND_CLI_PATH": getattr(settings, "TAILWIND_CLI_PATH", "~/.local/bin/"),
-        "TAILWIND_THEME_APP": getattr(settings, "TAILWIND_THEME_APP", "theme"),
-        "TAILWIND_SRC_CSS": getattr(settings, "TAILWIND_SRC_CSS", "src/styles.css"),
-        "TAILWIND_DIST_CSS": getattr(settings, "TAILWIND_DIST_CSS", "css/styles.css"),
-    }
+    def __init__(self):
+        """Initialize the configuration."""
+        self.tailwind_version: str = getattr(settings, "TAILWIND_CLI_VERSION", "3.3.3")
+        self.cli_path: str | None = getattr(settings, "TAILWIND_CLI_PATH", None)
+        self.src_css: str | None = getattr(settings, "TAILWIND_CLI_SRC_CSS", None)
+        self.dist_css: str = getattr(settings, "TAILWIND_CLI_DIST_CSS", "css/tailwind.css")
+        self.config_file: str = getattr(settings, "TAILWIND_CLI_CONFIG_FILE", "tailwind.config.js")
 
+    def validate_settings(self) -> None:
+        """Validate the settings."""
+        if len(settings.STATICFILES_DIRS) == 0:
+            raise ValueError("STATICFILES_DIRS is empty. Please add a path to your static files.")
 
-def get_download_url() -> str:
-    """Build download url for the Tailwind CSS CLI."""
-    config = get_config()
-    version = config["TAILWIND_VERSION"]
+    def get_system_and_machine(self) -> tuple[str, str]:
+        """Get the system and machine name."""
+        system = platform.system().lower()
+        if system == "darwin":  # pragma: no cover
+            system = "macos"
 
-    system = platform.system().lower()
-    if system == "darwin":  # pragma: no cover
-        system = "macos"
+        machine = platform.machine().lower()
+        if machine == "x86_64":  # pragma: no cover
+            machine = "x64"
 
-    machine = platform.machine().lower()
-    if machine == "x86_64":  # pragma: no cover
-        machine = "x64"
+        return (system, machine)
 
-    return "https://github.com/tailwindlabs/tailwindcss/releases/download/" f"v{version}/tailwindcss-{system}-{machine}"
+    def get_download_url(self) -> str:
+        """Get the download url for the Tailwind CSS CLI."""
+        system, machine = self.get_system_and_machine()
+        return (
+            "https://github.com/tailwindlabs/tailwindcss/releases/download/"
+            f"v{self.tailwind_version}/tailwindcss-{system}-{machine}"
+        )
 
+    def get_full_cli_path(self) -> Path:
+        """Get path to the Tailwind CSS CLI."""
+        system, machine = self.get_system_and_machine()
+        executable_name = f"tailwindcss-{system}-{machine}-{self.tailwind_version}"
+        if self.cli_path is None:
+            return Path(settings.BASE_DIR) / executable_name
+        else:
+            return Path(self.cli_path).expanduser() / executable_name
 
-def get_executable_path(basepath: Union[Path, str, None] = None) -> Path:
-    """Build path where to store the Tailwind CSS CLI locally."""
-    config = get_config()
+    def get_full_src_css_path(self) -> Path:
+        """Get path to the source css."""
+        if self.src_css is None:
+            raise ValueError("No source CSS file specified. Please set TAILWIND_SRC_CSS in your settings.")
+        return Path(settings.BASE_DIR) / self.src_css
 
-    version = config["TAILWIND_VERSION"]
+    def get_full_dist_css_path(self) -> Path:
+        """Get path to the compiled css."""
+        if len(settings.STATICFILES_DIRS) == 0:
+            raise ValueError("STATICFILES_DIRS is empty. Please add a path to your static files.")
 
-    system = platform.system().lower()
-    if system == "darwin":  # pragma: no cover
-        system = "macos"
+        return Path(settings.STATICFILES_DIRS[0]) / self.dist_css
 
-    machine = platform.machine().lower()
-    if machine == "x86_64":  # pragma: no cover
-        machine = "x64"
-
-    executable_name = f"tailwindcss-{system}-{machine}-{version}"
-
-    if basepath is not None:
-        return Path(basepath).expanduser() / executable_name
-    else:
-        return Path(config["TAILWIND_CLI_PATH"]).expanduser() / executable_name
-
-
-def get_theme_app_path() -> Path:
-    """Build path for the theme app."""
-    config = get_config()
-    return Path(settings.BASE_DIR) / config["TAILWIND_THEME_APP"]
-
-
-def get_src_css_path() -> Path:
-    """Build path to the source css."""
-    config = get_config()
-    return get_theme_app_path() / config["TAILWIND_SRC_CSS"]
-
-
-def get_dist_css_path() -> Path:
-    """Build path to the compiled css."""
-    config = get_config()
-    return get_theme_app_path() / "static" / config["TAILWIND_DIST_CSS"]
-
-
-def download_file(src: str, destination: Path):
-    """Download Tailwind CSS CLI to executable path."""
-    certifi_context = ssl.create_default_context(cafile=certifi.where())
-    with urllib.request.urlopen(src, context=certifi_context) as source, destination.open(mode="wb") as dest:
-        shutil.copyfileobj(source, dest)
-    # make cli executable
-    destination.chmod(0o755)
+    def get_full_config_file_path(self) -> Path:
+        """Get path to the tailwind.config.js file."""
+        return Path(settings.BASE_DIR) / self.config_file
