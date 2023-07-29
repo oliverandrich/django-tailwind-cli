@@ -67,7 +67,7 @@ Enjoy!
 
 ## Documentation
 
-The documentation can be found at [https://oliverandrich.github.io/django-tailwind-cli/](https://oliverandrich.github.io/django-tailwind-cli/)
+The documentation can be found at [https://django-tailwind-cli.andrich.me/](https://django-tailwind-cli.andrich.me/)
 
 ## Requirements
 
