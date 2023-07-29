@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.2
+
+-   Bugfixes for typing errors.
+-   Added missing test code.
+
 ## 2.0.0
 
 -   Version 2.0.0 is major refactoring compared to version 1.4.3.
