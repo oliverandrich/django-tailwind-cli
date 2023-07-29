@@ -46,4 +46,4 @@ jobs:
         uses: mhausenblas/mkdocs-deploy-gh-pages@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_DOMAIN: django-tailwind-cli.andrich.me
+          CUSTOM_DOMAIN: django-tailwind-cli.andrich.me
