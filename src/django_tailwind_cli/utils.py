@@ -7,6 +7,7 @@ the various paths.
 
 import platform
 from pathlib import Path
+from typing import Union
 
 from django.conf import settings
 
@@ -17,14 +18,14 @@ class Config:
     def __init__(self):
         """Initialize the configuration."""
         self.tailwind_version: str = getattr(settings, "TAILWIND_CLI_VERSION", "3.3.3")
-        self.cli_path: str | None = getattr(settings, "TAILWIND_CLI_PATH", None)
-        self.src_css: str | None = getattr(settings, "TAILWIND_CLI_SRC_CSS", None)
+        self.cli_path: Union[str, None] = getattr(settings, "TAILWIND_CLI_PATH", None)
+        self.src_css: Union[str, None] = getattr(settings, "TAILWIND_CLI_SRC_CSS", None)
         self.dist_css: str = getattr(settings, "TAILWIND_CLI_DIST_CSS", "css/tailwind.css")
         self.config_file: str = getattr(settings, "TAILWIND_CLI_CONFIG_FILE", "tailwind.config.js")
 
     def validate_settings(self) -> None:
         """Validate the settings."""
-        if len(settings.STATICFILES_DIRS) == 0:
+        if settings.STATICFILES_DIRS is None or len(settings.STATICFILES_DIRS) == 0:
             raise ValueError("STATICFILES_DIRS is empty. Please add a path to your static files.")
 
     def get_system_and_machine(self) -> tuple[str, str]:
@@ -64,7 +65,7 @@ class Config:
 
     def get_full_dist_css_path(self) -> Path:
         """Get path to the compiled css."""
-        if len(settings.STATICFILES_DIRS) == 0:
+        if settings.STATICFILES_DIRS is None or len(settings.STATICFILES_DIRS) == 0:
             raise ValueError("STATICFILES_DIRS is empty. Please add a path to your static files.")
 
         return Path(settings.STATICFILES_DIRS[0]) / self.dist_css

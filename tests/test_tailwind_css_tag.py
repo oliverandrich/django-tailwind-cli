@@ -1,27 +1,43 @@
-from typing import Any
+from typing import Any, Union
+
+from django.template import engines
+from django.test import SimpleTestCase
 
 
-def test_tailwind_css_in_production(settings: Any, snapshot: Any, render_django: Any):
-    """In production mode a stylesheet preloading directive is injected into the html."""
+class CssTagTestCase(SimpleTestCase):
+    """Test the tailwind_css tag."""
 
-    settings.DEBUG = False
-    template_string = """
-        {% load tailwind_cli %}
-        {% tailwind_css %}
-        """
-    context = {}
+    def test_tailwind_css_in_production(self):
+        """In production mode a stylesheet preloading directive is injected into the html."""
+        with self.settings(DEBUG=False):
+            template_string = """
+                {% load tailwind_cli %}
+                {% tailwind_css %}
+                """
+            context = {}
+            self.assertHTMLEqual(
+                """
+                <link rel="preload" href="/static/css/tailwind.css" as="style">
+                <link rel="stylesheet" href="/static/css/tailwind.css">
+                """,
+                self._render(template_string, context),
+            )
 
-    assert render_django(template_string, context) == snapshot
+    def test_tailwind_css_in_devmode(self):
+        """In development mode no stylesheet preloading directive is injected into the html."""
+        with self.settings(DEBUG=True):
+            template_string = """
+                {% load tailwind_cli %}
+                {% tailwind_css %}
+                """
+            context = {}
+            self.assertHTMLEqual(
+                """<link rel="stylesheet" href="/static/css/tailwind.css">""",
+                self._render(template_string, context),
+            )
 
-
-def test_tailwind_css_in_devmode(settings: Any, snapshot: Any, render_django: Any):
-    """In development mode no stylesheet preloading directive is injected into the html."""
-
-    settings.DEBUG = True
-    template_string = """
-        {% load tailwind_cli %}
-        {% tailwind_css %}
-        """
-    context = {}
-
-    assert render_django(template_string, context) == snapshot
+    def _render(self, text: str, context: Union[dict[str, Any], None] = None):
+        if context is None:
+            context = {}
+        template = engines["django"].from_string(text)
+        return template.render(context or {})

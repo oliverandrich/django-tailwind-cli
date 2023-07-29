@@ -18,7 +18,7 @@ INSTALLED_APPS = [
     "django_tailwind_cli",
 ]
 
-DATABASES: dict[str, Any] = {}
+DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3"}}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
