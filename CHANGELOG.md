@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.3
+
+-   Readded support for Python 3.8.
+-   Added Python 3.12 to the testing matrix.
+
 ## 2.0.2
 
 -   Bugfixes for typing errors.
