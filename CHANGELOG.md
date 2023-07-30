@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.6
+
+-   Bugfix for default tailwind.config.js.
+
 ## 2.0.5
 
 -   Fixed a regression with the default path for the Tailwind CLI.

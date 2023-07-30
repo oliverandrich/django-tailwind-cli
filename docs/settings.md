@@ -42,6 +42,8 @@ If you don't create a `tailwind.config.js` file yourself, the management command
 
 ```javascript title="tailwind.config.js"
 /** @type {import('tailwindcss').Config} */
+const plugin = require("tailwindcss/plugin");
+
 module.exports = {
     content: ["./templates/**/*.html", "**/templates/**/*.html"],
     theme: {

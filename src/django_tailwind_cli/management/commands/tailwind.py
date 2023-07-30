@@ -182,6 +182,8 @@ class Command(BaseCommand):
 
 
 DEFAULT_TAILWIND_CONFIG = """/** @type {import('tailwindcss').Config} */
+const plugin = require("tailwindcss/plugin");
+
 module.exports = {
   content: [
     './templates/**/*.html',
