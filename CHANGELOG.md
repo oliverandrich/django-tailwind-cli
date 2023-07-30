@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.5
+
+-   Fixed a regression with the default path for the Tailwind CLI.
+
 ## 2.0.4
 
 -   The reworked testing setup broke the package. Had to pull 2.0.3 from PyPI.

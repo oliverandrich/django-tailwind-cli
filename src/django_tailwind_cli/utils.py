@@ -18,7 +18,7 @@ class Config:
     def __init__(self):
         """Initialize the configuration."""
         self.tailwind_version: str = getattr(settings, "TAILWIND_CLI_VERSION", "3.3.3")
-        self.cli_path: Union[str, None] = getattr(settings, "TAILWIND_CLI_PATH", None)
+        self.cli_path: Union[str, None] = getattr(settings, "TAILWIND_CLI_PATH", "~/.local/bin/")
         self.src_css: Union[str, None] = getattr(settings, "TAILWIND_CLI_SRC_CSS", None)
         self.dist_css: str = getattr(settings, "TAILWIND_CLI_DIST_CSS", "css/tailwind.css")
         self.config_file: str = getattr(settings, "TAILWIND_CLI_CONFIG_FILE", "tailwind.config.js")

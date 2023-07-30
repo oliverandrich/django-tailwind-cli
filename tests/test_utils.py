@@ -22,7 +22,7 @@ class ConfigTestCase(SimpleTestCase):
         """Default settings are correct."""
         config = Config()
         self.assertEqual(config.tailwind_version, "3.3.3")
-        self.assertIsNone(config.cli_path)
+        self.assertEqual(config.cli_path, "~/.local/bin/")
         self.assertIsNone(config.src_css)
         self.assertEqual(config.dist_css, "css/tailwind.css")
         self.assertEqual(config.config_file, "tailwind.config.js")
@@ -77,7 +77,7 @@ class ConfigTestCase(SimpleTestCase):
 
         with self.settings(BASE_DIR="/home/user/project"):
             config = Config()
-            self.assertTrue(str(config.get_full_cli_path()).startswith("/home/user/project/tailwindcss-"))
+            self.assertTrue("/.local/bin/tailwindcss-" in str(config.get_full_cli_path()))
 
         with self.settings(BASE_DIR="/home/user/project", TAILWIND_CLI_PATH="/opt/bin"):
             config = Config()
