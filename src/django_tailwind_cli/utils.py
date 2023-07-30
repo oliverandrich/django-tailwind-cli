@@ -7,7 +7,7 @@ the various paths.
 
 import platform
 from pathlib import Path
-from typing import Union
+from typing import Tuple, Union
 
 from django.conf import settings
 
@@ -28,7 +28,7 @@ class Config:
         if settings.STATICFILES_DIRS is None or len(settings.STATICFILES_DIRS) == 0:
             raise ValueError("STATICFILES_DIRS is empty. Please add a path to your static files.")
 
-    def get_system_and_machine(self) -> tuple[str, str]:
+    def get_system_and_machine(self) -> Tuple[str, str]:
         """Get the system and machine name."""
         system = platform.system().lower()
         if system == "darwin":  # pragma: no cover

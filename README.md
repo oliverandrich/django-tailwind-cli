@@ -71,7 +71,7 @@ The documentation can be found at [https://django-tailwind-cli.andrich.me/](http
 
 ## Requirements
 
-Python 3.9 or newer with Django >= 3.2.
+Python 3.8 or newer with Django >= 3.2.
 
 ## License
 

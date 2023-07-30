@@ -6,7 +6,7 @@ import subprocess
 import sys
 import urllib.request
 from multiprocessing import Process
-from typing import Any
+from typing import Any, List
 
 import certifi
 from django.conf import settings
@@ -117,7 +117,7 @@ class Command(BaseCommand):
             watch_process.terminate()
             debugserver_process.terminate()
 
-    def get_build_cmd(self) -> list[str]:
+    def get_build_cmd(self) -> List[str]:
         """Get the command to build the CSS."""
         if self.config.src_css is None:
             return [
@@ -136,7 +136,7 @@ class Command(BaseCommand):
                 "--minify",
             ]
 
-    def get_watch_cmd(self) -> list[str]:
+    def get_watch_cmd(self) -> List[str]:
         """Get the command to watch the CSS."""
         if self.config.src_css is None:
             return [

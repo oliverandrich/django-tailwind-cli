@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Dict, Union
 
 from django.template import engines
 from django.test import SimpleTestCase
@@ -36,7 +36,7 @@ class CssTagTestCase(SimpleTestCase):
                 self._render(template_string, context),
             )
 
-    def _render(self, text: str, context: Union[dict[str, Any], None] = None):
+    def _render(self, text: str, context: Union[Dict[str, Any], None] = None):
         if context is None:
             context = {}
         template = engines["django"].from_string(text)
