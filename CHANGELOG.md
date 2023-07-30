@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.4
+
+-   The reworked testing setup broke the package. Had to pull 2.0.3 from PyPI.
+
 ## 2.0.3
 
 -   Readded support for Python 3.8.
