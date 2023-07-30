@@ -48,3 +48,7 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = (BASE_DIR / "assets",)
 
 USE_TZ = True
+
+SILENCED_SYSTEM_CHECKS = ["staticfiles.W004"]
+
+TEST_RUNNER = "django_rich.test.RichRunner"
