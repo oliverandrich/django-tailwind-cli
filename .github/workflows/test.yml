@@ -10,7 +10,6 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
-        django-version: ["3.2", "4.1", "4.2"]
 
     steps:
       - uses: actions/checkout@v3
@@ -36,13 +35,13 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           path: .venv
-          key: python-${{ matrix.python-version }}-django-{{ matrix.django-version }}-venvs
+          key: python-${{ matrix.python-version }}-venvs
 
       - name: Run lint
         run: hatch run lint:all
 
       - name: Run tests
-        run: hatch run test.py{{ matrix.python-version }}-{{ matrix.django-version }}:test
+        run: hatch run +py=${{ matrix.python-version }} test:test
 
       - name: Restore cache hatch virtual environments
         id: cache-venvs-save
