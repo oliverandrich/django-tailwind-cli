@@ -16,36 +16,25 @@ repos:
       - id: check-symlinks
       - id: check-json
 
-  - repo: https://github.com/psf/black
-    rev: 23.7.0
-    hooks:
-      - id: black
-
-  - repo: https://github.com/asottile/blacken-docs
-    rev: 1.15.0
-    hooks:
-      - id: blacken-docs
-        additional_dependencies:
-          - black==22.10.0
-
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: "v0.0.280"
-    hooks:
-      - id: ruff
-
-  - repo: https://github.com/RobertCraigie/pyright-python
-    rev: v1.1.318
+  - repo: local
     hooks:
       - id: pyright
-
-  - repo: https://github.com/rtts/djhtml
-    rev: 3.0.6
-    hooks:
-      - id: djhtml
-        args:
-          - --tabwidth=2
-
-  - repo: https://github.com/thibaudcolas/curlylint
-    rev: v0.13.1
-    hooks:
+        name: Run pyright
+        entry: hatch run lint:run-pyright
+        language: system
+        files: \.py$
+      - id: black
+        name: Run black
+        entry: hatch run lint:run-black
+        language: system
+        files: \.py$
+      - id: ruff
+        name: Run ruff
+        entry: hatch run lint:run-ruff
+        language: system
+        files: \.py$
       - id: curlylint
+        name: Run curlylint
+        entry: hatch run lint:run-curlylint
+        language: system
+        files: \.html$

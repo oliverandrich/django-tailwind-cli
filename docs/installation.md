@@ -1,6 +1,6 @@
 ---
 hide:
-    - navigation
+  - navigation
 ---
 
 # Installation
@@ -9,50 +9,50 @@ hide:
 
 1. Install the library.
 
-    ```shell
-    python -m pip install django-tailwind-cli
-    ```
+   ```shell
+   python -m pip install django-tailwind-cli
+   ```
 
 2. Add `django_tailwind_cli` to `INSTALLED_APPS` in `settings.py`.
 
-    ```python
-    INSTALLED_APPS = [
-        # other Django apps
-        "django_tailwind_cli",
-    ]
-    ```
+   ```python
+   INSTALLED_APPS = [
+       # other Django apps
+       "django_tailwind_cli",
+   ]
+   ```
 
 3. Configure the `STATICFILES_DIRS` parameter in your `settings.py` if not already configured.
 
-    ```python
-    STATICFILES_DIRS = [BASE_DIR / "assets"]
-    ```
+   ```python
+   STATICFILES_DIRS = [BASE_DIR / "assets"]
+   ```
 
 4. Add template code.
 
-    ```htmldjango
-    {% load tailwind_cli %}
-    ...
-    <head>
-      ...
-      {% tailwind_css %}
-      ...
-    </head>
-    ```
+   ```htmldjango
+   {% load tailwind_cli %}
+   ...
+   <head>
+     ...
+     {% tailwind_css %}
+     ...
+   </head>
+   ```
 
 5. Start the debug server or start the Tailwind CLI in watch mode.
 
-    ```shell
-    python manage.py tailwind runserver
-    ```
+   ```shell
+   python manage.py tailwind runserver
+   ```
 
-    Or
+   Or
 
-    ```shell
-    python manage.py tailwind watch
-    ```
+   ```shell
+   python manage.py tailwind watch
+   ```
 
-    If you only start the Tailwind CLI in watch mode, you have to start the debug server with the standard command `python manage.py runserver` seperately.
+   If you only start the Tailwind CLI in watch mode, you have to start the debug server with the standard command `python manage.py runserver` seperately.
 
 ## Optional steps
 
@@ -62,43 +62,43 @@ If you enjoy automatic reloading during development. Install the [django-browser
 
 1. Install `django-browser-reload` inside your Django project.
 
-    ```shell
-    python -m pip install django-browser-reload
-    ```
+   ```shell
+   python -m pip install django-browser-reload
+   ```
 
 2. Ensure you have `django.contrib.staticfiles` in your `INSTALLED_APPS`.
 
 3. Add `django_browser_reload` app to your `INSTALLED_APPS`.
 
-    ```python
-    INSTALLED_APPS = [
-        ...,
-        "django_browser_reload",
-        ...,
-    ]
-    ```
+   ```python
+   INSTALLED_APPS = [
+       ...,
+       "django_browser_reload",
+       ...,
+   ]
+   ```
 
 4. Include the app URL’s in your root URLconf(s).
 
-    ```python
-    from django.urls import include, path
+   ```python
+   from django.urls import include, path
 
-    urlpatterns = [
-        ...,
-        path("__reload__/", include("django_browser_reload.urls")),
-    ]
-    ```
+   urlpatterns = [
+       ...,
+       path("__reload__/", include("django_browser_reload.urls")),
+   ]
+   ```
 
 5. Add the middleware.
 
-    ```python
-    MIDDLEWARE = [
-        # ...
-        "django_browser_reload.middleware.BrowserReloadMiddleware",
-        # ...
-    ]
-    ```
+   ```python
+   MIDDLEWARE = [
+       # ...
+       "django_browser_reload.middleware.BrowserReloadMiddleware",
+       # ...
+   ]
+   ```
 
-    The middleware should be listed after any that encodes the response, such as Django’s GZipMiddleware.
+   The middleware should be listed after any that encodes the response, such as Django’s GZipMiddleware.
 
-    The middleware automatically inserts the required script tag on HTML responses before </body> when DEBUG is True. It does so to every HTML response, meaning it will be included on Django’s debug pages, admin pages, etc. If you want more control, you can instead insert the script tag in your templates—see below.
+   The middleware automatically inserts the required script tag on HTML responses before </body> when DEBUG is True. It does so to every HTML response, meaning it will be included on Django’s debug pages, admin pages, etc. If you want more control, you can instead insert the script tag in your templates—see below.

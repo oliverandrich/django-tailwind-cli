@@ -1,6 +1,6 @@
 ---
 hide:
-    - navigation
+  - navigation
 ---
 
 --8<-- "README.md"

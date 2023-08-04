@@ -33,6 +33,7 @@ nav:
   - "settings.md"
   - "template_tags.md"
   - "base_template.md"
+  - "development.md"
   - Changelog: "changelog.md"
 markdown_extensions:
   - def_list

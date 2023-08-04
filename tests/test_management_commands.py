@@ -10,6 +10,7 @@ from unittest.mock import MagicMock
 from django.conf import settings
 from django.core.management import CommandError, call_command
 from django.test import SimpleTestCase
+
 from django_tailwind_cli.management.commands.tailwind import DEFAULT_TAILWIND_CONFIG
 from django_tailwind_cli.management.commands.tailwind import Command as TailwindCommand
 from django_tailwind_cli.utils import Config

@@ -1,97 +1,164 @@
-[tool.poetry]
-name = "django-tailwind-cli"
-version = "2.0.6"
-description = "Django and Tailwind integration based on the prebuilt Tailwind CSS CLI."
-license = "MIT"
-authors = ["Oliver Andrich <oliver@andrich.me>"]
-readme = "README.md"
-homepage = "https://oliverandrich.github.io/django-tailwind-cli/"
-repository = "https://github.com/oliverandrich/django-tailwind-cli"
-keywords = ["django", "tailwind", "css"]
-classifiers = [
-    "Development Status :: 5 - Production/Stable",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Operating System :: OS Independent",
-    "Topic :: Software Development :: Libraries",
-    "Topic :: Utilities",
-    "Environment :: Web Environment",
-    "Framework :: Django :: 3.2",
-    "Framework :: Django :: 4.1",
-    "Framework :: Django :: 4.2",
-]
-packages = [{ include = "django_tailwind_cli", from = "src" }]
-
-[tool.poetry.urls]
-"Mastodon" = "https://2pxnl.de/@oliver"
-
-[tool.poetry.dependencies]
-python = ">=3.8,<4"
-django = ">=3.2,<4.3"
-certifi = "*"
-
-[tool.poetry.group.dev.dependencies]
-django-types = "^0.17.0"
-mkdocs-material = "^9.1.5"
-tox = "^4.6.4"
-tox-gh-actions = "^3.1.3"
-django-rich = "^1.7.0"
-
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
+[project]
+name = "django-tailwind-cli"
+dynamic = ["version"]
+description = 'Django and Tailwind integration based on the prebuilt Tailwind CSS CLI.'
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+keywords = ["django", "tailwind", "css"]
+authors = [{ name = "Oliver Andrich", email = "oliver@andrich.me" }]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Operating System :: OS Independent",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: Utilities",
+  "Environment :: Web Environment",
+  "Framework :: Django :: 3.2",
+  "Framework :: Django :: 4.1",
+  "Framework :: Django :: 4.2",
+]
+dependencies = ["django>=3.2,<5.0", "certifi"]
+
+[project.urls]
+Documentation = "https://django-tailwind-cli.andrich.me/"
+Issues = "https://github.com/oliverandrich/django-tailwind-cli/issues"
+Source = "https://github.com/oliverandrich/django-tailwind-cli"
+
+[tool.hatch.version]
+path = "src/django_tailwind_cli/__version__.py"
+
+# Default environment
+[tool.hatch.envs.default]
+dependencies = ["django-types"]
+
+# Test environment
+[[tool.hatch.envs.test.matrix]]
+python = ["3.8", "3.9", "3.10", "3.11", "3.12"]
+django = ["3.2", "4.1", "4.2"]
+
+[tool.hatch.envs.test]
+dependencies = ["django-rich", "coverage[toml]", "django~={matrix:django}.0"]
+
+[tool.hatch.envs.test.scripts]
+test = "python -m django test --settings tests.settings"
+test-cov = "coverage run -m django test --settings tests.settings"
+cov-report = ["coverage combine", "coverage report"]
+cov = ["test-cov", "cov-report"]
+
+# Lint environment
+[tool.hatch.envs.lint]
+dependencies = ["pyright", "django-types", "curlylint", "black", "ruff"]
+
+[tool.hatch.envs.lint.scripts]
+run-pyright = "pyright {args:.}"
+run-black = "black --quiet --check --diff {args:.}"
+run-ruff = "ruff check --quiet {args:.}"
+run-curlylint = "curlylint {args:.}"
+python = ["run-pyright", "run-black", "run-ruff"]
+templates = ["run-curlylint"]
+all = ["python", "templates"]
+
+# Docs environment
+[tool.hatch.envs.docs]
+dependencies = ["mkdocs-material"]
+
+[tool.hatch.envs.docs.scripts]
+build = "mkdocs build --clean --strict"
+serve = "mkdocs serve"
+
+# Black
 [tool.black]
 target-version = ["py38"]
 line-length = 120
+skip-string-normalization = true
 
+# Pyright
 [tool.pyright]
-venvPath = "."
-venv = ".venv"
 typeCheckingMode = "strict"
 
-[tool.coverage.run]
-omit = ["*/tests/*"]
-
+# Ruff
 [tool.ruff]
-select = ["A", "B", "C4", "D", "E", "F", "I", "DJ", "INP", "TID", "UP", "YTT"]
-ignore = ["D202", "D203", "D212"]
-fixable = ["A", "B", "C4", "D", "E", "F", "I", "TID", "UP"]
-unfixable = []
-exclude = [
-    ".bzr",
-    ".direnv",
-    ".eggs",
-    ".git",
-    ".github",
-    ".hg",
-    ".ruff_cache",
-    ".svn",
-    ".tox",
-    ".venv",
-    "__pypackages__",
-    "_build",
-    "build",
-    "dist",
-    "migrations",
-    "node_modules",
-    "static",
-]
-line-length = 120
-dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 target-version = "py38"
+line-length = 120
+select = [
+  "A",
+  "ARG",
+  "B",
+  "C",
+  "DJ",
+  "DTZ",
+  "E",
+  "EM",
+  "F",
+  "FBT",
+  "I",
+  "ICN",
+  "ISC",
+  "N",
+  "PLC",
+  "PLE",
+  "PLR",
+  "PLW",
+  "Q",
+  "RUF",
+  "S",
+  "T",
+  "TID",
+  "UP",
+  "W",
+  "YTT",
+]
+ignore = [
+  # Allow non-abstract empty methods in abstract base classes
+  "B027",
+  # Allow boolean positional values in function calls, like `dict.get(... True)`
+  "FBT003",
+  # Ignore checks for possible passwords
+  "S105",
+  "S106",
+  "S107",
+  # Ignore complexity
+  "C901",
+  "PLR0911",
+  "PLR0912",
+  "PLR0913",
+  "PLR0915",
+]
+unfixable = [
+  # Don't touch unused imports
+  "F401",
+]
 
-[tool.ruff.mccabe]
-max-complexity = 10
+[tool.ruff.isort]
+known-first-party = ["django_tailwind_cli"]
+
+[tool.ruff.flake8-tidy-imports]
+ban-relative-imports = "all"
 
 [tool.ruff.per-file-ignores]
-"__init__.py" = ["D104"]
-"apps.py" = ["D100", "D101"]
-"conftest.py" = ["D100"]
-"settings.py" = ["D100"]
-"test_*.py" = ["D100"]
+"tests/**/*" = ["PLR2004", "S101", "TID252"]
+
+# Coverage
+[tool.coverage.run]
+source_pkgs = ["django_tailwind_cli"]
+branch = true
+parallel = true
+omit = ["src/django_tailwind_cli/__version__.py"]
+
+[tool.coverage.paths]
+django_tailwind_cli = ["src/django_tailwind_cli"]
+tests = ["tests"]
+
+[tool.coverage.report]
+exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]

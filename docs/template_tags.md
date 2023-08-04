@@ -1,6 +1,6 @@
 ---
 hide:
-    - navigation
+  - navigation
 ---
 
 # Template Tags
@@ -21,15 +21,15 @@ Put this template tag in the head of your base template. It includes the `link`-
 
 Depending on the value of the variable `settings.DEBUG` it also activates preloading.
 
--   `DEBUG = False` creates the following output:
+- `DEBUG = False` creates the following output:
 
-    ```html
-    <link rel="preload" href="/static/css/styles.css" as="style" />
-    <link rel="stylesheet" href="/static/css/styles.css" />
-    ```
+  ```html
+  <link rel="preload" href="/static/css/styles.css" as="style" />
+  <link rel="stylesheet" href="/static/css/styles.css" />
+  ```
 
--   `DEBUG = True` creates this output:
+- `DEBUG = True` creates this output:
 
-    ```html
-    <link rel="stylesheet" href="/static/css/styles.css" />
-    ```
+  ```html
+  <link rel="stylesheet" href="/static/css/styles.css" />
+  ```

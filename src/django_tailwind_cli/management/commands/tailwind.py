@@ -18,7 +18,7 @@ from django_tailwind_cli.utils import Config
 class Command(BaseCommand):
     """Create and manage a Tailwind CSS theme."""
 
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, *args: Any, **kwargs: Any):
         """Initialize the command."""
 
         super().__init__(*args, **kwargs)
@@ -28,7 +28,8 @@ class Command(BaseCommand):
         try:
             self.config.validate_settings()
         except Exception as e:
-            raise CommandError("Configuration error") from e
+            msg = "Configuration error"
+            raise CommandError(msg) from e
 
     def add_arguments(self, parser: Any) -> None:
         """Add arguments to the command."""
@@ -43,7 +44,7 @@ class Command(BaseCommand):
         )
         runserver_parser.add_argument("addrport", nargs="?", help="Optional port number, or ipaddr:port")
 
-    def handle(self, *args: Any, **kwargs: Any) -> None:
+    def handle(self, *_args: Any, **kwargs: Any) -> None:
         """Perform the command's actions."""
 
         # Get the subcommand from the kwargs.
@@ -57,16 +58,16 @@ class Command(BaseCommand):
 
         # Start the subcommand.
         if label == "build":
-            self.build(*args[1:], **kwargs)
+            self.build()
         elif label == "watch":
-            self.watch(*args[1:], **kwargs)
+            self.watch()
         elif label == "runserver":  # pragma: no cover
-            self.runserver(*args[1:], **kwargs)
+            self.runserver(**kwargs)
 
-    def build(self, *args: Any, **kwargs: Any) -> None:
+    def build(self) -> None:
         """Build a minified production ready CSS file."""
         try:
-            subprocess.run(self.get_build_cmd(), cwd=settings.BASE_DIR, check=True)
+            subprocess.run(self.get_build_cmd(), cwd=settings.BASE_DIR, check=True)  # noqa: S603
         except KeyboardInterrupt:
             self.stdout.write(self.style.ERROR("Canceled building production stylesheet."))
         else:
@@ -74,14 +75,14 @@ class Command(BaseCommand):
                 self.style.SUCCESS(f"Built production stylesheet '{self.config.get_full_dist_css_path()}'.")
             )
 
-    def watch(self, *args: Any, **kwargs: Any) -> None:
+    def watch(self) -> None:
         """Start Tailwind CLI in watch mode during development."""
         try:
-            subprocess.run(self.get_watch_cmd(), cwd=settings.BASE_DIR, check=True)
+            subprocess.run(self.get_watch_cmd(), cwd=settings.BASE_DIR, check=True)  # noqa: S603
         except KeyboardInterrupt:
             self.stdout.write(self.style.SUCCESS("Stopped watching for changes."))
 
-    def runserver(self, *args: Any, **kwargs: Any) -> None:  # pragma: no cover
+    def runserver(self, **kwargs: Any) -> None:  # pragma: no cover
         """Start the Django development server and the Tailwind CLI in watch mode."""
 
         # Start the watch process in a separate process.
@@ -164,7 +165,7 @@ class Command(BaseCommand):
             self.stdout.write(self.style.WARNING(f"Downloading Tailwind CSS CLI from '{download_url}'"))
             dest_file.parent.mkdir(parents=True, exist_ok=True)
             certifi_context = ssl.create_default_context(cafile=certifi.where())
-            with urllib.request.urlopen(download_url, context=certifi_context) as source, dest_file.open(
+            with urllib.request.urlopen(download_url, context=certifi_context) as source, dest_file.open(  # noqa: S310
                 mode="wb"
             ) as dest:
                 shutil.copyfileobj(source, dest)

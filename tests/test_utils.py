@@ -2,6 +2,7 @@ import shutil
 from tempfile import mkdtemp
 
 from django.test import SimpleTestCase
+
 from django_tailwind_cli.utils import Config
 
 
