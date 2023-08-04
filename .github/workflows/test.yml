@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
     steps:
       - uses: actions/checkout@v3
@@ -40,7 +40,7 @@ jobs:
         run: hatch run lint:all
 
       - name: Run tests
-        run: hatch run +py={{ matrix.python-version }} test:test
+        run: hatch run test:test
 
       - name: Restore cache hatch virtual environments
         id: cache-venvs-save
