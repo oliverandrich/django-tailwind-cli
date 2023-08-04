@@ -18,6 +18,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+          caching: "pip"
 
       - name: Ensure latest pip
         run: python -m pip install --upgrade pip
@@ -25,8 +26,25 @@ jobs:
       - name: Install hatch
         run: python -m pip install hatch
 
+      - name: Configure hatch
+        run: hatch config set "dirs.env.virtual" ".venv"
+
+      - name: Restore cache hatch virtual environments
+        id: cache-venvs-restore
+        uses: actions/cache/restore@v3
+        with:
+          path: .venv
+          key: ${{ matrix.python-version }}-venvs
+
       - name: Run lint
         run: hatch run lint:all
 
       - name: Run tests
         run: hatch run test:test
+
+      - name: Restore cache hatch virtual environments
+        id: cache-venvs-save
+        uses: actions/cache/save@v3
+        with:
+          path: .venv
+          key: ${{ steps.cache-venvs-restore.outputs.cache-primary-key }}
