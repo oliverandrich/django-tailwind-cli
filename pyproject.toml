@@ -44,8 +44,16 @@ dependencies = ["django-types"]
 
 # Test environment
 [[tool.hatch.envs.test.matrix]]
-python = ["3.8", "3.9", "3.10", "3.11", "3.12"]
-django = ["3.2", "4.1", "4.2"]
+python = ["3.8", "3.9", "3.10"]
+django = ["3.2"]
+
+[[tool.hatch.envs.test.matrix]]
+python = ["3.8", "3.9", "3.10", "3.11"]
+django = ["4.1", "4.2"]
+
+[[tool.hatch.envs.test.matrix]]
+python = ["3.12"]
+django = ["4.2"]
 
 [tool.hatch.envs.test]
 dependencies = ["django-rich", "coverage[toml]", "django~={matrix:django}.0"]
