@@ -84,6 +84,7 @@ dependencies = ["mkdocs-material"]
 [tool.hatch.envs.docs.scripts]
 build = "mkdocs build --clean --strict"
 serve = "mkdocs serve"
+deploy = "mkdocs gh-deploy"
 
 # Black
 [tool.black]

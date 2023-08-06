@@ -23,9 +23,6 @@ jobs:
       - name: Install hatch
         run: python -m pip install hatch
 
-      - name: Configure hatch
-        run: hatch config set "dirs.env.virtual" ".venv"
-
       - name: Built
         run: hatch build
 
@@ -36,7 +33,4 @@ jobs:
         run: hatch publish
 
       - name: Deploy docs
-        uses: mhausenblas/mkdocs-deploy-gh-pages@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CUSTOM_DOMAIN: django-tailwind-cli.andrich.me
+        run: hatch run docs:deploy
