@@ -234,6 +234,7 @@ class ListTemplateCommandTestCase(MockedNetworkingProcessesAndShellToolsTestCase
         self.assertIn("templates/tailwind_cli/base.html", out.getvalue().strip())
         self.assertIn("templates/tailwind_cli/tailwind_css.html", out.getvalue().strip())
 
+
 @contextmanager
 def captured_output():
     """Capture the output of a function."""

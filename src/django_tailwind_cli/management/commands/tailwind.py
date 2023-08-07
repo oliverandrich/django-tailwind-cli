@@ -182,9 +182,12 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(f"Created Tailwind CSS config at '{tailwind_config_file}'"))
 
 
-DEFAULT_TAILWIND_CONFIG = """/** @type {import('tailwindcss').Config} */
-const plugin = require("tailwindcss/plugin");""" + f"""
-const projectRoot = '{settings.BASE_DIR}';""" + """
+DEFAULT_TAILWIND_CONFIG = (
+    """/** @type {import('tailwindcss').Config} */
+const plugin = require("tailwindcss/plugin");"""
+    f"""
+const projectRoot = '{settings.BASE_DIR}';"""
+    """
 const { spawnSync } = require('child_process');
 
 // Calls Django to fetch template files
@@ -229,3 +232,4 @@ module.exports = {
   ],
 }
 """
+)
