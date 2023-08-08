@@ -59,8 +59,8 @@ django = ["4.2"]
 dependencies = ["django-rich", "coverage[toml]", "django~={matrix:django}.0"]
 
 [tool.hatch.envs.test.scripts]
-test = "python -m django test --settings tests.settings"
-test-cov = "coverage run -m django test --settings tests.settings"
+test = "python -m django test --settings tests.settings {args}"
+test-cov = "coverage run -m django test --settings tests.settings {args}"
 cov-report = ["coverage combine", "coverage report"]
 cov = ["test-cov", "cov-report"]
 

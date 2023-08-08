@@ -1,16 +1,19 @@
 """`tailwind` management command."""
 
+import os
 import shutil
 import ssl
 import subprocess
 import sys
 import urllib.request
 from multiprocessing import Process
-from typing import Any, List
+from pathlib import Path
+from typing import Any, List, Union
 
 import certifi
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
+from django.template.utils import get_app_template_dirs
 
 from django_tailwind_cli.utils import Config
 
@@ -39,6 +42,8 @@ class Command(BaseCommand):
 
         subparsers.add_parser("watch", help="Start Tailwind CLI in watch mode during development.")
 
+        subparsers.add_parser("list_templates", help="List the templates of your django project.")
+
         runserver_parser = subparsers.add_parser(
             "runserver", help="Start the Django development server and the Tailwind CLI in watch mode."
         )
@@ -63,6 +68,8 @@ class Command(BaseCommand):
             self.watch()
         elif label == "runserver":  # pragma: no cover
             self.runserver(**kwargs)
+        elif label == "list_templates":
+            self.list_templates()
 
     def build(self) -> None:
         """Build a minified production ready CSS file."""
@@ -117,6 +124,23 @@ class Command(BaseCommand):
         except KeyboardInterrupt:
             watch_process.terminate()
             debugserver_process.terminate()
+
+    def list_templates(self):
+        template_files: List[str] = []
+        app_template_dirs = get_app_template_dirs("templates")
+        for app_template_dir in app_template_dirs:
+            template_files += self.list_template_files(app_template_dir)
+        template_files += self.list_template_files(settings.TEMPLATES[0]["DIRS"])
+
+        self.stdout.write("\n".join(template_files))
+
+    def list_template_files(self, template_dir: Union[str, Path]) -> List[str]:
+        template_files: List[str] = []
+        for dirpath, _, filenames in os.walk(str(template_dir)):
+            for filename in filenames:
+                if filename.endswith(".html") or filename.endswith(".txt"):
+                    template_files.append(os.path.join(dirpath, filename))
+        return template_files
 
     def get_build_cmd(self) -> List[str]:
         """Get the command to build the CSS."""
@@ -182,19 +206,17 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(f"Created Tailwind CSS config at '{tailwind_config_file}'"))
 
 
-DEFAULT_TAILWIND_CONFIG = (
-    """/** @type {import('tailwindcss').Config} */
-const plugin = require("tailwindcss/plugin");"""
-    f"""
-const projectRoot = '{settings.BASE_DIR}';"""
-    """
+DEFAULT_TAILWIND_CONFIG = """/** @type {import('tailwindcss').Config} */
+const plugin = require("tailwindcss/plugin");
 const { spawnSync } = require('child_process');
 
 // Calls Django to fetch template files
 const getTemplateFiles = () => {
-    const command = 'python'; // Requires a virtualenv to be activated
-    const args = ['-m', 'django', 'list_templates']; // Requires cwd to be set.
-    const options = { cwd: projectRoot };
+    const command = 'python3';
+    const args = ['-m', 'django', 'list_templates'];
+    // Assumes tailwind.config.js is located in the BASE_DIR of your Django project.
+    const options = { cwd: __dirname };
+
     const result = spawnSync(command, args, options);
 
     if (result.error){
@@ -232,4 +254,3 @@ module.exports = {
   ],
 }
 """
-)

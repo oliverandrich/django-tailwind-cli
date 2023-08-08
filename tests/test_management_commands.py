@@ -65,7 +65,8 @@ class BasicManagementCommandFunctionalityTestCase(MockedNetworkingProcessesAndSh
         """Unknown subcommands to the tailwind management command raise a `CommandError`."""
 
         with self.assertRaisesRegex(
-            CommandError, r"invalid choice: 'notavalidcommand' \(choose from 'build', 'watch', 'runserver'\)"
+            CommandError,
+            r"invalid choice: 'notavalidcommand' \(choose from 'build', 'watch', 'list_templates', 'runserver'\)",
         ):
             with captured_output():
                 call_command("tailwind", "notavalidcommand")
@@ -212,7 +213,7 @@ class ListTemplateCommandTestCase(MockedNetworkingProcessesAndShellToolsTestCase
     def test_list_project_templates(self):
         """Test that the list_templates command returns our two templates."""
         with captured_output() as (out, _err):
-            call_command("list_templates")
+            call_command("tailwind", "list_templates")
         self.assertIn("templates/tailwind_cli/base.html", out.getvalue().strip())
         self.assertIn("templates/tailwind_cli/tailwind_css.html", out.getvalue().strip())
         self.assertNotIn("templates/admin", out.getvalue().strip())
@@ -229,7 +230,7 @@ class ListTemplateCommandTestCase(MockedNetworkingProcessesAndShellToolsTestCase
         ]
         with self.settings(INSTALLED_APPS=admin_installed_apps):
             with captured_output() as (out, _err):
-                call_command("list_templates")
+                call_command("tailwind", "list_templates")
         self.assertIn("templates/admin", out.getvalue().strip())
         self.assertIn("templates/tailwind_cli/base.html", out.getvalue().strip())
         self.assertIn("templates/tailwind_cli/tailwind_css.html", out.getvalue().strip())
