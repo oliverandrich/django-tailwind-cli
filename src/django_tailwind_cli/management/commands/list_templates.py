@@ -1,13 +1,12 @@
 # Based on https://noumenal.es/notes/tailwind/django-integration/
 import os
+from pathlib import Path
 from typing import TYPE_CHECKING, Any, List, Union
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.template.utils import get_app_template_dirs
 
-if TYPE_CHECKING:
-    from pathlib import Path
 
 
 class Command(BaseCommand):
