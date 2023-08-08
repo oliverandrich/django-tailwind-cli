@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 
 class Command(BaseCommand):
-    def handle(self, *args: Any, **options: Any) -> None:
+    def handle(self, *args: Any, **options: Any) -> None:  # noqa: ARG002
         template_files: List[str] = []
         app_template_dirs = get_app_template_dirs("templates")
         for app_template_dir in app_template_dirs:
