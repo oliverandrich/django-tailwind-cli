@@ -31,6 +31,3 @@ jobs:
           HATCH_INDEX_USER: "__token__"
           HATCH_INDEX_AUTH: "${{ secrets.PYPI_TOKEN }}"
         run: hatch publish
-
-      - name: Deploy docs
-        run: hatch run docs:deploy
