@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.2.0
+
+- [#49](https://github.com/oliverandrich/django-tailwind-cli/pull/49) by [@andrlik](https://github.com/andrlik) added a new management command `tailwind list_templates`.
+- The new default config uses this command to implent the idea of Calton Gibson outlined in his blog post [Using Django’s template loaders to configure Tailwind](https://noumenal.es/notes/tailwind/django-integration/).
+
 ## 2.1.1
 
 - Switched from poetry to hatch for package management.
