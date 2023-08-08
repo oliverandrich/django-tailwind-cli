@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.3
+
+- Fixed a copy&paste error introduced by pasting the tailwind.config.js without proper escaping.
+
 ## 2.2.2
 
 - Fixed an error locating templates from the global template directories configured via `settings.TEMPLATES[0]["DIRS"]`.
