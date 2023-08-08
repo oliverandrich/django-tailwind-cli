@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.2
+
+- Fixed an error locating templates from the global template directories configured via `settings.TEMPLATES[0]["DIRS"]`.
+
 ## 2.2.1
 
 - Fixed a bug introduced by refactoring the changes from [#49](https://github.com/oliverandrich/django-tailwind-cli/pull/49).
