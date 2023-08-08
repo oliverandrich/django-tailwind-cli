@@ -40,12 +40,45 @@ The package can be configured by a few settings, which can be overwritten in the
 
 If you don't create a `tailwind.config.js` file yourself, the management commands will create a sane default for you inside the `BASE_DIR` of your project. The default activates all the official plugins for Tailwind CSS and adds a minimal plugin to support some variants for [HTMX](https://htmx.org/).
 
+The default configuration also embrasses the nice trick authored by Carlton Gibson in his post [Using Django’s template loaders to configure Tailwind¶](https://noumenal.es/notes/tailwind/django-integration/). The implementation adopts Carlton's implementation to honor the conventions of this project. If you put your `tailwind.config.js` in a different location then your `BASE_DIR`, you have to change this file too.
+
 ```javascript title="tailwind.config.js"
 /** @type {import('tailwindcss').Config} */
 const plugin = require("tailwindcss/plugin");
+const { spawnSync } = require("child_process");
+
+// Calls Django to fetch template files
+const getTemplateFiles = () => {
+  const command = "python3";
+  const args = ["-m", "django", "list_templates"];
+  // Assumes tailwind.config.js is located in the BASE_DIR of your Django project.
+  const options = { cwd: __dirname };
+
+  const result = spawnSync(command, args, options);
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  if (result.status !== 0) {
+    console.log(result.stdout.toString(), result.stderr.toString());
+    throw new Error(
+      `Django management command exited with code ${result.status}`
+    );
+  }
+
+  const templateFiles = result.stdout
+    .toString()
+    .split("\n")
+    .map((file) => file.trim())
+    .filter(function (e) {
+      return e;
+    }); // Remove empty strings, including last empty line.
+  return templateFiles;
+};
 
 module.exports = {
-  content: ["./templates/**/*.html", "**/templates/**/*.html"],
+  content: [].concat(getTemplateFiles()),
   theme: {
     extend: {},
   },
