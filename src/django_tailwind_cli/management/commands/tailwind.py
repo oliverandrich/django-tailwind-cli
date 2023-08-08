@@ -234,7 +234,7 @@ const getTemplateFiles = () => {
 
   const templateFiles = result.stdout
     .toString()
-    .split("\n")
+    .split("\\n")
     .map((file) => file.trim())
     .filter(function (e) {
       return e;
