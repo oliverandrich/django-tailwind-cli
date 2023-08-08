@@ -130,7 +130,9 @@ class Command(BaseCommand):
         app_template_dirs = get_app_template_dirs("templates")
         for app_template_dir in app_template_dirs:
             template_files += self.list_template_files(app_template_dir)
-        template_files += self.list_template_files(str(settings.TEMPLATES[0]["DIRS"]))
+
+        for template_dir in settings.TEMPLATES[0]["DIRS"]:
+            template_files += self.list_template_files(template_dir)
 
         self.stdout.write("\n".join(template_files))
 
@@ -239,8 +241,6 @@ const getTemplateFiles = () => {
     }); // Remove empty strings, including last empty line.
   return templateFiles;
 };
-
-console.log(getTemplateFiles());
 
 module.exports = {
   content: [].concat(getTemplateFiles()),
