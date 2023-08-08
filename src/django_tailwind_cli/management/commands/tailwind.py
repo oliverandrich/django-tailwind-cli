@@ -182,14 +182,39 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(f"Created Tailwind CSS config at '{tailwind_config_file}'"))
 
 
-DEFAULT_TAILWIND_CONFIG = """/** @type {import('tailwindcss').Config} */
-const plugin = require("tailwindcss/plugin");
+DEFAULT_TAILWIND_CONFIG = (
+    """/** @type {import('tailwindcss').Config} */
+const plugin = require("tailwindcss/plugin");"""
+    f"""
+const projectRoot = '{settings.BASE_DIR}';"""
+    """
+const { spawnSync } = require('child_process');
+
+// Calls Django to fetch template files
+const getTemplateFiles = () => {
+    const command = 'python'; // Requires a virtualenv to be activated
+    const args = ['-m', 'django', 'list_templates']; // Requires cwd to be set.
+    const options = { cwd: projectRoot };
+    const result = spawnSync(command, args, options);
+
+    if (result.error){
+        throw result.error;
+    }
+
+    if (result.status !== 0){
+        console.log(result.stdout.toString(), result.stderr.toString());
+        throw new Error(`Django management command exited with code ${result.status}`);
+    }
+
+    const templateFiles = result.stdout.toString()
+        .split('\n')
+        .map((file) => file.trim())
+        .filter(function(e){return e}); // Remove empty strings, including last empty line.
+    return templateFiles;
+}
 
 module.exports = {
-  content: [
-    './templates/**/*.html',
-    '**/templates/**/*.html',
-  ],
+  content: [].concat(getTemplateFiles()),
   theme: {
     extend: {},
   },
@@ -207,3 +232,4 @@ module.exports = {
   ],
 }
 """
+)

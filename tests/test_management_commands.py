@@ -206,6 +206,35 @@ class WatchCommandTestCase(MockedNetworkingProcessesAndShellToolsTestCase):
             self.assertIn("--input", build_cmd)
 
 
+class ListTemplateCommandTestCase(MockedNetworkingProcessesAndShellToolsTestCase):
+    """Test that list_templates command works."""
+
+    def test_list_project_templates(self):
+        """Test that the list_templates command returns our two templates."""
+        with captured_output() as (out, _err):
+            call_command("list_templates")
+        self.assertIn("templates/tailwind_cli/base.html", out.getvalue().strip())
+        self.assertIn("templates/tailwind_cli/tailwind_css.html", out.getvalue().strip())
+        self.assertNotIn("templates/admin", out.getvalue().strip())
+
+    def test_list_all_templates(self):
+        """Test that app templates are also included."""
+        admin_installed_apps = [
+            "django.contrib.contenttypes",
+            "django.contrib.messages",
+            "django.contrib.auth",
+            "django.contrib.admin",
+            "django.contrib.staticfiles",
+            "django_tailwind_cli",
+        ]
+        with self.settings(INSTALLED_APPS=admin_installed_apps):
+            with captured_output() as (out, _err):
+                call_command("list_templates")
+        self.assertIn("templates/admin", out.getvalue().strip())
+        self.assertIn("templates/tailwind_cli/base.html", out.getvalue().strip())
+        self.assertIn("templates/tailwind_cli/tailwind_css.html", out.getvalue().strip())
+
+
 @contextmanager
 def captured_output():
     """Capture the output of a function."""
