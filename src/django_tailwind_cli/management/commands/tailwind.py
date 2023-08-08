@@ -130,7 +130,7 @@ class Command(BaseCommand):
         app_template_dirs = get_app_template_dirs("templates")
         for app_template_dir in app_template_dirs:
             template_files += self.list_template_files(app_template_dir)
-        template_files += self.list_template_files(settings.TEMPLATES[0]["DIRS"])
+        template_files += self.list_template_files(str(settings.TEMPLATES[0]["DIRS"]))
 
         self.stdout.write("\n".join(template_files))
 
@@ -208,32 +208,39 @@ class Command(BaseCommand):
 
 DEFAULT_TAILWIND_CONFIG = """/** @type {import('tailwindcss').Config} */
 const plugin = require("tailwindcss/plugin");
-const { spawnSync } = require('child_process');
+const { spawnSync } = require("child_process");
 
 // Calls Django to fetch template files
 const getTemplateFiles = () => {
-    const command = 'python3';
-    const args = ['-m', 'django', 'list_templates'];
-    // Assumes tailwind.config.js is located in the BASE_DIR of your Django project.
-    const options = { cwd: __dirname };
+  const command = "python3";
+  const args = ["-m", "django", "tailwind", "list_templates"];
+  // Assumes tailwind.config.js is located in the BASE_DIR of your Django project.
+  const options = { cwd: __dirname };
 
-    const result = spawnSync(command, args, options);
+  const result = spawnSync(command, args, options);
 
-    if (result.error){
-        throw result.error;
-    }
+  if (result.error) {
+    throw result.error;
+  }
 
-    if (result.status !== 0){
-        console.log(result.stdout.toString(), result.stderr.toString());
-        throw new Error(`Django management command exited with code ${result.status}`);
-    }
+  if (result.status !== 0) {
+    console.log(result.stdout.toString(), result.stderr.toString());
+    throw new Error(
+      `Django management command exited with code ${result.status}`
+    );
+  }
 
-    const templateFiles = result.stdout.toString()
-        .split('\n')
-        .map((file) => file.trim())
-        .filter(function(e){return e}); // Remove empty strings, including last empty line.
-    return templateFiles;
-}
+  const templateFiles = result.stdout
+    .toString()
+    .split("\n")
+    .map((file) => file.trim())
+    .filter(function (e) {
+      return e;
+    }); // Remove empty strings, including last empty line.
+  return templateFiles;
+};
+
+console.log(getTemplateFiles());
 
 module.exports = {
   content: [].concat(getTemplateFiles()),
@@ -241,10 +248,10 @@ module.exports = {
     extend: {},
   },
   plugins: [
-    require('@tailwindcss/typography'),
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/aspect-ratio'),
-    require('@tailwindcss/container-queries'),
+    require("@tailwindcss/typography"),
+    require("@tailwindcss/forms"),
+    require("@tailwindcss/aspect-ratio"),
+    require("@tailwindcss/container-queries"),
     plugin(function ({ addVariant }) {
       addVariant("htmx-settling", ["&.htmx-settling", ".htmx-settling &"]);
       addVariant("htmx-request", ["&.htmx-request", ".htmx-request &"]);
@@ -252,5 +259,5 @@ module.exports = {
       addVariant("htmx-added", ["&.htmx-added", ".htmx-added &"]);
     }),
   ],
-}
+};
 """
