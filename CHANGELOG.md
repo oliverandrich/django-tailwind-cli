@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.1
+
+- Fixed a bug introduced by refactoring the changes from [#49](https://github.com/oliverandrich/django-tailwind-cli/pull/49).
+
 ## 2.2.0
 
 - [#49](https://github.com/oliverandrich/django-tailwind-cli/pull/49) by [@andrlik](https://github.com/andrlik) added a new management command `tailwind list_templates`.
