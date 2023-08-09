@@ -216,6 +216,7 @@ class ListTemplateCommandTestCase(MockedNetworkingProcessesAndShellToolsTestCase
             call_command("tailwind", "list_templates")
         self.assertIn("templates/tailwind_cli/base.html", out.getvalue().strip())
         self.assertIn("templates/tailwind_cli/tailwind_css.html", out.getvalue().strip())
+        self.assertIn("templates/tests/base.html", out.getvalue().strip())
         self.assertNotIn("templates/admin", out.getvalue().strip())
 
     def test_list_all_templates(self):

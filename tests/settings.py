@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 import pathlib
-from tempfile import mkdtemp
 from typing import Any
 
-BASE_DIR = pathlib.Path(mkdtemp())
+BASE_DIR = pathlib.Path(__file__).resolve().parent
 
 DEBUG = False
 
@@ -32,7 +31,7 @@ MIDDLEWARE = [
 TEMPLATES: list[dict[str, Any]] = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
