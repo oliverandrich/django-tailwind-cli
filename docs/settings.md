@@ -44,6 +44,14 @@ The default configuration also embrasses the nice trick authored by Carlton Gibs
 
 This configuration uses the management command `tailwind list_templates`, which list all the templates files inside your project.
 
+!!! warning "Editor Integration besides VS Code"
+
+    The following default configuration tries to be as smart as possible to find all the templates inside your project and installed dependencies. This works like a charm when you run the debug server using `python manage.py tailwind runserver`. It also works if you start VSCode with `code .` from within the active virtual environment.
+
+    But it does not work with Sublime Text and the lsp-tailwindcss package or with the various LSP packages for (neo)vim. The reason is, that these intergrations not honoring the active virtual environment when being started. If you have an idea to solve this, patches are welcome.
+
+    **With editors besides VS Code please use the simple config at the end of this page.**
+
 ```javascript title="tailwind.config.js"
 /** @type {import('tailwindcss').Config} */
 const plugin = require("tailwindcss/plugin");
@@ -81,6 +89,32 @@ const getTemplateFiles = () => {
 
 module.exports = {
   content: [].concat(getTemplateFiles()),
+  theme: {
+    extend: {},
+  },
+  plugins: [
+    require("@tailwindcss/typography"),
+    require("@tailwindcss/forms"),
+    require("@tailwindcss/aspect-ratio"),
+    require("@tailwindcss/container-queries"),
+    plugin(function ({ addVariant }) {
+      addVariant("htmx-settling", ["&.htmx-settling", ".htmx-settling &"]);
+      addVariant("htmx-request", ["&.htmx-request", ".htmx-request &"]);
+      addVariant("htmx-swapping", ["&.htmx-swapping", ".htmx-swapping &"]);
+      addVariant("htmx-added", ["&.htmx-added", ".htmx-added &"]);
+    }),
+  ],
+};
+```
+
+### Simple Config for Sublime Text and (neo)vim
+
+```javascript title="tailwind.config.js"
+/** @type {import('tailwindcss').Config} */
+const plugin = require("tailwindcss/plugin");
+
+module.exports = {
+  content: ["./templates/**/*.html", "**/templates/**/*.html"],
   theme: {
     extend: {},
   },
