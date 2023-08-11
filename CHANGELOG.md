@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.3.0
+
+- Changed default config to support lsp-tailwindcss
+
+  "python3 -m django" was replaced with "python manage.py" so that the dynamic
+  configuration of the content selector in tailwind.config.js also works inside
+  the language server for Tailwind CSS in VSCode, Sublime, etc.
+
 ## 2.2.3
 
 - Fixed a copy&paste error introduced by pasting the tailwind.config.js without proper escaping.
