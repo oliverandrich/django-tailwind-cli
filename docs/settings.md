@@ -52,7 +52,7 @@ const { spawnSync } = require("child_process");
 // Calls Django to fetch template files
 const getTemplateFiles = () => {
   const command = "python3";
-  const args = ["-m", "django", "tailwind", "list_templates"];
+  const args = ["manage.py", "tailwind", "list_templates"];
   // Assumes tailwind.config.js is located in the BASE_DIR of your Django project.
   const options = { cwd: __dirname };
 
