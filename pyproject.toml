@@ -28,7 +28,10 @@ classifiers = [
   "Framework :: Django :: 4.1",
   "Framework :: Django :: 4.2",
 ]
-dependencies = ["django>=3.2,<5.0", "certifi"]
+dependencies = [
+  "django>=3.2,<5.0",
+  "certifi"
+]
 
 [project.urls]
 Documentation = "https://django-tailwind-cli.andrich.me/"
@@ -40,7 +43,12 @@ path = "src/django_tailwind_cli/__version__.py"
 
 # Default environment
 [tool.hatch.envs.default]
-dependencies = ["django-types"]
+dependencies = [
+  "django-types",
+  "pytest",
+  "pytest-mock",
+  "pytest-django"
+]
 
 # Test environment
 [[tool.hatch.envs.test.matrix]]
@@ -56,11 +64,21 @@ python = ["3.12"]
 django = ["4.2"]
 
 [tool.hatch.envs.test]
-dependencies = ["django-rich", "coverage[toml]", "django~={matrix:django}.0"]
+dependencies = [
+  "django~={matrix:django}.0",
+  "django-rich",
+  "pytest",
+  "pytest-django",
+  "pytest-cov",
+  "pytest-sugar",
+  "pytest-randomly",
+  "pytest-mock",
+  "syrupy"
+]
 
 [tool.hatch.envs.test.scripts]
-test = "python -m django test --settings tests.settings {args}"
-test-cov = "coverage run -m django test --settings tests.settings {args}"
+test = "pytest --no-header {args}"
+test-cov = "pytest --cov {args}"
 cov-report = ["coverage combine", "coverage report"]
 cov = ["test-cov", "cov-report"]
 
@@ -86,6 +104,13 @@ build = "mkdocs build --clean --strict"
 serve = "mkdocs serve"
 deploy = "mkdocs gh-deploy"
 
+# pytest
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "tests.settings"
+pythonpath = [".", "src"]
+django_find_project = false
+markers = ["mock_network_and_subprocess"]
+
 # Black
 [tool.black]
 target-version = ["py38"]
@@ -95,6 +120,8 @@ skip-string-normalization = true
 # Pyright
 [tool.pyright]
 typeCheckingMode = "strict"
+venvPath = ".venv"
+venv = "django-tailwind-cli"
 
 # Ruff
 [tool.ruff]
@@ -147,6 +174,8 @@ ignore = [
 unfixable = [
   # Don't touch unused imports
   "F401",
+  # Don't touch unused variables
+  "F841",
 ]
 
 [tool.ruff.isort]
