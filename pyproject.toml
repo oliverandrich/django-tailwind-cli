@@ -131,8 +131,6 @@ skip-string-normalization = true
 # Pyright
 [tool.pyright]
 typeCheckingMode = "strict"
-venvPath = ".venv"
-venv = "django-tailwind-cli"
 
 # Ruff
 [tool.ruff]
