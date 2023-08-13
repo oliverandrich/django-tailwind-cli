@@ -32,8 +32,22 @@ jobs:
       - name: Configure hatch
         run: hatch config set "dirs.env.virtual" ".venv"
 
+      - name: Restore cache hatch virtual environments
+        id: cache-venvs-restore
+        uses: actions/cache/restore@v3
+        with:
+          path: .venv
+          key: python-${{ matrix.python-version }}-venvs-${{ hashFiles('pyproject.toml') }}
+
       - name: Run lint
         run: hatch run lint:all
 
       - name: Run tests
         run: hatch run +py=${{ matrix.python-version }} test:test
+
+      - name: Save cache hatch virtual environments
+        id: cache-venvs-save
+        uses: actions/cache/save@v3
+        with:
+          path: .venv
+          key: ${{ steps.cache-venvs-restore.outputs.cache-primary-key }}

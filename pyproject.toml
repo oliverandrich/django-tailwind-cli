@@ -85,11 +85,13 @@ cov = ["test-cov", "cov-report"]
 # Lint environment
 [tool.hatch.envs.lint]
 dependencies = [
+  # Tools
   "pyright",
-  "django-types",
   "curlylint",
   "black",
   "ruff",
+  # Libraries / Typestubs
+  "django-types",
   "pytest",
   "pytest-django",
   "pytest-mock",
