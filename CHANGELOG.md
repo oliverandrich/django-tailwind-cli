@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.4.0 (Unreleased)
+
+- Back to Poetry for project management.
+
 ## 2.3.0
 
 - Changed default config to support lsp-tailwindcss
