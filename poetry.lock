@@ -269,13 +269,13 @@ bcrypt = ["bcrypt"]
 
 [[package]]
 name = "django-types"
-version = "0.17.0"
+version = "0.18.0"
 description = "Type stubs for Django"
 optional = false
 python-versions = ">=3.7,<4.0"
 files = [
-    {file = "django-types-0.17.0.tar.gz", hash = "sha256:c1c42ab78876c57c728342d5ab060725ab371fc8dc83bb85bae0be06846aad70"},
-    {file = "django_types-0.17.0-py3-none-any.whl", hash = "sha256:43d4931159524c1a08b25c1b9a4db2512b7c1234b64b1d4db4aff78881d6afd0"},
+    {file = "django-types-0.18.0.tar.gz", hash = "sha256:b8e2334c810864d7abf11cd3cdb1da3b2015b67e7f1270007e33777ff1bd8654"},
+    {file = "django_types-0.18.0-py3-none-any.whl", hash = "sha256:7c28fefecfddec1fae7a3b7fec74a12862cf45b76fc891b220fbd42ccbc44808"},
 ]
 
 [[package]]
@@ -1079,4 +1079,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8.1"
-content-hash = "a0fe2f1d56582227e20bdb09b55259b54bfefac86d48df1701b25ca22a65fa04"
+content-hash = "758dc5ed5848b55e05d623e27de5a5a2f92a7db0f737735d208c5030435e599b"
