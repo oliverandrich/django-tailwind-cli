@@ -3,6 +3,7 @@
 ## 2.4.0 (Unreleased)
 
 - Back to Poetry for project management.
+- Added optional django-extensions for the runserver_plus command.
 
 ## 2.3.0
 

@@ -32,6 +32,12 @@ packages = [{ include = "django_tailwind_cli", from = "src" }]
 python = "^3.8.1"
 django = ">=3.2,<5.0"
 certifi = "^2023.7.22"
+django-extensions = {version = "^3.2.1", optional = true}
+
+
+[tool.poetry.extras]
+"django-extensions" = ["django-extensions"]
+
 
 [tool.poetry.group.dev.dependencies]
 django-types = ">=0.17,<0.19"

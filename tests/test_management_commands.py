@@ -28,7 +28,7 @@ def test_calling_unknown_subcommand():
 
     with pytest.raises(
         CommandError,
-        match=r"invalid choice: 'notavalidcommand' \(choose from 'build', 'watch', 'list_templates', 'runserver'\)",
+        match=r"invalid choice: 'notavalidcommand' \(choose from 'build', 'watch', 'list_templates', 'runserver', 'runserver_plus'\)",
     ):
         call_command("tailwind", "notavalidcommand")
 
