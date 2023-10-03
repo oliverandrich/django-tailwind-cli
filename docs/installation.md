@@ -13,7 +13,7 @@ hide:
    python -m pip install django-tailwind-cli
    ```
 
-   with optional `django-extensions` library to use the `runserver_plus` command.
+   with optional `django-extensions` and `Werkezeug` libraries to use the `runserver_plus` command.
 
    ```shell
    python -m pip install django-tailwind-cli[django-extensions]
@@ -25,6 +25,16 @@ hide:
    INSTALLED_APPS = [
        # other Django apps
        "django_tailwind_cli",
+   ]
+   ```
+
+   If you plan to use the `runserver_plus` command, the changes to `INSTALLED_APPS` looks like that.
+
+   ```python
+   INSTALLED_APPS = [
+       # other Django apps
+       "django_tailwind_cli",
+       "django_extensions,
    ]
    ```
 
@@ -51,7 +61,7 @@ hide:
    ```shell
    python manage.py tailwind runserver
    ```
-   
+
    Or
 
    ```shell
