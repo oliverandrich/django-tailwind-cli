@@ -115,8 +115,6 @@ class Command(BaseCommand):
     def runserver(self, **kwargs: Any) -> None:  # pragma: no cover
         """Start the Django development server and the Tailwind CLI in watch mode."""
 
-        print("KWargs", kwargs)
-
         # Start the watch process in a separate process.
         watch_cmd = [sys.executable, "manage.py", "tailwind", "watch"]
         watch_process = Process(
@@ -142,8 +140,6 @@ class Command(BaseCommand):
             debugserver_cmd.append(f"--key-file={key_file}")
         if reloader_interval := kwargs.get("reloader_interval"):
             debugserver_cmd.append(f"--reloader-interval={reloader_interval}")
-
-        print("DEBUGSERVER CMD", debugserver_cmd)
 
         debugserver_process = Process(
             target=subprocess.run,
