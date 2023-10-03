@@ -23,7 +23,17 @@ The easiest way to use this library during development is to start the debug ser
 python manage.py tailwind runserver
 ```
 
-This command starts two processes. One is the standard debug server of Django which is normally started by running `python manage.py runserver`. The other is the Tailwind CLI in watch mode by running `python manage.py tailwind watch`.
+Optionally you can use `runserver_plus` which requires `django-extensions` to be installed
+```shell
+python manage.py tailwind runserver_plus
+```
+
+This command starts two processes. One is the standard debug server of Django which is normally started by running `python manage.py runserver or runserver_plus`. The other is the Tailwind CLI in watch mode by running `python manage.py tailwind watch`.
+
+Two main advantages of using `runserver_plus` are the following:
+
+- Debug server uses Werkzeug instead of the standard WSGI server for more debugging support.
+- Can also use HTTPS with a self-signed certificate for local development.
 
 ### Use the standard debug server along with Tailwind CLI in watch mode
 

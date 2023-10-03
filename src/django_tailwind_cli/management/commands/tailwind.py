@@ -47,7 +47,29 @@ class Command(BaseCommand):
         runserver_parser = subparsers.add_parser(
             "runserver", help="Start the Django development server and the Tailwind CLI in watch mode."
         )
+
         runserver_parser.add_argument("addrport", nargs="?", help="Optional port number, or ipaddr:port")
+
+        runserver_plus_parser = subparsers.add_parser(
+            "runserver_plus",
+            help="Start the Django Extensions runserver_plus development server and the Tailwind CLI in watch mode.",
+        )
+
+        runserver_plus_parser.add_argument("addrport", nargs="?", help="Optional port number, or ipaddr:port")
+
+        runserver_plus_parser.add_argument(
+            "--cert-file", help="Optional SSL certificate file to use for the development server."
+        )
+        runserver_plus_parser.add_argument(
+            "--cert", help="[DEPRECATED] Optional SSL certificate file to use for the development server."
+        )
+        runserver_plus_parser.add_argument(
+            "--key-file", help="Optional SSL certificate file to use for the development server."
+        )
+
+        runserver_plus_parser.add_argument(
+            "--reloader-interval", help="Optional SSL certificate file to use for the development server."
+        )
 
     def handle(self, *_args: Any, **kwargs: Any) -> None:
         """Perform the command's actions."""
@@ -66,7 +88,8 @@ class Command(BaseCommand):
             self.build()
         elif label == "watch":
             self.watch()
-        elif label == "runserver":  # pragma: no cover
+        elif label == "runserver" or label == "runserver_plus":  # pragma: no cover
+            kwargs["runserver_cmd"] = label
             self.runserver(**kwargs)
         elif label == "list_templates":
             self.list_templates()
@@ -104,9 +127,20 @@ class Command(BaseCommand):
         )
 
         # Start the runserver process in the current process.
-        debugserver_cmd = [sys.executable, "manage.py", "runserver"]
+        debugserver_cmd = [sys.executable, "manage.py", kwargs["runserver_cmd"]]
+
         if addrport := kwargs.get("addrport"):
             debugserver_cmd.append(addrport)
+
+        if cert_file := kwargs.get("cert_file"):
+            debugserver_cmd.append(f"--cert-file={cert_file}")
+        elif cert := kwargs.get("cert"):
+            debugserver_cmd.append(f"--cert-file={cert}")
+        if key_file := kwargs.get("key_file"):
+            debugserver_cmd.append(f"--key-file={key_file}")
+        if reloader_interval := kwargs.get("reloader_interval"):
+            debugserver_cmd.append(f"--reloader-interval={reloader_interval}")
+
         debugserver_process = Process(
             target=subprocess.run,
             args=(debugserver_cmd,),
