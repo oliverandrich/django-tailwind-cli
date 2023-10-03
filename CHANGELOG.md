@@ -3,7 +3,7 @@
 ## 2.4.0 (Unreleased)
 
 - Back to Poetry for project management.
-- Added optional django-extensions for the runserver_plus command.
+- [#57](https://github.com/oliverandrich/django-tailwind-cli/pull/57) by [@wshayes](https://github.com/wshayes) added optional django-extensions for the runserver_plus command.
 
 ## 2.3.0
 
