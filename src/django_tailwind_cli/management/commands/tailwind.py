@@ -88,7 +88,7 @@ class Command(BaseCommand):
             self.build()
         elif label == "watch":
             self.watch()
-        elif label == "runserver" or label == "runserver_plus":  # pragma: no cover
+        elif label in ("runserver", "runserver_plus"):  # pragma: no cover
             kwargs["runserver_cmd"] = label
             self.runserver(**kwargs)
         elif label == "list_templates":
