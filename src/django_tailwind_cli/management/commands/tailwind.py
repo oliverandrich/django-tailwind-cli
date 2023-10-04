@@ -1,5 +1,6 @@
 """`tailwind` management command."""
 
+import importlib.util
 import os
 import shutil
 import ssl
@@ -52,7 +53,7 @@ class Command(BaseCommand):
 
         runserver_plus_parser = subparsers.add_parser(
             "runserver_plus",
-            help="Start the Django Extensions runserver_plus development server and the Tailwind CLI in watch mode.",
+            help="Start the django-extensions runserver_plus development server and the Tailwind CLI in watch mode.",
         )
 
         runserver_plus_parser.add_argument("addrport", nargs="?", help="Optional port number, or ipaddr:port")
@@ -88,9 +89,16 @@ class Command(BaseCommand):
             self.build()
         elif label == "watch":
             self.watch()
-        elif label in ("runserver", "runserver_plus"):  # pragma: no cover
-            kwargs["runserver_cmd"] = label
+        elif label == "runserver":  # pragma: no cover
+            kwargs["runserver_cmd"] = "runserver"
             self.runserver(**kwargs)
+        elif label == "runserver_plus":  # pragma: no cover
+            if importlib.util.find_spec("django_extensions") and importlib.util.find_spec("werkzeug"):
+                kwargs["runserver_cmd"] = "runserver"
+                self.runserver(**kwargs)
+            else:
+                msg = "Missing dependencies. Follow the instructions found on https://django-tailwind-cli.andrich.me/installation/."
+                raise CommandError(msg)
         elif label == "list_templates":
             self.list_templates()
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.4.1 (Unreleased)
+
+- Added checks for `runserver_plus` management command to give a nice error messages, when `django-extensions` and `Werkzeug` are not properly installed.
+
 ## 2.4.0
 
 - Back to Poetry for project management.
