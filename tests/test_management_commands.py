@@ -23,12 +23,23 @@ def test_download_cli(settings: LazySettings, tmpdir: Any):
     assert config.get_full_cli_path().exists()
 
 
+@pytest.mark.mock_network_and_subprocess
+def test_download_cli_without_tailwind_cli_path(settings: LazySettings, tmpdir: Any):
+    settings.TAILWIND_CLI_PATH = None
+    settings.BASE_DIR = tmpdir
+    config = Config()
+
+    assert not config.get_full_cli_path().exists()
+    call_command("tailwind", "build")
+    assert config.get_full_cli_path().exists()
+
+
 def test_calling_unknown_subcommand():
     """Unknown subcommands to the tailwind management command raise a `CommandError`."""
 
     with pytest.raises(
         CommandError,
-        match=r"invalid choice: 'notavalidcommand' \(choose from 'build', 'watch', 'list_templates', 'runserver', 'runserver_plus'\)",
+        match=r"invalid choice: 'notavalidcommand' \(choose from 'build', 'watch', 'list_templates', 'runserver', 'runserver_plus'\)",  # noqa: E501
     ):
         call_command("tailwind", "notavalidcommand")
 
@@ -182,6 +193,23 @@ def test_get_watch_cmd(settings: LazySettings):
     assert "--input" not in TailwindCommand().get_watch_cmd()
     settings.TAILWIND_CLI_SRC_CSS = "css/source.css"
     assert "--input" in TailwindCommand().get_watch_cmd()
+
+
+@pytest.mark.mock_network_and_subprocess
+def test_runserver():
+    call_command("tailwind", "runserver")
+
+
+@pytest.mark.mock_network_and_subprocess
+def test_runserver_plus_with_django_extensions_installed():
+    call_command("tailwind", "runserver_plus")
+
+
+@pytest.mark.mock_network_and_subprocess
+def test_runserver_plus_without_django_extensions_installed(mocker: MockerFixture):
+    mocker.patch.dict(sys.modules, {"django_extensions": None})
+    with pytest.raises(CommandError, match=r"Missing dependencies."):
+        call_command("tailwind", "runserver_plus")
 
 
 def test_list_project_templates(capsys: Any):

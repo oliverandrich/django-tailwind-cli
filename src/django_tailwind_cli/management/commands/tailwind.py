@@ -89,10 +89,10 @@ class Command(BaseCommand):
             self.build()
         elif label == "watch":
             self.watch()
-        elif label == "runserver":  # pragma: no cover
+        elif label == "runserver":
             kwargs["runserver_cmd"] = "runserver"
             self.runserver(**kwargs)
-        elif label == "runserver_plus":  # pragma: no cover
+        elif label == "runserver_plus":
             if importlib.util.find_spec("django_extensions") and importlib.util.find_spec("werkzeug"):
                 kwargs["runserver_cmd"] = "runserver"
                 self.runserver(**kwargs)
