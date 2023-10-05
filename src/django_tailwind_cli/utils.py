@@ -38,6 +38,8 @@ class Config:
         machine = platform.machine().lower()
         if machine == "x86_64":  # pragma: no cover
             machine = "x64"
+        elif machine == "aarch64":  # pragma: no cover
+            machine = "arm64"
 
         return (system, machine)
 
