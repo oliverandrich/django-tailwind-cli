@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.4.2
+
+- Correctly map aarch64 machine architecture to arm64 for downloading the CLI.
+
 ## 2.4.1
 
 - Added checks for `runserver_plus` management command to give a nice error message, when `django-extensions` and `Werkzeug` are not properly installed.
