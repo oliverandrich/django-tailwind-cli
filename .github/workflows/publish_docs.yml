@@ -1,13 +1,12 @@
 name: Publish documentation
 
 on:
-  workflow_dispatch:
   release:
     types:
       - published
 
 jobs:
-  publish:
+  publish_documentation:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
