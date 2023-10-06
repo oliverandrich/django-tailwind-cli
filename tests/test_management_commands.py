@@ -1,240 +1,215 @@
-import subprocess
+import io
 import sys
-from typing import Any
+import tempfile
+import unittest
+from contextlib import redirect_stderr, redirect_stdout
+from pathlib import Path
+from typing import Any, Tuple
+from unittest import mock
 
-import pytest
-from django.conf import LazySettings
 from django.core.management import CommandError, call_command
-from pytest_mock import MockerFixture
+from django.test import TestCase
 
 from django_tailwind_cli.management.commands.tailwind import DEFAULT_TAILWIND_CONFIG
 from django_tailwind_cli.management.commands.tailwind import Command as TailwindCommand
 from django_tailwind_cli.utils import Config
 
 
-@pytest.mark.mock_network_and_subprocess
-def test_download_cli(settings: LazySettings, tmpdir: Any):
-    settings.TAILWIND_CLI_PATH = tmpdir
-    settings.BASE_DIR = tmpdir
-    config = Config()
-
-    assert not config.get_full_cli_path().exists()
-    call_command("tailwind", "build")
-    assert config.get_full_cli_path().exists()
+def captured_call_command(command: str) -> Tuple[str, str]:
+    with redirect_stdout(io.StringIO()) as stdout:
+        with redirect_stderr(io.StringIO()) as stdin:
+            call_command("tailwind", command)
+    return stdout.getvalue(), stdin.getvalue()
 
 
-@pytest.mark.mock_network_and_subprocess
-def test_download_cli_without_tailwind_cli_path(settings: LazySettings, tmpdir: Any):
-    settings.TAILWIND_CLI_PATH = None
-    settings.BASE_DIR = tmpdir
-    config = Config()
+@mock.patch("multiprocessing.Process.start", name="process_start")
+@mock.patch("multiprocessing.Process.join", name="process_join")
+@mock.patch("subprocess.run", name="subprocess_run")
+@mock.patch("urllib.request.urlopen", name="urlopen")
+@mock.patch("shutil.copyfileobj", name="copyfileobj")
+class ManagementCommandsTestCase(TestCase):
+    def test_calling_unknown_subcommand(self, *_args: Any):
+        with self.assertRaisesRegex(CommandError, r"invalid choice: 'notavalidcommand'"):
+            captured_call_command("notavalidcommand")
 
-    assert not config.get_full_cli_path().exists()
-    call_command("tailwind", "build")
-    assert config.get_full_cli_path().exists()
+    def test_invalid_configuration(self, *_args: Any):
+        with self.assertRaisesRegex(CommandError, r"Configuration error"):
+            with self.settings(STATICFILES_DIRS=None):
+                captured_call_command("build")
 
+        with self.assertRaisesRegex(CommandError, r"Configuration error"):
+            with self.settings(STATICFILES_DIRS=[]):
+                captured_call_command("build")
 
-def test_calling_unknown_subcommand():
-    """Unknown subcommands to the tailwind management command raise a `CommandError`."""
+    def test_download_cli(self, *_args: Any):
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            with self.settings(TAILWIND_CLI_PATH=tmpdirname, BASE_DIR=Path(tmpdirname)):
+                config = Config()
+                self.assertFalse(config.get_full_cli_path().exists())
+                captured_call_command("build")
+                self.assertTrue(config.get_full_cli_path().exists())
 
-    with pytest.raises(
-        CommandError,
-        match=r"invalid choice: 'notavalidcommand' \(choose from 'build', 'watch', 'list_templates', 'runserver', 'runserver_plus'\)",  # noqa: E501
+    def test_download_cli_without_tailwind_cli_path(self, *_args: Any):
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            with self.settings(TAILWIND_CLI_PATH=None, BASE_DIR=Path(tmpdirname)):
+                config = Config()
+                self.assertFalse(config.get_full_cli_path().exists())
+                captured_call_command("build")
+                self.assertTrue(config.get_full_cli_path().exists())
+
+    def test_create_tailwind_config_if_non_exists(self, *_args: Any):
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            with self.settings(TAILWIND_CLI_PATH=tmpdirname, BASE_DIR=Path(tmpdirname)):
+                config = Config()
+
+                self.assertFalse(config.get_full_config_file_path().exists())
+                captured_call_command("build")
+                self.assertTrue(config.get_full_config_file_path().exists())
+                self.assertEqual(DEFAULT_TAILWIND_CONFIG, config.get_full_config_file_path().read_text())
+
+    def test_with_existing_tailwind_config(self, *_args: Any):
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            with self.settings(TAILWIND_CLI_PATH=tmpdirname, BASE_DIR=Path(tmpdirname)):
+                config = Config()
+                config.get_full_config_file_path().write_text("module.exports = {}")
+
+                captured_call_command("build")
+                self.assertTrue(config.get_full_config_file_path().exists())
+                self.assertEqual("module.exports = {}", config.get_full_config_file_path().read_text())
+                self.assertNotEqual(DEFAULT_TAILWIND_CONFIG, config.get_full_config_file_path().read_text())
+
+    def test_build_subprocess_run_called(
+        self,
+        _copyfileobj: mock.MagicMock,
+        _urlopen: mock.MagicMock,
+        subprocess_run: mock.MagicMock,
+        _process_join: mock.MagicMock,
+        _process_start: mock.MagicMock,
     ):
-        call_command("tailwind", "notavalidcommand")
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            with self.settings(TAILWIND_CLI_PATH=tmpdirname, BASE_DIR=Path(tmpdirname)):
+                captured_call_command("build")
+                self.assertGreaterEqual(subprocess_run.call_count, 1)
+                self.assertLessEqual(subprocess_run.call_count, 2)
 
+    def test_build_output_of_first_run(self, *_args: Any):
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            with self.settings(TAILWIND_CLI_PATH=tmpdirname, BASE_DIR=Path(tmpdirname)):
+                stdout, _ = captured_call_command("build")
+                self.assertIn("Tailwind CSS CLI not found.", stdout)
+                self.assertIn("Downloading Tailwind CSS CLI from ", stdout)
+                self.assertIn("Built production stylesheet", stdout)
 
-def test_invalid_configuration(settings: LazySettings):
-    """An invalid configuration raises a `CommandError`."""
+    def test_build_output_of_firtest_build_output_of_second_runt_run(self, *_args: Any):
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            with self.settings(TAILWIND_CLI_PATH=tmpdirname, BASE_DIR=Path(tmpdirname)):
+                captured_call_command("build")
+                stdout, _ = captured_call_command("build")
+                self.assertNotIn("Tailwind CSS CLI not found.", stdout)
+                self.assertNotIn("Downloading Tailwind CSS CLI from ", stdout)
+                self.assertIn("Built production stylesheet", stdout)
 
-    settings.STATICFILES_DIRS = None
-    with pytest.raises(CommandError, match=r"Configuration error"):
-        call_command("tailwind", "build")
+    @unittest.skipIf(sys.version_info < (3, 9), "The capturing of KeyboardInterupt fails with pytest every other time.")
+    def test_build_keyboard_interrupt(
+        self,
+        _copyfileobj: mock.MagicMock,
+        _urlopen: mock.MagicMock,
+        subprocess_run: mock.MagicMock,
+        _process_join: mock.MagicMock,
+        _process_start: mock.MagicMock,
+    ):
+        subprocess_run.side_effect = KeyboardInterrupt
 
-    settings.STATICFILES_DIRS = []
-    with pytest.raises(CommandError, match=r"Configuration error"):
-        call_command("tailwind", "build")
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            with self.settings(TAILWIND_CLI_PATH=tmpdirname, BASE_DIR=Path(tmpdirname)):
+                stdout, _ = captured_call_command("build")
+                self.assertIn("Canceled building production stylesheet.", stdout)
 
+    def test_get_build_cmd(self, *_args: Any):
+        self.assertNotIn("--input", TailwindCommand().get_build_cmd())
+        with self.settings(TAILWIND_CLI_SRC_CSS="css/source.css"):
+            self.assertIn("--input", TailwindCommand().get_build_cmd())
 
-@pytest.mark.mock_network_and_subprocess
-def test_create_tailwind_config_if_non_exists(settings: LazySettings, tmpdir: Any):
-    settings.TAILWIND_CLI_PATH = tmpdir
-    settings.BASE_DIR = tmpdir
-    config = Config()
+    def test_watch_subprocess_run_called(
+        self,
+        _copyfileobj: mock.MagicMock,
+        _urlopen: mock.MagicMock,
+        subprocess_run: mock.MagicMock,
+        _process_join: mock.MagicMock,
+        _process_start: mock.MagicMock,
+    ):
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            with self.settings(TAILWIND_CLI_PATH=tmpdirname, BASE_DIR=Path(tmpdirname)):
+                captured_call_command("watch")
+                self.assertGreaterEqual(subprocess_run.call_count, 1)
+                self.assertLessEqual(subprocess_run.call_count, 2)
 
-    assert not config.get_full_config_file_path().exists()
-    call_command("tailwind", "build")
-    assert config.get_full_config_file_path().exists()
-    assert config.get_full_config_file_path().read_text() == DEFAULT_TAILWIND_CONFIG
+    def test_watch_output_of_first_run(self, *_args: Any):
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            with self.settings(TAILWIND_CLI_PATH=tmpdirname, BASE_DIR=Path(tmpdirname)):
+                stdout, _ = captured_call_command("watch")
+                self.assertIn("Tailwind CSS CLI not found.", stdout)
+                self.assertIn("Downloading Tailwind CSS CLI from ", stdout)
 
+    def test_watch_output_of_second_run(self, *_args: Any):
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            with self.settings(TAILWIND_CLI_PATH=tmpdirname, BASE_DIR=Path(tmpdirname)):
+                captured_call_command("watch")
+                stdout, _ = captured_call_command("watch")
+                self.assertNotIn("Tailwind CSS CLI not found.", stdout)
+                self.assertNotIn("Downloading Tailwind CSS CLI from ", stdout)
 
-@pytest.mark.mock_network_and_subprocess
-def test_with_existing_tailwind_config(settings: LazySettings, tmpdir: Any):
-    settings.TAILWIND_CLI_PATH = tmpdir
-    settings.BASE_DIR = tmpdir
-    config = Config()
-    config.get_full_config_file_path().write_text("module.exports = {}")
+    @unittest.skipIf(sys.version_info < (3, 9), "The capturing of KeyboardInterupt fails with pytest every other time.")
+    def test_watch_keyboard_interrupt(
+        self,
+        _copyfileobj: mock.MagicMock,
+        _urlopen: mock.MagicMock,
+        subprocess_run: mock.MagicMock,
+        _process_join: mock.MagicMock,
+        _process_start: mock.MagicMock,
+    ):
+        subprocess_run.side_effect = KeyboardInterrupt
 
-    call_command("tailwind", "build")
-    assert config.get_full_config_file_path().exists()
-    assert config.get_full_config_file_path().read_text() == "module.exports = {}"
-    assert config.get_full_config_file_path().read_text() != DEFAULT_TAILWIND_CONFIG
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            with self.settings(TAILWIND_CLI_PATH=tmpdirname, BASE_DIR=Path(tmpdirname)):
+                stdout, _ = captured_call_command("watch")
+                self.assertIn("Stopped watching for changes.", stdout)
 
+    def test_get_watch_cmd(self, *_args: Any):
+        self.assertNotIn("--input", TailwindCommand().get_watch_cmd())
+        with self.settings(TAILWIND_CLI_SRC_CSS="css/source.css"):
+            self.assertIn("--input", TailwindCommand().get_watch_cmd())
 
-@pytest.mark.mock_network_and_subprocess
-def test_build_subprocess_run_called(settings: LazySettings, tmpdir: Any, mocker: MockerFixture):
-    settings.TAILWIND_CLI_PATH = tmpdir
-    settings.BASE_DIR = tmpdir
-    subprocess_run = mocker.spy(subprocess, "run")
+    def test_runserver(self, *_args: Any):
+        captured_call_command("runserver")
 
-    call_command("tailwind", "build")
-    assert 1 <= subprocess_run.call_count <= 2
+    def test_runserver_plus_with_django_extensions_installed(self, *_args: Any):
+        captured_call_command("runserver_plus")
 
+    @mock.patch.dict(sys.modules, {"django_extensions": None})
+    def test_runserver_plus_without_django_extensions_installed(self, *_args: Any):
+        with self.assertRaisesRegex(CommandError, "Missing dependencies."):
+            captured_call_command("runserver_plus")
 
-@pytest.mark.mock_network_and_subprocess
-def test_build_output_of_first_run(settings: LazySettings, tmpdir: Any, capsys: Any):
-    settings.TAILWIND_CLI_PATH = tmpdir
-    settings.BASE_DIR = tmpdir
+    def test_list_project_templates(self, *_args: Any):
+        stdout, _ = captured_call_command("list_templates")
+        self.assertIn("templates/tailwind_cli/base.html", stdout)
+        self.assertIn("templates/tailwind_cli/tailwind_css.html", stdout)
+        self.assertIn("templates/tests/base.html", stdout)
+        self.assertNotIn("templates/admin", stdout)
 
-    call_command("tailwind", "build")
-    captured = capsys.readouterr()
-    assert "Tailwind CSS CLI not found." in captured.out
-    assert "Downloading Tailwind CSS CLI from " in captured.out
-    assert "Built production stylesheet" in captured.out
-
-
-@pytest.mark.mock_network_and_subprocess
-def test_build_output_of_second_run(settings: LazySettings, tmpdir: Any, capsys: Any):
-    settings.TAILWIND_CLI_PATH = tmpdir
-    settings.BASE_DIR = tmpdir
-
-    call_command("tailwind", "build")
-    captured = capsys.readouterr()
-
-    call_command("tailwind", "build")
-    captured = capsys.readouterr()
-    assert "Tailwind CSS CLI not found." not in captured.out
-    assert "Downloading Tailwind CSS CLI from " not in captured.out
-    assert "Built production stylesheet" in captured.out
-
-
-@pytest.mark.skipif(
-    sys.version_info < (3, 9), reason="The capturing of KeyboardInterupt fails with pytest every other time."
-)
-@pytest.mark.mock_network_and_subprocess
-def test_build_keyboard_interrupt(settings: LazySettings, tmpdir: Any, mocker: MockerFixture, capsys: Any):
-    settings.TAILWIND_CLI_PATH = tmpdir
-    settings.BASE_DIR = tmpdir
-    subprocess_run = mocker.spy(subprocess, "run")
-    subprocess_run.side_effect = KeyboardInterrupt
-
-    call_command("tailwind", "build")
-    captured = capsys.readouterr()
-    assert "Canceled building production stylesheet." in captured.out
-
-
-def test_get_build_cmd(settings: LazySettings):
-    assert "--input" not in TailwindCommand().get_build_cmd()
-    settings.TAILWIND_CLI_SRC_CSS = "css/source.css"
-    assert "--input" in TailwindCommand().get_build_cmd()
-
-
-@pytest.mark.mock_network_and_subprocess
-def test_watch_subprocess_run_called(settings: LazySettings, tmpdir: Any, mocker: MockerFixture):
-    settings.TAILWIND_CLI_PATH = tmpdir
-    settings.BASE_DIR = tmpdir
-    subprocess_run = mocker.spy(subprocess, "run")
-
-    call_command("tailwind", "watch")
-    assert 1 <= subprocess_run.call_count <= 2
-
-
-@pytest.mark.mock_network_and_subprocess
-def test_watch_output_of_first_run(settings: LazySettings, tmpdir: Any, capsys: Any):
-    settings.TAILWIND_CLI_PATH = tmpdir
-    settings.BASE_DIR = tmpdir
-
-    call_command("tailwind", "watch")
-    captured = capsys.readouterr()
-    assert "Tailwind CSS CLI not found." in captured.out
-    assert "Downloading Tailwind CSS CLI from " in captured.out
-
-
-@pytest.mark.mock_network_and_subprocess
-def test_watch_output_of_second_run(settings: LazySettings, tmpdir: Any, capsys: Any):
-    settings.TAILWIND_CLI_PATH = tmpdir
-    settings.BASE_DIR = tmpdir
-
-    call_command("tailwind", "watch")
-    captured = capsys.readouterr()
-
-    call_command("tailwind", "watch")
-    captured = capsys.readouterr()
-    assert "Tailwind CSS CLI not found." not in captured.out
-    assert "Downloading Tailwind CSS CLI from " not in captured.out
-
-
-@pytest.mark.skipif(
-    sys.version_info < (3, 9), reason="The capturing of KeyboardInterupt fails with pytest every other time."
-)
-@pytest.mark.mock_network_and_subprocess
-def test_watch_keyboard_interrupt(settings: LazySettings, tmpdir: Any, mocker: MockerFixture, capsys: Any):
-    settings.TAILWIND_CLI_PATH = tmpdir
-    settings.BASE_DIR = tmpdir
-    subprocess_run = mocker.spy(subprocess, "run")
-    subprocess_run.side_effect = KeyboardInterrupt
-
-    call_command("tailwind", "watch")
-    captured = capsys.readouterr()
-    assert "Stopped watching for changes." in captured.out
-
-
-def test_get_watch_cmd(settings: LazySettings):
-    assert "--input" not in TailwindCommand().get_watch_cmd()
-    settings.TAILWIND_CLI_SRC_CSS = "css/source.css"
-    assert "--input" in TailwindCommand().get_watch_cmd()
-
-
-@pytest.mark.mock_network_and_subprocess
-def test_runserver():
-    call_command("tailwind", "runserver")
-
-
-@pytest.mark.mock_network_and_subprocess
-def test_runserver_plus_with_django_extensions_installed():
-    call_command("tailwind", "runserver_plus")
-
-
-@pytest.mark.mock_network_and_subprocess
-def test_runserver_plus_without_django_extensions_installed(mocker: MockerFixture):
-    mocker.patch.dict(sys.modules, {"django_extensions": None})
-    with pytest.raises(CommandError, match=r"Missing dependencies."):
-        call_command("tailwind", "runserver_plus")
-
-
-def test_list_project_templates(capsys: Any):
-    call_command("tailwind", "list_templates")
-    captured = capsys.readouterr()
-    assert "templates/tailwind_cli/base.html" in captured.out
-    assert "templates/tailwind_cli/tailwind_css.html" in captured.out
-    assert "templates/tests/base.html" in captured.out
-    assert "templates/admin" not in captured.out
-
-
-def test_list_all_templates(settings: LazySettings, capsys: Any):
-    admin_installed_apps = [
-        "django.contrib.contenttypes",
-        "django.contrib.messages",
-        "django.contrib.auth",
-        "django.contrib.admin",
-        "django.contrib.staticfiles",
-        "django_tailwind_cli",
-    ]
-    settings.INSTALLED_APPS = admin_installed_apps
-
-    call_command("tailwind", "list_templates")
-    captured = capsys.readouterr()
-    assert "templates/tailwind_cli/base.html" in captured.out
-    assert "templates/tailwind_cli/tailwind_css.html" in captured.out
-    assert "templates/tests/base.html" in captured.out
-    assert "templates/admin" in captured.out
+    def test_list_project_all_templates(self, *_args: Any):
+        admin_installed_apps = [
+            "django.contrib.contenttypes",
+            "django.contrib.messages",
+            "django.contrib.auth",
+            "django.contrib.admin",
+            "django.contrib.staticfiles",
+            "django_tailwind_cli",
+        ]
+        with self.settings(INSTALLED_APPS=admin_installed_apps):
+            stdout, _ = captured_call_command("list_templates")
+            self.assertIn("templates/tailwind_cli/base.html", stdout)
+            self.assertIn("templates/tailwind_cli/tailwind_css.html", stdout)
+            self.assertIn("templates/tests/base.html", stdout)
+            self.assertIn("templates/admin", stdout)

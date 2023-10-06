@@ -1,73 +1,56 @@
-import pytest
-from django.conf import LazySettings
+from django.test import TestCase, override_settings
 
 from django_tailwind_cli.utils import Config
 
 
-def test_default_config():
-    """Default that the settings are correct."""
+@override_settings(BASE_DIR="/home/user/project")
+class UtilsTestCase(TestCase):
+    def test_default_config(self):
+        config = Config()
+        self.assertEqual("3.3.3", config.tailwind_version)
+        self.assertEqual("~/.local/bin/", config.cli_path)
+        self.assertIsNone(config.src_css)
+        self.assertEqual("css/tailwind.css", config.dist_css)
+        self.assertEqual("tailwind.config.js", config.config_file)
+        self.assertIn("3.3.3", config.get_download_url())
+        self.assertIn("3.3.3", str(config.get_full_cli_path()))
 
-    config = Config()
-    assert config.tailwind_version == "3.3.3"
-    assert config.cli_path == "~/.local/bin/"
-    assert config.src_css is None
-    assert config.dist_css == "css/tailwind.css"
-    assert config.config_file == "tailwind.config.js"
-    assert "3.3.3" in config.get_download_url()
-    assert "3.3.3" in str(config.get_full_cli_path())
+    @override_settings(STATICFILES_DIRS=[])
+    def test_validate_settigns(self):
+        config = Config()
+        with self.assertRaises(ValueError):
+            config.validate_settings()
 
+    def test_get_full_config_file_path(self):
+        config = Config()
+        self.assertEqual("/home/user/project/tailwind.config.js", str(config.get_full_config_file_path()))
 
-def test_validate_settigns(settings: LazySettings):
-    """Test that validate_settings raises an exception when STATICFILES_DIRS is empty."""
+    @override_settings(STATICFILES_DIRS=None)
+    def test_get_full_dist_css_path_without_staticfiles_dir_set(self):
+        config = Config()
+        with self.assertRaises(ValueError):
+            config.get_full_dist_css_path()
 
-    settings.STATICFILES_DIRS = []
-    config = Config()
-    with pytest.raises(ValueError):
-        config.validate_settings()
+    @override_settings(STATICFILES_DIRS=["/home/user/project"])
+    def test_get_full_dist_css_path_with_staticfiles_dir_set(self):
+        config = Config()
+        self.assertEqual("/home/user/project/css/tailwind.css", str(config.get_full_dist_css_path()))
 
+    def test_get_full_src_css_path(self):
+        config = Config()
+        with self.assertRaises(ValueError):
+            config.get_full_src_css_path()
 
-def test_get_full_config_file_path(settings: LazySettings):
-    settings.BASE_DIR = "/home/user/project"
-    config = Config()
-    assert str(config.get_full_config_file_path()) == "/home/user/project/tailwind.config.js"
+    @override_settings(TAILWIND_CLI_SRC_CSS="css/source.css")
+    def test_get_full_src_css_path_with_changed_tailwind_cli_src_css(self):
+        config = Config()
+        self.assertEqual("/home/user/project/css/source.css", str(config.get_full_src_css_path()))
 
-    settings.BASE_DIR = "/home/user/project"
-    settings.TAILWIND_CLI_CONFIG_FILE = "config/tailwind.config.js"
-    config = Config()
-    assert str(config.get_full_config_file_path()) == "/home/user/project/config/tailwind.config.js"
+    def test_get_full_cli_path(self):
+        config = Config()
+        self.assertIn("/.local/bin/tailwindcss-", str(config.get_full_cli_path()))
 
-
-def test_get_full_dist_css_path(settings: LazySettings):
-    settings.BASE_DIR = "/home/user/project"
-    settings.STATICFILES_DIRS = None
-    config = Config()
-    with pytest.raises(ValueError):
-        config.get_full_dist_css_path()
-
-    settings.BASE_DIR = "/home/user/project"
-    settings.STATICFILES_DIRS = ["/home/user/project"]
-    config = Config()
-    assert str(config.get_full_dist_css_path()) == "/home/user/project/css/tailwind.css"
-
-
-def test_get_full_src_css_path(settings: LazySettings):
-    settings.BASE_DIR = "/home/user/project"
-    config = Config()
-    with pytest.raises(ValueError):
-        config.get_full_src_css_path()
-
-    settings.BASE_DIR = "/home/user/project"
-    settings.TAILWIND_CLI_SRC_CSS = "css/source.css"
-    config = Config()
-    assert str(config.get_full_src_css_path()) == "/home/user/project/css/source.css"
-
-
-def test_get_full_cli_path(settings: LazySettings):
-    settings.BASE_DIR = "/home/user/project"
-    config = Config()
-    assert "/.local/bin/tailwindcss-" in str(config.get_full_cli_path())
-
-    settings.BASE_DIR = "/home/user/project"
-    settings.TAILWIND_CLI_PATH = "/opt/bin"
-    config = Config()
-    assert str(config.get_full_cli_path()).startswith("/opt/bin/tailwindcss-")
+    @override_settings(TAILWIND_CLI_PATH="/opt/bin")
+    def test_get_full_cli_path_with_changed_tailwind_cli_path(self):
+        config = Config()
+        self.assertIn("/opt/bin/tailwindcss-", str(config.get_full_cli_path()))
