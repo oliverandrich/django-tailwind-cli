@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.4.3
+
+- Code and project cleanup.
+- Switched back to `unittest` for testing purposes.
+
 ## 2.4.2
 
 - Correctly map aarch64 machine architecture to arm64 for downloading the CLI.
