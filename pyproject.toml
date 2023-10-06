@@ -34,6 +34,7 @@ django = ">=3.2,<5.0"
 certifi = "^2023.7.22"
 django-extensions = { version = "^3.2.1", optional = true }
 werkzeug = { version = "^3.0.0", optional = true }
+coverage = { extras = ["toml"], version = "^7.3.2" }
 
 
 [tool.poetry.extras]
@@ -42,12 +43,6 @@ werkzeug = { version = "^3.0.0", optional = true }
 
 [tool.poetry.group.dev.dependencies]
 django-types = ">=0.17,<0.19"
-pytest = "^7.4.2"
-pytest-mock = "^3.11.1"
-pytest-django = "^4.5.2"
-pytest-cov = "^4.1.0"
-pytest-randomly = "^3.15.0"
-syrupy = "^4.5.0"
 mkdocs-material = "^9.3.1"
 
 [build-system]
@@ -145,13 +140,11 @@ ban-relative-imports = "all"
 
 # Coverage
 [tool.coverage.run]
-source_pkgs = ["django_tailwind_cli"]
+source = ["django_tailwind_cli", "tests"]
 branch = true
-parallel = true
 
 [tool.coverage.paths]
-django_tailwind_cli = ["src/django_tailwind_cli"]
-tests = ["tests"]
+source = ["src", ".tox/**/site-packages"]
 
 [tool.coverage.report]
 exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]

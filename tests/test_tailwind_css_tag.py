@@ -25,7 +25,5 @@ class TailwindCssTagTestcase(TestCase):
         self.assertEqual('<link rel="stylesheet" href="/static/css/tailwind.css">', rendered_output)
 
     def _render(self, text: str, context: Union[Dict[str, Any], None] = None):
-        if context is None:
-            context = {}
         template = engines["django"].from_string(text)
         return template.render(context or {})
