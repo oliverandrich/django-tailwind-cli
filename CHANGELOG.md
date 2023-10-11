@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.4.4
+
+- [#59](https://github.com/oliverandrich/django-tailwind-cli/pull/59) by [@killianarts](https://github.com/killianarts) fixed a regression from 2.4.3 that used the wrong runserver for the runserver_plus command.
+
 ## 2.4.3
 
 - Code and project cleanup.
