@@ -94,7 +94,7 @@ class Command(BaseCommand):
             self.runserver(**kwargs)
         elif label == "runserver_plus":
             if importlib.util.find_spec("django_extensions") and importlib.util.find_spec("werkzeug"):
-                kwargs["runserver_cmd"] = "runserver"
+                kwargs["runserver_cmd"] = "runserver_plus"
                 self.runserver(**kwargs)
             else:
                 msg = "Missing dependencies. Follow the instructions found on https://django-tailwind-cli.andrich.me/installation/."
