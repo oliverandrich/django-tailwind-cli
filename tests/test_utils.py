@@ -21,7 +21,9 @@ def test_default_config(config: Config):
 
 def test_validate_settigns(config: Config, settings: LazySettings):
     settings.STATICFILES_DIRS = []
-    with pytest.raises(ValueError, match="STATICFILES_DIRS is empty. Please add a path to your static files."):
+    with pytest.raises(
+        ValueError, match="STATICFILES_DIRS is empty. Please add a path to your static files."
+    ):
         config.validate_settings()
 
 
@@ -31,7 +33,9 @@ def test_get_full_config_file_path(config: Config):
 
 def test_get_full_dist_css_path_without_staticfiles_dir_set(config: Config, settings: LazySettings):
     settings.STATICFILES_DIRS = None
-    with pytest.raises(ValueError, match="STATICFILES_DIRS is empty. Please add a path to your static files."):
+    with pytest.raises(
+        ValueError, match="STATICFILES_DIRS is empty. Please add a path to your static files."
+    ):
         config.get_full_dist_css_path()
 
 
@@ -41,11 +45,16 @@ def test_get_full_dist_css_path_with_staticfiles_dir_set(config: Config, setting
 
 
 def test_get_full_src_css_path(config: Config):
-    with pytest.raises(ValueError, match="No source CSS file specified. Please set TAILWIND_SRC_CSS in your settings."):
+    with pytest.raises(
+        ValueError,
+        match="No source CSS file specified. Please set TAILWIND_SRC_CSS in your settings.",
+    ):
         config.get_full_src_css_path()
 
 
-def test_get_full_src_css_path_with_changed_tailwind_cli_src_css(config: Config, settings: LazySettings):
+def test_get_full_src_css_path_with_changed_tailwind_cli_src_css(
+    config: Config, settings: LazySettings
+):
     settings.TAILWIND_CLI_SRC_CSS = "css/source.css"
     assert "/home/user/project/css/source.css" == str(config.get_full_src_css_path())
 

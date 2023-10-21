@@ -46,30 +46,40 @@ class Command(BaseCommand):
         subparsers.add_parser("list_templates", help="List the templates of your django project.")
 
         runserver_parser = subparsers.add_parser(
-            "runserver", help="Start the Django development server and the Tailwind CLI in watch mode."
+            "runserver",
+            help="Start the Django development server and the Tailwind CLI in watch mode.",
         )
 
-        runserver_parser.add_argument("addrport", nargs="?", help="Optional port number, or ipaddr:port")
+        runserver_parser.add_argument(
+            "addrport", nargs="?", help="Optional port number, or ipaddr:port"
+        )
 
         runserver_plus_parser = subparsers.add_parser(
             "runserver_plus",
-            help="Start the django-extensions runserver_plus development server and the Tailwind CLI in watch mode.",
+            help=(
+                "Start the django-extensions runserver_plus development server and the "
+                "Tailwind CLI in watch mode."
+            ),
         )
 
-        runserver_plus_parser.add_argument("addrport", nargs="?", help="Optional port number, or ipaddr:port")
+        runserver_plus_parser.add_argument(
+            "addrport", nargs="?", help="Optional port number, or ipaddr:port"
+        )
 
         runserver_plus_parser.add_argument(
             "--cert-file", help="Optional SSL certificate file to use for the development server."
         )
         runserver_plus_parser.add_argument(
-            "--cert", help="[DEPRECATED] Optional SSL certificate file to use for the development server."
+            "--cert",
+            help="[DEPRECATED] Optional SSL certificate file to use for the development server.",
         )
         runserver_plus_parser.add_argument(
             "--key-file", help="Optional SSL certificate file to use for the development server."
         )
 
         runserver_plus_parser.add_argument(
-            "--reloader-interval", help="Optional SSL certificate file to use for the development server."
+            "--reloader-interval",
+            help="Optional SSL certificate file to use for the development server.",
         )
 
     def handle(self, *_args: Any, **kwargs: Any) -> None:
@@ -93,7 +103,9 @@ class Command(BaseCommand):
             kwargs["runserver_cmd"] = "runserver"
             self.runserver(**kwargs)
         elif label == "runserver_plus":
-            if importlib.util.find_spec("django_extensions") and importlib.util.find_spec("werkzeug"):
+            if importlib.util.find_spec("django_extensions") and importlib.util.find_spec(
+                "werkzeug"
+            ):
                 kwargs["runserver_cmd"] = "runserver_plus"
                 self.runserver(**kwargs)
             else:
@@ -110,7 +122,9 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR("Canceled building production stylesheet."))
         else:
             self.stdout.write(
-                self.style.SUCCESS(f"Built production stylesheet '{self.config.get_full_dist_css_path()}'.")
+                self.style.SUCCESS(
+                    f"Built production stylesheet '{self.config.get_full_dist_css_path()}'."
+                )
             )
 
     def watch(self) -> None:
@@ -230,12 +244,14 @@ class Command(BaseCommand):
 
         if not dest_file.exists():
             self.stdout.write(self.style.ERROR("Tailwind CSS CLI not found."))
-            self.stdout.write(self.style.WARNING(f"Downloading Tailwind CSS CLI from '{download_url}'"))
+            self.stdout.write(
+                self.style.WARNING(f"Downloading Tailwind CSS CLI from '{download_url}'")
+            )
             dest_file.parent.mkdir(parents=True, exist_ok=True)
             certifi_context = ssl.create_default_context(cafile=certifi.where())
-            with urllib.request.urlopen(download_url, context=certifi_context) as source, dest_file.open(  # noqa: S310
-                mode="wb"
-            ) as dest:
+            with urllib.request.urlopen(  # noqa: S310
+                download_url, context=certifi_context
+            ) as source, dest_file.open(mode="wb") as dest:
                 shutil.copyfileobj(source, dest)
             # make cli executable
             dest_file.chmod(0o755)
@@ -247,7 +263,9 @@ class Command(BaseCommand):
         if not tailwind_config_file.exists():
             self.stdout.write(self.style.ERROR("Tailwind CSS config not found."))
             tailwind_config_file.write_text(DEFAULT_TAILWIND_CONFIG)
-            self.stdout.write(self.style.SUCCESS(f"Created Tailwind CSS config at '{tailwind_config_file}'"))
+            self.stdout.write(
+                self.style.SUCCESS(f"Created Tailwind CSS config at '{tailwind_config_file}'")
+            )
 
 
 DEFAULT_TAILWIND_CONFIG = """/** @type {import('tailwindcss').Config} */

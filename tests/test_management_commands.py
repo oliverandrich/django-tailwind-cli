@@ -45,7 +45,9 @@ def test_download_cli(settings: LazySettings, tmp_path: Path, config: Config):
     assert config.get_full_cli_path().exists()
 
 
-def test_download_cli_without_tailwind_cli_path(settings: LazySettings, tmp_path: Path, config: Config):
+def test_download_cli_without_tailwind_cli_path(
+    settings: LazySettings, tmp_path: Path, config: Config
+):
     settings.BASE_DIR = tmp_path
     settings.TAILWIND_CLI_PATH = None
     assert not config.get_full_cli_path().exists()
@@ -53,7 +55,9 @@ def test_download_cli_without_tailwind_cli_path(settings: LazySettings, tmp_path
     assert config.get_full_cli_path().exists()
 
 
-def test_create_tailwind_config_if_non_exists(settings: LazySettings, tmp_path: Path, config: Config):
+def test_create_tailwind_config_if_non_exists(
+    settings: LazySettings, tmp_path: Path, config: Config
+):
     settings.BASE_DIR = tmp_path
     settings.TAILWIND_CLI_PATH = str(tmp_path)
     assert not config.get_full_config_file_path().exists()
@@ -103,9 +107,12 @@ def test_build_output_of_second_run(settings: LazySettings, tmp_path: Path, caps
 
 
 @pytest.mark.skipif(
-    sys.version_info < (3, 9), reason="The capturing of KeyboardInterupt fails with pytest every other time."
+    sys.version_info < (3, 9),
+    reason="The capturing of KeyboardInterupt fails with pytest every other time.",
 )
-def test_build_keyboard_interrupt(settings: LazySettings, tmp_path: Path, mocker: MockerFixture, capsys: Any):
+def test_build_keyboard_interrupt(
+    settings: LazySettings, tmp_path: Path, mocker: MockerFixture, capsys: Any
+):
     settings.BASE_DIR = tmp_path
     settings.TAILWIND_CLI_PATH = str(tmp_path)
     subprocess_run = mocker.patch("subprocess.run")
@@ -150,9 +157,12 @@ def test_watch_output_of_second_run(settings: LazySettings, tmp_path: Path, caps
 
 
 @pytest.mark.skipif(
-    sys.version_info < (3, 9), reason="The capturing of KeyboardInterupt fails with pytest every other time."
+    sys.version_info < (3, 9),
+    reason="The capturing of KeyboardInterupt fails with pytest every other time.",
 )
-def test_watch_keyboard_interrupt(settings: LazySettings, tmp_path: Path, mocker: MockerFixture, capsys: Any):
+def test_watch_keyboard_interrupt(
+    settings: LazySettings, tmp_path: Path, mocker: MockerFixture, capsys: Any
+):
     settings.BASE_DIR = tmp_path
     settings.TAILWIND_CLI_PATH = str(tmp_path)
     subprocess_run = mocker.patch("subprocess.run")
