@@ -15,13 +15,25 @@ from django.conf import settings
 class Config:
     """Configuration for the Tailwind CSS CLI."""
 
-    def __init__(self) -> None:
-        """Initialize the configuration."""
-        self.tailwind_version: str = getattr(settings, "TAILWIND_CLI_VERSION", "3.3.3")
-        self.cli_path: Union[str, None] = getattr(settings, "TAILWIND_CLI_PATH", "~/.local/bin/")
-        self.src_css: Union[str, None] = getattr(settings, "TAILWIND_CLI_SRC_CSS", None)
-        self.dist_css: str = getattr(settings, "TAILWIND_CLI_DIST_CSS", "css/tailwind.css")
-        self.config_file: str = getattr(settings, "TAILWIND_CLI_CONFIG_FILE", "tailwind.config.js")
+    @property
+    def tailwind_version(self) -> str:
+        return getattr(settings, "TAILWIND_CLI_VERSION", "3.3.3")
+
+    @property
+    def cli_path(self) -> Union[str, None]:
+        return getattr(settings, "TAILWIND_CLI_PATH", "~/.local/bin/")
+
+    @property
+    def src_css(self) -> Union[str, None]:
+        return getattr(settings, "TAILWIND_CLI_SRC_CSS", None)
+
+    @property
+    def dist_css(self) -> str:
+        return getattr(settings, "TAILWIND_CLI_DIST_CSS", "css/tailwind.css")
+
+    @property
+    def config_file(self) -> str:
+        return getattr(settings, "TAILWIND_CLI_CONFIG_FILE", "tailwind.config.js")
 
     def validate_settings(self) -> None:
         """Validate the settings."""

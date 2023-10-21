@@ -1,29 +1,28 @@
 from typing import Any, Dict, Union
 
+import pytest
+from django.conf import LazySettings
 from django.template import engines
-from django.test import TestCase, override_settings
 
 
-class TailwindCssTagTestcase(TestCase):
-    def setUp(self):
-        self.template_string = """{% spaceless %}
-            {% load tailwind_cli %}
-            {% tailwind_css %}
-            {% endspaceless %}"""
+@pytest.fixture
+def template_string() -> str:
+    return "{% spaceless %}{% load tailwind_cli %}{% tailwind_css %}{% endspaceless %}"
 
-    @override_settings(DEBUG=False)
-    def test_tailwind_css_tag_in_production(self):
-        rendered_output = self._render(self.template_string)
-        self.assertEqual(
-            '<link rel="preload" href="/static/css/tailwind.css" as="style"><link rel="stylesheet" href="/static/css/tailwind.css">',  # noqa: E501
-            rendered_output,
-        )
 
-    @override_settings(DEBUG=True)
-    def test_tailwind_css_tag_in_devmode(self):
-        rendered_output = self._render(self.template_string)
-        self.assertEqual('<link rel="stylesheet" href="/static/css/tailwind.css">', rendered_output)
+def test_tailwind_css_tag_in_production(settings: LazySettings, template_string: str):
+    settings.DEBUG = False
+    assert (
+        '<link rel="preload" href="/static/css/tailwind.css" as="style"><link rel="stylesheet" href="/static/css/tailwind.css">'  # noqa: E501
+        == _render(template_string)
+    )
 
-    def _render(self, text: str, context: Union[Dict[str, Any], None] = None):
-        template = engines["django"].from_string(text)
-        return template.render(context or {})
+
+def test_tailwind_css_tag_in_devmode(settings: LazySettings, template_string: str):
+    settings.DEBUG = True
+    assert '<link rel="stylesheet" href="/static/css/tailwind.css">' == _render(template_string)
+
+
+def _render(text: str, context: Union[Dict[str, Any], None] = None):
+    template = engines["django"].from_string(text)
+    return template.render(context or {})
