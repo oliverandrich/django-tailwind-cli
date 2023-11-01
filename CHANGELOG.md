@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.5.0
+
+- Bumped default version of Tailwind CSS CLI to 3.3.5.
+
 ## 2.4.5
 
 - Moved coverage to the dev depencies. Somehow it ended up in the package dependencies.
