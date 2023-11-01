@@ -25,12 +25,13 @@ classifiers = [
   "Framework :: Django :: 3.2",
   "Framework :: Django :: 4.1",
   "Framework :: Django :: 4.2",
+  "Framework :: Django :: 5.0",
 ]
 packages = [{ include = "django_tailwind_cli", from = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.8.1"
-django = ">=3.2,<5.0"
+django = ">=3.2"
 certifi = "^2023.7.22"
 django-extensions = { version = "^3.2.1", optional = true }
 werkzeug = { version = "^3.0.0", optional = true }
