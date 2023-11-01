@@ -10,13 +10,13 @@ def configure_settings(settings: LazySettings):
 
 
 def test_default_config(config: Config):
-    assert "3.3.3" == config.tailwind_version
+    assert "3.3.5" == config.tailwind_version
     assert "~/.local/bin/" == config.cli_path
     assert config.src_css is None
     assert "css/tailwind.css" == config.dist_css
     assert "tailwind.config.js" == config.config_file
-    assert "3.3.3" in config.get_download_url()
-    assert "3.3.3" in str(config.get_full_cli_path())
+    assert "3.3.5" in config.get_download_url()
+    assert "3.3.5" in str(config.get_full_cli_path())
 
 
 def test_validate_settigns(config: Config, settings: LazySettings):
