@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.6.0
+
+- Added 'support' for Django 5.0.
+  - Extended the tox configuration to include Django 5.0b1 and beyond.
+  - Added the trove classifiert.
+  - Removed the upper boundary of the django version.
+
 ## 2.5.0
 
 - Bumped default version of Tailwind CSS CLI to 3.3.5.
