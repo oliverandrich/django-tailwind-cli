@@ -301,14 +301,17 @@ Django = ">=3.2"
 
 [[package]]
 name = "django-types"
-version = "0.18.0"
+version = "0.19.1"
 description = "Type stubs for Django"
 optional = false
 python-versions = ">=3.7,<4.0"
 files = [
-    {file = "django-types-0.18.0.tar.gz", hash = "sha256:b8e2334c810864d7abf11cd3cdb1da3b2015b67e7f1270007e33777ff1bd8654"},
-    {file = "django_types-0.18.0-py3-none-any.whl", hash = "sha256:7c28fefecfddec1fae7a3b7fec74a12862cf45b76fc891b220fbd42ccbc44808"},
+    {file = "django_types-0.19.1-py3-none-any.whl", hash = "sha256:b3f529de17f6374d41ca67232aa01330c531bbbaa3ac4097896f31ac33c96c30"},
+    {file = "django_types-0.19.1.tar.gz", hash = "sha256:5ae7988612cf6fbc357b018bbc3b3a878b65e04275cc46e0d35d66a708daff12"},
 ]
+
+[package.dependencies]
+types-psycopg2 = ">=2.9.21.13"
 
 [[package]]
 name = "exceptiongroup"
@@ -992,6 +995,17 @@ files = [
 ]
 
 [[package]]
+name = "types-psycopg2"
+version = "2.9.21.15"
+description = "Typing stubs for psycopg2"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "types-psycopg2-2.9.21.15.tar.gz", hash = "sha256:cf99b62ab32cd4ef412fc3c4da1c29ca5a130847dff06d709b84a523802406f0"},
+    {file = "types_psycopg2-2.9.21.15-py3-none-any.whl", hash = "sha256:cc80479def02e4dd1ef21649d82f04426c73bc0693bcc0a8b5223c7c168472af"},
+]
+
+[[package]]
 name = "typing-extensions"
 version = "4.8.0"
 description = "Backported and Experimental Type Hints for Python 3.8+"
@@ -1107,4 +1121,4 @@ django-extensions = ["django-extensions", "werkzeug"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8.1"
-content-hash = "2e8898d185a5a59758ba5b5a0f8a890a0f508e6cf79493ebdaad700a1f7afae3"
+content-hash = "2a8b03d8afccd946535677120137364897d92f791f94394da3ef5b04cdbd079c"
