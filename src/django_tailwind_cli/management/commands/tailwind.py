@@ -49,7 +49,11 @@ class Command(BaseCommand):
             "runserver",
             help="Start the Django development server and the Tailwind CLI in watch mode.",
         )
-
+        runserver_parser.add_argument(
+            "--skip-checks",
+            action="store_true",
+            help="Skip system checks.",
+        )
         runserver_parser.add_argument(
             "addrport", nargs="?", help="Optional port number, or ipaddr:port"
         )
@@ -63,7 +67,27 @@ class Command(BaseCommand):
         )
 
         runserver_plus_parser.add_argument(
-            "addrport", nargs="?", help="Optional port number, or ipaddr:port"
+            "--pdb",
+            action="store_true",
+            help="Drop into pdb shell at the start of any view.",
+        )
+
+        runserver_plus_parser.add_argument(
+            "--ipdb",
+            action="store_true",
+            help="Drop into ipdb shell at the start of any view.",
+        )
+
+        runserver_plus_parser.add_argument(
+            "--pm",
+            action="store_true",
+            help="Drop into (i)pdb shell if an exception is raised in a view.",
+        )
+
+        runserver_plus_parser.add_argument(
+            "--print-sql",
+            action="store_true",
+            help="Print SQL queries as they're executed.",
         )
 
         runserver_plus_parser.add_argument(
@@ -80,6 +104,10 @@ class Command(BaseCommand):
         runserver_plus_parser.add_argument(
             "--reloader-interval",
             help="Optional SSL certificate file to use for the development server.",
+        )
+
+        runserver_plus_parser.add_argument(
+            "addrport", nargs="?", help="Optional port number, or ipaddr:port"
         )
 
     def handle(self, *_args: Any, **kwargs: Any) -> None:
@@ -154,12 +182,25 @@ class Command(BaseCommand):
         if addrport := kwargs.get("addrport"):
             debugserver_cmd.append(addrport)
 
+        if kwargs.get("skip_checks", False):
+            debugserver_cmd.append("--skip-checks")
+
+        if kwargs.get("print_sql", False):
+            debugserver_cmd.append("--print-sql")
+        if kwargs.get("pdb", False):
+            debugserver_cmd.append("--pdb")
+        if kwargs.get("ipdb", False):
+            debugserver_cmd.append("--ipdb")
+        if kwargs.get("pm", False):
+            debugserver_cmd.append("--pm")
+
         if cert_file := kwargs.get("cert_file"):
             debugserver_cmd.append(f"--cert-file={cert_file}")
         elif cert := kwargs.get("cert"):
             debugserver_cmd.append(f"--cert-file={cert}")
         if key_file := kwargs.get("key_file"):
             debugserver_cmd.append(f"--key-file={key_file}")
+
         if reloader_interval := kwargs.get("reloader_interval"):
             debugserver_cmd.append(f"--reloader-interval={reloader_interval}")
 
