@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.7.0
+
+- Added more command line arguments to `tailwind runserver` and `tailwind runserver_plus`.
+  - `tailwind runserver`
+    - `--skip-checks` [#69](https://github.com/oliverandrich/django-tailwind-cli/issues/69)
+    - `--noreload`
+    - `--nothreading`
+    - `--ipv6`
+  - `tailwind runserver_plus`
+    - `--noreload`
+    - `--nothreading`
+    - `--ipv6`
+    - `--pdb`
+    - `--ipdb`
+    - `--pm`
+    - `--print-sql`
+
 ## 2.6.0
 
 - Added 'support' for Django 5.0.
