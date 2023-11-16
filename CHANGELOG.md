@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.7.0
+## 2.7.0 (unreleased)
 
 - Added more command line arguments to `tailwind runserver` and `tailwind runserver_plus`.
   - `tailwind runserver`
