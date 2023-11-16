@@ -49,6 +49,25 @@ class Command(BaseCommand):
             "runserver",
             help="Start the Django development server and the Tailwind CLI in watch mode.",
         )
+        parser.add_argument(
+            "--ipv6",
+            "-6",
+            action="store_true",
+            dest="use_ipv6",
+            help="Tells Django to use an IPv6 address.",
+        )
+        parser.add_argument(
+            "--nothreading",
+            action="store_true",
+            dest="no_threading",
+            help="Tells Django to NOT use threading.",
+        )
+        parser.add_argument(
+            "--noreload",
+            action="store_true",
+            dest="no_reloader",
+            help="Tells Django to NOT use the auto-reloader.",
+        )
         runserver_parser.add_argument(
             "--skip-checks",
             action="store_true",
@@ -65,31 +84,45 @@ class Command(BaseCommand):
                 "Tailwind CLI in watch mode."
             ),
         )
-
+        runserver_plus_parser.add_argument(
+            "--ipv6",
+            "-6",
+            action="store_true",
+            dest="use_ipv6",
+            help="Tells Django to use an IPv6 address.",
+        )
+        runserver_plus_parser.add_argument(
+            "--nothreading",
+            action="store_true",
+            dest="no_threading",
+            help="Do not run in multithreaded mode.",
+        )
+        runserver_plus_parser.add_argument(
+            "--noreload",
+            action="store_true",
+            dest="no_reloader",
+            help="Tells Django to NOT use the auto-reloader.",
+        )
         runserver_plus_parser.add_argument(
             "--pdb",
             action="store_true",
             help="Drop into pdb shell at the start of any view.",
         )
-
         runserver_plus_parser.add_argument(
             "--ipdb",
             action="store_true",
             help="Drop into ipdb shell at the start of any view.",
         )
-
         runserver_plus_parser.add_argument(
             "--pm",
             action="store_true",
             help="Drop into (i)pdb shell if an exception is raised in a view.",
         )
-
         runserver_plus_parser.add_argument(
             "--print-sql",
             action="store_true",
             help="Print SQL queries as they're executed.",
         )
-
         runserver_plus_parser.add_argument(
             "--cert-file", help="Optional SSL certificate file to use for the development server."
         )
@@ -100,12 +133,10 @@ class Command(BaseCommand):
         runserver_plus_parser.add_argument(
             "--key-file", help="Optional SSL certificate file to use for the development server."
         )
-
         runserver_plus_parser.add_argument(
             "--reloader-interval",
             help="Optional SSL certificate file to use for the development server.",
         )
-
         runserver_plus_parser.add_argument(
             "addrport", nargs="?", help="Optional port number, or ipaddr:port"
         )
@@ -182,6 +213,12 @@ class Command(BaseCommand):
         if addrport := kwargs.get("addrport"):
             debugserver_cmd.append(addrport)
 
+        if kwargs.get("use_ipv6", False):
+            debugserver_cmd.append("--ipv6")
+        if kwargs.get("no_threading", False):
+            debugserver_cmd.append("--nothreading")
+        if kwargs.get("no_reloader", False):
+            debugserver_cmd.append("--noreload")
         if kwargs.get("skip_checks", False):
             debugserver_cmd.append("--skip-checks")
 
