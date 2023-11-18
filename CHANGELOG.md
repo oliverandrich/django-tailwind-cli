@@ -16,6 +16,7 @@
     - `--ipdb`
     - `--pm`
     - `--print-sql`
+- Fixed [#67](https://github.com/oliverandrich/django-tailwind-cli/issues/67) to fetch the correct CLI on the Windows platform.
 
 ## 2.6.0
 

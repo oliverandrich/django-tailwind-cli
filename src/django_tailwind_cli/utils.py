@@ -48,7 +48,7 @@ class Config:
             system = "macos"
 
         machine = platform.machine().lower()
-        if machine == "x86_64":  # pragma: no cover
+        if machine in ["x86_64", "amd64"]:  # pragma: no cover
             machine = "x64"
         elif machine == "aarch64":  # pragma: no cover
             machine = "arm64"
@@ -58,15 +58,17 @@ class Config:
     def get_download_url(self) -> str:
         """Get the download url for the Tailwind CSS CLI."""
         system, machine = self.get_system_and_machine()
+        extension = ".exe" if system == "windows" else ""
         return (
             "https://github.com/tailwindlabs/tailwindcss/releases/download/"
-            f"v{self.tailwind_version}/tailwindcss-{system}-{machine}"
+            f"v{self.tailwind_version}/tailwindcss-{system}-{machine}{extension}"
         )
 
     def get_full_cli_path(self) -> Path:
         """Get path to the Tailwind CSS CLI."""
         system, machine = self.get_system_and_machine()
-        executable_name = f"tailwindcss-{system}-{machine}-{self.tailwind_version}"
+        extension = ".exe" if system == "windows" else ""
+        executable_name = f"tailwindcss-{system}-{machine}-{self.tailwind_version}{extension}"
         if self.cli_path is None:
             return Path(settings.BASE_DIR) / executable_name
         else:

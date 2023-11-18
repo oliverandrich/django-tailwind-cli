@@ -1,5 +1,6 @@
 import pytest
 from django.conf import LazySettings
+from pytest_mock import MockerFixture
 
 from django_tailwind_cli.utils import Config
 
@@ -59,8 +60,74 @@ def test_get_full_src_css_path_with_changed_tailwind_cli_src_css(
     assert "/home/user/project/css/source.css" == str(config.get_full_src_css_path())
 
 
-def test_get_full_cli_path(config: Config):
+def test_get_system_and_machine(config: Config, mocker: MockerFixture):
+    platform_system = mocker.patch("platform.system")
+
+    platform_system.return_value = "Windows"
+    [system, _] = config.get_system_and_machine()
+    assert system == "windows"
+
+    platform_system.return_value = "Darwin"
+    [system, _] = config.get_system_and_machine()
+    assert system == "macos"
+
+    platform_machine = mocker.patch("platform.machine")
+
+    platform_machine.return_value = "x86_64"
+    [_, machine] = config.get_system_and_machine()
+    assert machine == "x64"
+
+    platform_machine.return_value = "amd64"
+    [_, machine] = config.get_system_and_machine()
+    assert machine == "x64"
+
+    platform_machine.return_value = "aarch64"
+    [_, machine] = config.get_system_and_machine()
+    assert machine == "arm64"
+
+
+def test_get_download_url(config: Config, mocker: MockerFixture):
+    platform_system = mocker.patch("platform.system")
+    platform_machine = mocker.patch("platform.machine")
+
+    platform_system.return_value = "Windows"
+    platform_machine.return_value = "x86_64"
+    assert config.get_download_url().endswith("tailwindcss-windows-x64.exe")
+
+    platform_system.return_value = "Windows"
+    platform_machine.return_value = "amd64"
+    assert config.get_download_url().endswith("tailwindcss-windows-x64.exe")
+
+    platform_system.return_value = "Darwin"
+    platform_machine.return_value = "aarch64"
+    assert config.get_download_url().endswith("tailwindcss-macos-arm64")
+
+    platform_system.return_value = "Darwin"
+    platform_machine.return_value = "arm64"
+    assert config.get_download_url().endswith("tailwindcss-macos-arm64")
+
+
+def test_get_full_cli_path(config: Config, mocker: MockerFixture):
     assert "/.local/bin/tailwindcss-" in str(config.get_full_cli_path())
+
+    platform_system = mocker.patch("platform.system")
+    platform_machine = mocker.patch("platform.machine")
+
+    platform_system.return_value = "Windows"
+    platform_machine.return_value = "x86_64"
+    assert str(config.get_full_cli_path()).endswith("tailwindcss-windows-x64-3.3.5.exe")
+
+    platform_system.return_value = "Windows"
+    platform_machine.return_value = "amd64"
+    assert str(config.get_full_cli_path()).endswith("tailwindcss-windows-x64-3.3.5.exe")
+
+    platform_system.return_value = "Darwin"
+    platform_machine.return_value = "aarch64"
+    assert str(config.get_full_cli_path()).endswith("tailwindcss-macos-arm64-3.3.5")
+
+    platform_system.return_value = "Darwin"
+    platform_machine.return_value = "arm64"
+    assert str(config.get_full_cli_path()).endswith("tailwindcss-macos-arm64-3.3.5")
 
 
 def test_get_full_cli_path_with_changed_tailwind_cli_path(config: Config, settings: LazySettings):
