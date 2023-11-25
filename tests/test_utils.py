@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 from django.conf import LazySettings
 from pytest_mock import MockerFixture
@@ -12,7 +14,7 @@ def configure_settings(settings: LazySettings):
 
 def test_default_config(config: Config):
     assert "3.3.5" == config.tailwind_version
-    assert "~/.local/bin/" == config.cli_path
+    assert Path("~/.local/bin/").expanduser() == config.cli_path
     assert config.src_css is None
     assert "css/tailwind.css" == config.dist_css
     assert "tailwind.config.js" == config.config_file
@@ -128,6 +130,14 @@ def test_get_full_cli_path(config: Config, mocker: MockerFixture):
     platform_system.return_value = "Darwin"
     platform_machine.return_value = "arm64"
     assert str(config.get_full_cli_path()).endswith("tailwindcss-macos-arm64-3.3.5")
+
+
+def test_get_full_cli_path_with_existing_executable(
+    config: Config, tmp_path: Path, settings: LazySettings
+):
+    settings.TAILWIND_CLI_PATH = tmp_path / "tailwindcss.exe"
+    settings.TAILWIND_CLI_PATH.touch(mode=0o755, exist_ok=True)
+    assert config.get_full_cli_path() == tmp_path / "tailwindcss.exe"
 
 
 def test_get_full_cli_path_with_changed_tailwind_cli_path(config: Config, settings: LazySettings):

@@ -5,6 +5,7 @@ This module contains utility functions to read the configuration, download the C
 the various paths.
 """
 
+import os
 import platform
 from pathlib import Path
 from typing import Tuple, Union
@@ -20,8 +21,15 @@ class Config:
         return getattr(settings, "TAILWIND_CLI_VERSION", "3.3.5")
 
     @property
-    def cli_path(self) -> Union[str, None]:
-        return getattr(settings, "TAILWIND_CLI_PATH", "~/.local/bin/")
+    def cli_path(self) -> Union[Path, None]:
+        p = getattr(settings, "TAILWIND_CLI_PATH", "~/.local/bin/")
+        if p is None:
+            return p
+        return Path(p).expanduser()
+
+    @property
+    def automatic_download(self) -> bool:
+        return bool(getattr(settings, "TAILWIND_CLI_AUTOMATIC_DOWNLOAD", True))
 
     @property
     def src_css(self) -> Union[str, None]:
@@ -44,13 +52,13 @@ class Config:
     def get_system_and_machine(self) -> Tuple[str, str]:
         """Get the system and machine name."""
         system = platform.system().lower()
-        if system == "darwin":  # pragma: no cover
+        if system == "darwin":
             system = "macos"
 
         machine = platform.machine().lower()
-        if machine in ["x86_64", "amd64"]:  # pragma: no cover
+        if machine in ["x86_64", "amd64"]:
             machine = "x64"
-        elif machine == "aarch64":  # pragma: no cover
+        elif machine == "aarch64":
             machine = "arm64"
 
         return (system, machine)
@@ -66,13 +74,24 @@ class Config:
 
     def get_full_cli_path(self) -> Path:
         """Get path to the Tailwind CSS CLI."""
+
+        # If Tailwind CSS CLI path points to an existing executable use is.
+        if (
+            self.cli_path
+            and self.cli_path.exists()
+            and self.cli_path.is_file()
+            and os.access(self.cli_path, os.X_OK)
+        ):
+            return self.cli_path
+
+        # Otherwise try to calculate the full cli path as usual.
         system, machine = self.get_system_and_machine()
         extension = ".exe" if system == "windows" else ""
         executable_name = f"tailwindcss-{system}-{machine}-{self.tailwind_version}{extension}"
         if self.cli_path is None:
             return Path(settings.BASE_DIR) / executable_name
         else:
-            return Path(self.cli_path).expanduser() / executable_name
+            return self.cli_path / executable_name
 
     def get_full_src_css_path(self) -> Path:
         """Get path to the source css."""

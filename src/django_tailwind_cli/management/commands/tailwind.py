@@ -318,9 +318,9 @@ class Command(BaseCommand):
 
     def _download_cli_if_not_exists(self) -> None:
         dest_file = self.config.get_full_cli_path()
-        download_url = self.config.get_download_url()
 
-        if not dest_file.exists():
+        if not dest_file.exists() and self.config.automatic_download:
+            download_url = self.config.get_download_url()
             self.stdout.write(self.style.ERROR("Tailwind CSS CLI not found."))
             self.stdout.write(
                 self.style.WARNING(f"Downloading Tailwind CSS CLI from '{download_url}'")

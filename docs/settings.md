@@ -17,7 +17,22 @@ The package can be configured by a few settings, which can be overwritten in the
 `TAILWIND_CLI_PATH`
 : **Default**: `"~/.local/bin/"`
 
-    The path where to store CLI binary on your machine. The default value aims for an installation in your home directory and is tailored for Unix and macOS systems. On Windows you might need to configure a different path.
+    The path where to store CLI binary on your machine or the path to an manually installed binary.
+
+    The default behaviour is, that `TAILWIND_CLI_PATH` should point to a directory, where `django-tailwind-cli` is allowed to download the official CLI to. Normally, this library tries to manage the tailwind CLI by itself and don't rely on externally installed versions of it.
+
+    Starting with version **2.7.0** TAILWIND_CLI_PATH can also point to an existing binary, in case you want to install it using some package manager or if you have installed `tailwindcss`` globally with `npm` along with some plugins you want to use.
+
+    !!! warning
+
+        If you use the new option from **2.7.0** but haven't installed a binary before running any of the management commands, these commands will treat the configured path as a directory and create it, if it is missing. Afterwards the official CLI will be downloaded to this path.
+
+        In case you want to use the new behaviour, it is highly recommended to also set the new setting `TAILWIND_CLI_AUTOMATIC_DOWNLOAD` to `False`.
+
+`TAILWIND_CLI_AUTOMATIC_DOWNLOAD`
+: **Default**: `True`
+
+    Enable or disable the automatic downloading of the official CLI to your machine.
 
 `TAILWIND_CLI_SRC_CSS`
 : **Default**: `None`
