@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.7.2
+
+- Fixed broken commit for 2.7.1. Sorry guys.
+
 ## 2.7.1
 
 - Bumped default Tailwind CLI version to 3.3.6.
