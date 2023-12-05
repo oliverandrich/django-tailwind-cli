@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.7.1
+
+- Bumped default Tailwind CLI version to 3.3.6.
+
 ## 2.7.0
 
 - Added more command line arguments to `tailwind runserver` and `tailwind runserver_plus`.

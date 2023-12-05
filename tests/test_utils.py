@@ -13,13 +13,13 @@ def configure_settings(settings: LazySettings):
 
 
 def test_default_config(config: Config):
-    assert "3.3.5" == config.tailwind_version
+    assert "3.3.6" == config.tailwind_version
     assert Path("~/.local/bin/").expanduser() == config.cli_path
     assert config.src_css is None
     assert "css/tailwind.css" == config.dist_css
     assert "tailwind.config.js" == config.config_file
-    assert "3.3.5" in config.get_download_url()
-    assert "3.3.5" in str(config.get_full_cli_path())
+    assert "3.3.6" in config.get_download_url()
+    assert "3.3.6" in str(config.get_full_cli_path())
 
 
 def test_validate_settigns(config: Config, settings: LazySettings):
@@ -117,19 +117,19 @@ def test_get_full_cli_path(config: Config, mocker: MockerFixture):
 
     platform_system.return_value = "Windows"
     platform_machine.return_value = "x86_64"
-    assert str(config.get_full_cli_path()).endswith("tailwindcss-windows-x64-3.3.5.exe")
+    assert str(config.get_full_cli_path()).endswith("tailwindcss-windows-x64-3.3.6.exe")
 
     platform_system.return_value = "Windows"
     platform_machine.return_value = "amd64"
-    assert str(config.get_full_cli_path()).endswith("tailwindcss-windows-x64-3.3.5.exe")
+    assert str(config.get_full_cli_path()).endswith("tailwindcss-windows-x64-3.3.6.exe")
 
     platform_system.return_value = "Darwin"
     platform_machine.return_value = "aarch64"
-    assert str(config.get_full_cli_path()).endswith("tailwindcss-macos-arm64-3.3.5")
+    assert str(config.get_full_cli_path()).endswith("tailwindcss-macos-arm64-3.3.6")
 
     platform_system.return_value = "Darwin"
     platform_machine.return_value = "arm64"
-    assert str(config.get_full_cli_path()).endswith("tailwindcss-macos-arm64-3.3.5")
+    assert str(config.get_full_cli_path()).endswith("tailwindcss-macos-arm64-3.3.6")
 
 
 def test_get_full_cli_path_with_existing_executable(
