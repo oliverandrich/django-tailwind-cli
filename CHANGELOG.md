@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.7.3
+
+- [#80](https://github.com/oliverandrich/django-tailwind-cli/pull/80) by [@joshuadavidthomas](https://github.com/joshuadavidthomas) added document for using the management commands inside a docker container.
+- [#81](https://github.com/oliverandrich/django-tailwind-cli/pull/81) by [@joshuadavidthomas](https://github.com/joshuadavidthomas) fixed typos in the documentation.
+
 ## 2.7.2
 
 - Fixed broken commit for 2.7.1. Sorry guys.
