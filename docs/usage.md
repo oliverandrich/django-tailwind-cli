@@ -43,6 +43,22 @@ If you prefer to use the standard debug server or have written your own extended
 python manage.py tailwind watch
 ```
 
+### Use of this library with Docker Compose
+
+When used in the `watch` mode, the Tailwind CLI requires a TTY-enabled environment to function correctly. In a Docker Compose setup, ensure that the container executing the Tailwind style rebuild command (either `python manage.py tailwind runserver` or `python manage.py tailwind watch`, as noted above) is configured with the `tty: true` setting in your `docker-compose.yml`.
+
+```yaml
+web:
+  command: python manage.py tailwind runserver
+  tty: true
+
+# or
+
+tailwind-sidecar:
+  command: python manage.py tailwind watch
+  tty: true
+```
+
 ## In your build process
 
 To create an optimized production built of the stylesheet run the following command. Afterwards you are ready to deploy. Take care the this command is run before `python manage.py collectstatic`.
