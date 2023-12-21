@@ -12,13 +12,15 @@ from typing import Tuple, Union
 
 from django.conf import settings
 
+x: int = 1
+
 
 class Config:
     """Configuration for the Tailwind CSS CLI."""
 
     @property
     def tailwind_version(self) -> str:
-        return getattr(settings, "TAILWIND_CLI_VERSION", "3.3.6")
+        return getattr(settings, "TAILWIND_CLI_VERSION", "3.4.0")
 
     @property
     def cli_path(self) -> Union[Path, None]:
@@ -43,13 +45,15 @@ class Config:
     def config_file(self) -> str:
         return getattr(settings, "TAILWIND_CLI_CONFIG_FILE", "tailwind.config.js")
 
-    def validate_settings(self) -> None:
+    @staticmethod
+    def validate_settings() -> None:
         """Validate the settings."""
         if settings.STATICFILES_DIRS is None or len(settings.STATICFILES_DIRS) == 0:
             msg = "STATICFILES_DIRS is empty. Please add a path to your static files."
             raise ValueError(msg)
 
-    def get_system_and_machine(self) -> Tuple[str, str]:
+    @staticmethod
+    def get_system_and_machine() -> Tuple[str, str]:
         """Get the system and machine name."""
         system = platform.system().lower()
         if system == "darwin":
@@ -61,7 +65,7 @@ class Config:
         elif machine == "aarch64":
             machine = "arm64"
 
-        return (system, machine)
+        return system, machine
 
     def get_download_url(self) -> str:
         """Get the download url for the Tailwind CSS CLI."""

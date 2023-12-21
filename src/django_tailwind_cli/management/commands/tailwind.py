@@ -13,7 +13,7 @@ from typing import Any, List, Union
 
 import certifi
 from django.conf import settings
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand, CommandError, CommandParser
 from django.template.utils import get_app_template_dirs
 
 from django_tailwind_cli.utils import Config
@@ -35,7 +35,7 @@ class Command(BaseCommand):
             msg = "Configuration error"
             raise CommandError(msg) from e
 
-    def add_arguments(self, parser: Any) -> None:
+    def add_arguments(self, parser: CommandParser) -> None:
         """Add arguments to the command."""
         subparsers = parser.add_subparsers(dest="tailwind", required=True)
 
@@ -168,13 +168,15 @@ class Command(BaseCommand):
                 kwargs["runserver_cmd"] = "runserver_plus"
                 self.runserver(**kwargs)
             else:
-                msg = "Missing dependencies. Follow the instructions found on https://django-tailwind-cli.andrich.me/installation/."
+                msg = (
+                    "Missing dependencies. Follow the instructions found on "
+                    "https://django-tailwind-cli.andrich.me/installation/."
+                )
                 raise CommandError(msg)
         elif label == "list_templates":
             self.list_templates()
 
     def build(self) -> None:
-        """Build a minified production ready CSS file."""
         try:
             subprocess.run(self.get_build_cmd(), cwd=settings.BASE_DIR, check=True)  # noqa: S603
         except KeyboardInterrupt:
@@ -193,7 +195,8 @@ class Command(BaseCommand):
         except KeyboardInterrupt:
             self.stdout.write(self.style.SUCCESS("Stopped watching for changes."))
 
-    def runserver(self, **kwargs: Any) -> None:  # pragma: no cover
+    @staticmethod
+    def runserver(**kwargs: Any) -> None:  # pragma: no cover
         """Start the Django development server and the Tailwind CLI in watch mode."""
 
         # Start the watch process in a separate process.
@@ -208,42 +211,42 @@ class Command(BaseCommand):
         )
 
         # Start the runserver process in the current process.
-        debugserver_cmd = [sys.executable, "manage.py", kwargs["runserver_cmd"]]
+        debug_server_cmd = [sys.executable, "manage.py", kwargs["runserver_cmd"]]
 
         if addrport := kwargs.get("addrport"):
-            debugserver_cmd.append(addrport)
+            debug_server_cmd.append(addrport)
 
         if kwargs.get("use_ipv6", False):
-            debugserver_cmd.append("--ipv6")
+            debug_server_cmd.append("--ipv6")
         if kwargs.get("no_threading", False):
-            debugserver_cmd.append("--nothreading")
+            debug_server_cmd.append("--nothreading")
         if kwargs.get("no_reloader", False):
-            debugserver_cmd.append("--noreload")
+            debug_server_cmd.append("--noreload")
         if kwargs.get("skip_checks", False):
-            debugserver_cmd.append("--skip-checks")
+            debug_server_cmd.append("--skip-checks")
 
         if kwargs.get("print_sql", False):
-            debugserver_cmd.append("--print-sql")
+            debug_server_cmd.append("--print-sql")
         if kwargs.get("pdb", False):
-            debugserver_cmd.append("--pdb")
+            debug_server_cmd.append("--pdb")
         if kwargs.get("ipdb", False):
-            debugserver_cmd.append("--ipdb")
+            debug_server_cmd.append("--ipdb")
         if kwargs.get("pm", False):
-            debugserver_cmd.append("--pm")
+            debug_server_cmd.append("--pm")
 
         if cert_file := kwargs.get("cert_file"):
-            debugserver_cmd.append(f"--cert-file={cert_file}")
+            debug_server_cmd.append(f"--cert-file={cert_file}")
         elif cert := kwargs.get("cert"):
-            debugserver_cmd.append(f"--cert-file={cert}")
+            debug_server_cmd.append(f"--cert-file={cert}")
         if key_file := kwargs.get("key_file"):
-            debugserver_cmd.append(f"--key-file={key_file}")
+            debug_server_cmd.append(f"--key-file={key_file}")
 
         if reloader_interval := kwargs.get("reloader_interval"):
-            debugserver_cmd.append(f"--reloader-interval={reloader_interval}")
+            debug_server_cmd.append(f"--reloader-interval={reloader_interval}")
 
         debugserver_process = Process(
             target=subprocess.run,
-            args=(debugserver_cmd,),
+            args=(debug_server_cmd,),
             kwargs={
                 "cwd": settings.BASE_DIR,
                 "check": True,
@@ -270,12 +273,13 @@ class Command(BaseCommand):
 
         self.stdout.write("\n".join(template_files))
 
-    def list_template_files(self, template_dir: Union[str, Path]) -> List[str]:
+    @staticmethod
+    def list_template_files(template_dir: Union[str, Path]) -> List[str]:
         template_files: List[str] = []
-        for dirpath, _, filenames in os.walk(str(template_dir)):
+        for d, _, filenames in os.walk(str(template_dir)):
             for filename in filenames:
                 if filename.endswith(".html") or filename.endswith(".txt"):
-                    template_files.append(os.path.join(dirpath, filename))
+                    template_files.append(os.path.join(d, filename))
         return template_files
 
     def get_build_cmd(self) -> List[str]:

@@ -1,9 +1,16 @@
 # Changelog
 
+## 2.8.0 (Unreleased)
+
+- Bumped default Tailwind CLI version to 3.4.0.
+
 ## 2.7.3
 
-- [#80](https://github.com/oliverandrich/django-tailwind-cli/pull/80) by [@joshuadavidthomas](https://github.com/joshuadavidthomas) added document for using the management commands inside a docker container.
-- [#81](https://github.com/oliverandrich/django-tailwind-cli/pull/81) by [@joshuadavidthomas](https://github.com/joshuadavidthomas) fixed typos in the documentation.
+- [#80](https://github.com/oliverandrich/django-tailwind-cli/pull/80)
+  by [@joshuadavidthomas](https://github.com/joshuadavidthomas) added document for using the
+  management commands inside a docker container.
+- [#81](https://github.com/oliverandrich/django-tailwind-cli/pull/81)
+  by [@joshuadavidthomas](https://github.com/joshuadavidthomas) fixed typos in the documentation.
 
 ## 2.7.2
 
@@ -16,29 +23,32 @@
 ## 2.7.0
 
 - Added more command line arguments to `tailwind runserver` and `tailwind runserver_plus`.
-  - `tailwind runserver`
-    - `--skip-checks` [#69](https://github.com/oliverandrich/django-tailwind-cli/issues/69)
-    - `--noreload`
-    - `--nothreading`
-    - `--ipv6`
-  - `tailwind runserver_plus`
-    - `--noreload`
-    - `--nothreading`
-    - `--ipv6`
-    - `--pdb`
-    - `--ipdb`
-    - `--pm`
-    - `--print-sql`
-- Fixed [#67](https://github.com/oliverandrich/django-tailwind-cli/issues/67) to fetch the correct CLI on the Windows platform.
+    - `tailwind runserver`
+        - `--skip-checks` [#69](https://github.com/oliverandrich/django-tailwind-cli/issues/69)
+        - `--noreload`
+        - `--nothreading`
+        - `--ipv6`
+    - `tailwind runserver_plus`
+        - `--noreload`
+        - `--nothreading`
+        - `--ipv6`
+        - `--pdb`
+        - `--ipdb`
+        - `--pm`
+        - `--print-sql`
+- Fixed [#67](https://github.com/oliverandrich/django-tailwind-cli/issues/67) to fetch the correct
+  CLI on the Windows platform.
 - `TAILWIND_CLI_PATH` can also point to an pre-installed binary from a package manager.
-- Added a new setting `TAILWIND_CLI_AUTOMATIC_DOWNLOAD` to steer if you want the library to download the CLI binary or not. This comes in handy with the additional option for `TAILWIND_CLI_PATH` to point to a pre-installed binary.
+- Added a new setting `TAILWIND_CLI_AUTOMATIC_DOWNLOAD` to steer if you want the library to download
+  the CLI binary or not. This comes in handy with the additional option for `TAILWIND_CLI_PATH` to
+  point to a pre-installed binary.
 
 ## 2.6.0
 
 - Added 'support' for Django 5.0.
-  - Extended the tox configuration to include Django 5.0b1 and beyond.
-  - Added the trove classifiert.
-  - Removed the upper boundary of the django version.
+    - Extended the tox configuration to include Django 5.0b1 and beyond.
+    - Added the trove classifiert.
+    - Removed the upper boundary of the django version.
 
 ## 2.5.0
 
@@ -50,7 +60,9 @@
 
 ## 2.4.4
 
-- [#59](https://github.com/oliverandrich/django-tailwind-cli/pull/59) by [@killianarts](https://github.com/killianarts) fixed a regression from 2.4.3 that used the wrong runserver for the runserver_plus command.
+- [#59](https://github.com/oliverandrich/django-tailwind-cli/pull/59)
+  by [@killianarts](https://github.com/killianarts) fixed a regression from 2.4.3 that used the
+  wrong runserver for the runserver_plus command.
 
 ## 2.4.3
 
@@ -63,12 +75,15 @@
 
 ## 2.4.1
 
-- Added checks for `runserver_plus` management command to give a nice error message, when `django-extensions` and `Werkzeug` are not properly installed.
+- Added checks for `runserver_plus` management command to give a nice error message,
+  when `django-extensions` and `Werkzeug` are not properly installed.
 
 ## 2.4.0
 
 - Back to Poetry for project management.
-- [#57](https://github.com/oliverandrich/django-tailwind-cli/pull/57) by [@wshayes](https://github.com/wshayes) added optional django-extensions for the runserver_plus command.
+- [#57](https://github.com/oliverandrich/django-tailwind-cli/pull/57)
+  by [@wshayes](https://github.com/wshayes) added optional django-extensions for the runserver_plus
+  command.
 
 ## 2.3.0
 
@@ -84,16 +99,21 @@
 
 ## 2.2.2
 
-- Fixed an error locating templates from the global template directories configured via `settings.TEMPLATES[0]["DIRS"]`.
+- Fixed an error locating templates from the global template directories configured
+  via `settings.TEMPLATES[0]["DIRS"]`.
 
 ## 2.2.1
 
-- Fixed a bug introduced by refactoring the changes from [#49](https://github.com/oliverandrich/django-tailwind-cli/pull/49).
+- Fixed a bug introduced by refactoring the changes
+  from [#49](https://github.com/oliverandrich/django-tailwind-cli/pull/49).
 
 ## 2.2.0
 
-- [#49](https://github.com/oliverandrich/django-tailwind-cli/pull/49) by [@andrlik](https://github.com/andrlik) added a new management command `tailwind list_templates`.
-- The new default config uses this command to implent the idea of Calton Gibson outlined in his blog post [Using Django’s template loaders to configure Tailwind](https://noumenal.es/notes/tailwind/django-integration/).
+- [#49](https://github.com/oliverandrich/django-tailwind-cli/pull/49)
+  by [@andrlik](https://github.com/andrlik) added a new management
+  command `tailwind list_templates`.
+- The new default config uses this command to implent the idea of Calton Gibson outlined in his blog
+  post [Using Django’s template loaders to configure Tailwind](https://noumenal.es/notes/tailwind/django-integration/).
 
 ## 2.1.1
 
@@ -127,7 +147,8 @@
 - No more theme app required.
 - Easier to install.
 - Better out of the box DX.
-- A custom runserver that starts the Tailwind CLI watcher and the debug server in a single terminal session.
+- A custom runserver that starts the Tailwind CLI watcher and the debug server in a single terminal
+  session.
 - Less dependencies.
 
 ## 1.4.3
@@ -137,7 +158,8 @@
 ## 1.4.0
 
 - Refactored the project for future extensions.
-- Added proper documetation which is hosted at <https://oliverandrich.github.io/django-tailwind-cli/>.
+- Added proper documetation which is hosted
+  at <https://oliverandrich.github.io/django-tailwind-cli/>.
 - Swichted from django-click to django-rich to implement the management commands.
 
 ## 1.3.1
@@ -176,8 +198,10 @@
 
 ## 0.9.2
 
-- Removed `httpx` as a dependency. Downloading the cli is done with `urllib.request.urlopen` once again. Fixes [\#4](https://github.com/oliverandrich/django-tailwind-cli/issues/4)
-- Removed rich-styling information from error strings. Fixes [\#5](https://github.com/oliverandrich/django-tailwind-cli/issues/5)
+- Removed `httpx` as a dependency. Downloading the cli is done with `urllib.request.urlopen` once
+  again. Fixes [\#4](https://github.com/oliverandrich/django-tailwind-cli/issues/4)
+- Removed rich-styling information from error strings.
+  Fixes [\#5](https://github.com/oliverandrich/django-tailwind-cli/issues/5)
 - Fixing more typos in the README.md.
 
 ## 0.9.1
