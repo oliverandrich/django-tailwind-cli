@@ -38,7 +38,7 @@
         - `--print-sql`
 - Fixed [#67](https://github.com/oliverandrich/django-tailwind-cli/issues/67) to fetch the correct
   CLI on the Windows platform.
-- `TAILWIND_CLI_PATH` can also point to an pre-installed binary from a package manager.
+- `TAILWIND_CLI_PATH` can also point to a pre-installed binary from a package manager.
 - Added a new setting `TAILWIND_CLI_AUTOMATIC_DOWNLOAD` to steer if you want the library to download
   the CLI binary or not. This comes in handy with the additional option for `TAILWIND_CLI_PATH` to
   point to a pre-installed binary.
@@ -146,7 +146,7 @@
 - Version 2.0.0 is major refactoring compared to version 1.4.3.
 - No more theme app required.
 - Easier to install.
-- Better out of the box DX.
+- Better out-of-the-box DX.
 - A custom runserver that starts the Tailwind CLI watcher and the debug server in a single terminal
   session.
 - Less dependencies.
