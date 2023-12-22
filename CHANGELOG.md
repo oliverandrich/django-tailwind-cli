@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.8.0 (Unreleased)
+## 2.8.0
 
 - Bumped default Tailwind CLI version to 3.4.0.
 
