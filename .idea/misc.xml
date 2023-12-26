@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="Black">
-    <option name="pathToExecutable" value="/opt/homebrew/bin/black" />
-    <option name="sdkName" value="Poetry (django-tailwind-cli)" />
-  </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Poetry (django-tailwind-cli)" project-jdk-type="Python SDK" />
-</project>
