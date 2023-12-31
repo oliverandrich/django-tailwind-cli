@@ -42,7 +42,7 @@ The package can be configured by a few settings, which can be overwritten in the
     If you don't define this setting, the default of the Tailwind CLI is used.
 
 `TAILWIND_CLI_DIST_CSS`
-: **Default**: `"css/styles.css"`
+: **Default**: `"css/tailwind.css"`
 
     The name of the output file. This file is stored relative to the first element of the `STATICFILES_DIRS` array.
 
