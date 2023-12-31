@@ -55,7 +55,7 @@ The package can be configured by a few settings, which can be overwritten in the
 
 If you don't create a `tailwind.config.js` file yourself, the management commands will create a sane default for you inside the `BASE_DIR` of your project. The default activates all the official plugins for Tailwind CSS and adds a minimal plugin to support some variants for [HTMX](https://htmx.org/).
 
-The default configuration also embrasses the nice trick authored by Carlton Gibson in his post [Using Django’s template loaders to configure Tailwind¶](https://noumenal.es/notes/tailwind/django-integration/). The implementation adopts Carlton's implementation to honor the conventions of this project. If you put your `tailwind.config.js` in a different location then your `BASE_DIR`, you have to change this file too.
+The default configuration also embraces the nice trick authored by Carlton Gibson in his post [Using Django’s template loaders to configure Tailwind¶](https://noumenal.es/notes/tailwind/django-integration/). The implementation adopts Carlton's implementation to honor the conventions of this project. If you put your `tailwind.config.js` in a different location then your `BASE_DIR`, you have to change this file too.
 
 This configuration uses the management command `tailwind list_templates`, which list all the templates files inside your project.
 
