@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.8.1
+
+- [#83](https://github.com/oliverandrich/django-tailwind-cli/pull/83)
+  by [@lgp171188](https://github.com/lgp171188) fixed some documentation errors.
+
 ## 2.8.0
 
 - Bumped default Tailwind CLI version to 3.4.0.
@@ -23,19 +28,19 @@
 ## 2.7.0
 
 - Added more command line arguments to `tailwind runserver` and `tailwind runserver_plus`.
-    - `tailwind runserver`
-        - `--skip-checks` [#69](https://github.com/oliverandrich/django-tailwind-cli/issues/69)
-        - `--noreload`
-        - `--nothreading`
-        - `--ipv6`
-    - `tailwind runserver_plus`
-        - `--noreload`
-        - `--nothreading`
-        - `--ipv6`
-        - `--pdb`
-        - `--ipdb`
-        - `--pm`
-        - `--print-sql`
+  - `tailwind runserver`
+    - `--skip-checks` [#69](https://github.com/oliverandrich/django-tailwind-cli/issues/69)
+    - `--noreload`
+    - `--nothreading`
+    - `--ipv6`
+  - `tailwind runserver_plus`
+    - `--noreload`
+    - `--nothreading`
+    - `--ipv6`
+    - `--pdb`
+    - `--ipdb`
+    - `--pm`
+    - `--print-sql`
 - Fixed [#67](https://github.com/oliverandrich/django-tailwind-cli/issues/67) to fetch the correct
   CLI on the Windows platform.
 - `TAILWIND_CLI_PATH` can also point to a pre-installed binary from a package manager.
@@ -46,9 +51,9 @@
 ## 2.6.0
 
 - Added 'support' for Django 5.0.
-    - Extended the tox configuration to include Django 5.0b1 and beyond.
-    - Added the trove classifiert.
-    - Removed the upper boundary of the django version.
+  - Extended the tox configuration to include Django 5.0b1 and beyond.
+  - Added the trove classifiert.
+  - Removed the upper boundary of the django version.
 
 ## 2.5.0
 
