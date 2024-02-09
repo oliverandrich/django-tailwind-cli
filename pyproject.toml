@@ -43,7 +43,7 @@ werkzeug = { version = "^3.0.0", optional = true }
 django-types = ">=0.17,<0.20"
 mkdocs-material = "^9.3.1"
 coverage = { extras = ["toml"], version = "^7.3.2" }
-pytest = "^7.4.2"
+pytest = ">=7.4.2,<9.0.0"
 pytest-django = "^4.5.2"
 pytest-cov = "^4.1.0"
 pytest-mock = "^3.12.0"
