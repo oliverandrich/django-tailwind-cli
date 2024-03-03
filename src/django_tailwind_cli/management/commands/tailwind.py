@@ -49,20 +49,20 @@ class Command(BaseCommand):
             "runserver",
             help="Start the Django development server and the Tailwind CLI in watch mode.",
         )
-        parser.add_argument(
+        runserver_parser.add_argument(
             "--ipv6",
             "-6",
             action="store_true",
             dest="use_ipv6",
             help="Tells Django to use an IPv6 address.",
         )
-        parser.add_argument(
+        runserver_parser.add_argument(
             "--nothreading",
             action="store_true",
             dest="no_threading",
             help="Tells Django to NOT use threading.",
         )
-        parser.add_argument(
+        runserver_parser.add_argument(
             "--noreload",
             action="store_true",
             dest="no_reloader",
