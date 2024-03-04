@@ -49,6 +49,7 @@ class Command(BaseCommand):
             "runserver",
             help="Start the Django development server and the Tailwind CLI in watch mode.",
         )
+
         runserver_parser.add_argument(
             "--ipv6",
             "-6",
@@ -61,6 +62,12 @@ class Command(BaseCommand):
             action="store_true",
             dest="no_threading",
             help="Tells Django to NOT use threading.",
+        )
+        runserver_parser.add_argument(
+            "--nostatic",
+            action="store_true",
+            dest="no_reloader",
+            help="Tells Django to NOT use the auto-reloader.",
         )
         runserver_parser.add_argument(
             "--noreload",
@@ -262,7 +269,7 @@ class Command(BaseCommand):
             watch_process.terminate()
             debugserver_process.terminate()
 
-    def list_templates(self):
+    def list_templates(self) -> None:
         template_files: List[str] = []
         app_template_dirs = get_app_template_dirs("templates")
         for app_template_dir in app_template_dirs:

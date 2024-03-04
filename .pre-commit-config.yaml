@@ -25,10 +25,12 @@ repos:
     hooks:
       - id: ruff
 
-  - repo: https://github.com/RobertCraigie/pyright-python
-    rev: v1.1.332
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: "v1.7.1"
     hooks:
-      - id: pyright
+      - id: mypy
+        additional_dependencies:
+          - django-stubs==4.2.7
 
   - repo: https://github.com/rtts/djhtml
     rev: 3.0.6
