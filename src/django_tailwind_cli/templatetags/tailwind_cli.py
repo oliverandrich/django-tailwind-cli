@@ -1,6 +1,5 @@
 """Tailwind template tags."""
 
-
 from typing import Dict, Union
 
 from django import template

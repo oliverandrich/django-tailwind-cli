@@ -12,8 +12,6 @@ from typing import Tuple, Union
 
 from django.conf import settings
 
-x: int = 1
-
 
 class Config:
     """Configuration for the Tailwind CSS CLI."""
