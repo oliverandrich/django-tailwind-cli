@@ -1,5 +1,5 @@
 default_language_version:
-  python: python3.8
+  python: python3.9
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -25,12 +25,10 @@ repos:
     hooks:
       - id: ruff
 
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: "v1.7.1"
+  - repo: https://github.com/RobertCraigie/pyright-python
+    rev: v1.1.353
     hooks:
-      - id: mypy
-        additional_dependencies:
-          - django-stubs==4.2.7
+      - id: pyright
 
   - repo: https://github.com/rtts/djhtml
     rev: 3.0.6

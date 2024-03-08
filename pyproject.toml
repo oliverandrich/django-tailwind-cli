@@ -23,7 +23,6 @@ classifiers = [
   "Topic :: Utilities",
   "Environment :: Web Environment",
   "Framework :: Django :: 3.2",
-  "Framework :: Django :: 4.1",
   "Framework :: Django :: 4.2",
   "Framework :: Django :: 5.0",
 ]
@@ -35,6 +34,7 @@ django = ">=3.2"
 certifi = ">=2023.7.22,<2025.0.0"
 django-extensions = { version = "^3.2.1", optional = true }
 werkzeug = { version = "^3.0.0", optional = true }
+django-typer = "^1.0.3"
 
 [tool.poetry.extras]
 "django-extensions" = ["django-extensions", "werkzeug"]
@@ -47,7 +47,7 @@ pytest-django = "^4.5.2"
 pytest-cov = "^4.1.0"
 pytest-mock = "^3.12.0"
 tox = "^4.11.4"
-django-stubs = { extras = ["compatible-mypy"], version = "^4.2.7" }
+django-types = "^0.19.1"
 
 [build-system]
 requires = ["poetry-core"]
@@ -56,7 +56,7 @@ build-backend = "poetry.core.masonry.api"
 # Black
 [tool.black]
 target-version = ["py38"]
-line-length = 100
+line-length = 120
 skip-string-normalization = true
 exclude = '''
 /(
@@ -70,22 +70,17 @@ exclude = '''
 )/
 '''
 
-# mypy
-[tool.mypy]
-mypy_path = "src/"
-python_version = "3.8"
-strict = true
-namespace_packages = false
-warn_unreachable = true
-
-[[tool.mypy.overrides]]
-module = "tests.*"
-allow_untyped_defs = true
+# Pyright
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+typeCheckingMode = "strict"
+ignore = ["./tests/**/*"]
 
 # Ruff
 [tool.ruff]
 target-version = "py38"
-line-length = 100
+line-length = 120
 select = [
   "A",
   "ARG",
