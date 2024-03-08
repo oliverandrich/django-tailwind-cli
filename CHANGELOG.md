@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Bumped default Tailwind CLI version to 3.4.1.
+
 ## 2.8.1
 
 - [#83](https://github.com/oliverandrich/django-tailwind-cli/pull/83)

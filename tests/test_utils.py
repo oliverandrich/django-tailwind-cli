@@ -9,20 +9,18 @@ def configure_settings(settings):
 
 
 def test_default_config(config):
-    assert "3.4.0" == config.tailwind_version
+    assert "3.4.1" == config.tailwind_version
     assert Path("~/.local/bin/").expanduser() == config.cli_path
     assert config.src_css is None
     assert "css/tailwind.css" == config.dist_css
     assert "tailwind.config.js" == config.config_file
-    assert "3.4.0" in config.get_download_url()
-    assert "3.4.0" in str(config.get_full_cli_path())
+    assert "3.4.1" in config.get_download_url()
+    assert "3.4.1" in str(config.get_full_cli_path())
 
 
 def test_validate_settigns(config, settings):
     settings.STATICFILES_DIRS = []
-    with pytest.raises(
-        ValueError, match="STATICFILES_DIRS is empty. Please add a path to your static files."
-    ):
+    with pytest.raises(ValueError, match="STATICFILES_DIRS is empty. Please add a path to your static files."):
         config.validate_settings()
 
 
@@ -32,9 +30,7 @@ def test_get_full_config_file_path(config):
 
 def test_get_full_dist_css_path_without_staticfiles_dir_set(config, settings):
     settings.STATICFILES_DIRS = None
-    with pytest.raises(
-        ValueError, match="STATICFILES_DIRS is empty. Please add a path to your static files."
-    ):
+    with pytest.raises(ValueError, match="STATICFILES_DIRS is empty. Please add a path to your static files."):
         config.get_full_dist_css_path()
 
 
@@ -82,48 +78,42 @@ def test_get_system_and_machine(config, mocker):
     assert machine == "arm64"
 
 
-def test_get_download_url(config, mocker):
+@pytest.mark.parametrize(
+    "platform,machine,result",
+    [
+        ("Windows", "x86_64", "tailwindcss-windows-x64.exe"),
+        ("Windows", "amd64", "tailwindcss-windows-x64.exe"),
+        ("Darwin", "aarch64", "tailwindcss-macos-arm64"),
+        ("Darwin", "arm64", "tailwindcss-macos-arm64"),
+    ],
+)
+def test_get_download_url(config, mocker, platform, machine, result):
     platform_system = mocker.patch("platform.system")
     platform_machine = mocker.patch("platform.machine")
 
-    platform_system.return_value = "Windows"
-    platform_machine.return_value = "x86_64"
-    assert config.get_download_url().endswith("tailwindcss-windows-x64.exe")
-
-    platform_system.return_value = "Windows"
-    platform_machine.return_value = "amd64"
-    assert config.get_download_url().endswith("tailwindcss-windows-x64.exe")
-
-    platform_system.return_value = "Darwin"
-    platform_machine.return_value = "aarch64"
-    assert config.get_download_url().endswith("tailwindcss-macos-arm64")
-
-    platform_system.return_value = "Darwin"
-    platform_machine.return_value = "arm64"
-    assert config.get_download_url().endswith("tailwindcss-macos-arm64")
+    platform_system.return_value = platform
+    platform_machine.return_value = machine
+    assert config.get_download_url().endswith(result)
 
 
-def test_get_full_cli_path(config, mocker):
+@pytest.mark.parametrize(
+    "platform,machine,result",
+    [
+        ("Windows", "x86_64", "tailwindcss-windows-x64-3.4.1.exe"),
+        ("Windows", "amd64", "tailwindcss-windows-x64-3.4.1.exe"),
+        ("Darwin", "aarch64", "tailwindcss-macos-arm64-3.4.1"),
+        ("Darwin", "arm64", "tailwindcss-macos-arm64-3.4.1"),
+    ],
+)
+def test_get_full_cli_path(config, mocker, platform, machine, result):
     assert "/.local/bin/tailwindcss-" in str(config.get_full_cli_path())
 
     platform_system = mocker.patch("platform.system")
     platform_machine = mocker.patch("platform.machine")
 
-    platform_system.return_value = "Windows"
-    platform_machine.return_value = "x86_64"
-    assert str(config.get_full_cli_path()).endswith("tailwindcss-windows-x64-3.4.0.exe")
-
-    platform_system.return_value = "Windows"
-    platform_machine.return_value = "amd64"
-    assert str(config.get_full_cli_path()).endswith("tailwindcss-windows-x64-3.4.0.exe")
-
-    platform_system.return_value = "Darwin"
-    platform_machine.return_value = "aarch64"
-    assert str(config.get_full_cli_path()).endswith("tailwindcss-macos-arm64-3.4.0")
-
-    platform_system.return_value = "Darwin"
-    platform_machine.return_value = "arm64"
-    assert str(config.get_full_cli_path()).endswith("tailwindcss-macos-arm64-3.4.0")
+    platform_system.return_value = platform
+    platform_machine.return_value = machine
+    assert str(config.get_full_cli_path()).endswith(result)
 
 
 def test_get_full_cli_path_with_existing_executable(config, tmp_path, settings):

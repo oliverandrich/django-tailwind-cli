@@ -18,7 +18,7 @@ class Config:
 
     @property
     def tailwind_version(self) -> str:
-        return getattr(settings, "TAILWIND_CLI_VERSION", "3.4.0")
+        return getattr(settings, "TAILWIND_CLI_VERSION", "3.4.1")
 
     @property
     def cli_path(self) -> Union[Path, None]:
@@ -78,12 +78,7 @@ class Config:
         """Get path to the Tailwind CSS CLI."""
 
         # If Tailwind CSS CLI path points to an existing executable use is.
-        if (
-            self.cli_path
-            and self.cli_path.exists()
-            and self.cli_path.is_file()
-            and os.access(self.cli_path, os.X_OK)
-        ):
+        if self.cli_path and self.cli_path.exists() and self.cli_path.is_file() and os.access(self.cli_path, os.X_OK):
             return self.cli_path
 
         # Otherwise try to calculate the full cli path as usual.
