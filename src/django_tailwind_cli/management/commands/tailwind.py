@@ -9,24 +9,23 @@ import sys
 import urllib.request
 from multiprocessing import Process
 from pathlib import Path
-from typing import Any, List, Union
+from typing import Annotated, List, Optional, Union
 
 import certifi
 from django.conf import settings
-from django.core.management.base import BaseCommand, CommandError, CommandParser
+from django.core.management.base import CommandError
 from django.template.utils import get_app_template_dirs
+from django_typer import TyperCommand, command, initialize
+from typer import Argument, Option
 
 from django_tailwind_cli.utils import Config
 
 
-class Command(BaseCommand):
-    """Create and manage a Tailwind CSS theme."""
+class Command(TyperCommand):
+    help = """Create and manage a Tailwind CSS theme."""
 
-    def __init__(self, *args: Any, **kwargs: Any):
-        """Initialize the command."""
-
-        super().__init__(*args, **kwargs)
-
+    @initialize()
+    def init(self):
         # Get the config from the settings and validate it.
         self.config = Config()
         try:
@@ -35,177 +34,176 @@ class Command(BaseCommand):
             msg = "Configuration error"
             raise CommandError(msg) from e
 
-    def add_arguments(self, parser: CommandParser) -> None:
-        """Add arguments to the command."""
-        subparsers = parser.add_subparsers(dest="tailwind", required=True)
-
-        subparsers.add_parser("build", help="Build a minified production ready CSS file.")
-
-        subparsers.add_parser("watch", help="Start Tailwind CLI in watch mode during development.")
-
-        subparsers.add_parser("list_templates", help="List the templates of your django project.")
-
-        runserver_parser = subparsers.add_parser(
-            "runserver",
-            help="Start the Django development server and the Tailwind CLI in watch mode.",
-        )
-
-        runserver_parser.add_argument(
-            "--ipv6",
-            "-6",
-            action="store_true",
-            dest="use_ipv6",
-            help="Tells Django to use an IPv6 address.",
-        )
-        runserver_parser.add_argument(
-            "--nothreading",
-            action="store_true",
-            dest="no_threading",
-            help="Tells Django to NOT use threading.",
-        )
-        runserver_parser.add_argument(
-            "--nostatic",
-            action="store_true",
-            dest="no_reloader",
-            help="Tells Django to NOT use the auto-reloader.",
-        )
-        runserver_parser.add_argument(
-            "--noreload",
-            action="store_true",
-            dest="no_reloader",
-            help="Tells Django to NOT use the auto-reloader.",
-        )
-        runserver_parser.add_argument(
-            "--skip-checks",
-            action="store_true",
-            help="Skip system checks.",
-        )
-        runserver_parser.add_argument(
-            "addrport", nargs="?", help="Optional port number, or ipaddr:port"
-        )
-
-        runserver_plus_parser = subparsers.add_parser(
-            "runserver_plus",
-            help=(
-                "Start the django-extensions runserver_plus development server and the "
-                "Tailwind CLI in watch mode."
-            ),
-        )
-        runserver_plus_parser.add_argument(
-            "--ipv6",
-            "-6",
-            action="store_true",
-            dest="use_ipv6",
-            help="Tells Django to use an IPv6 address.",
-        )
-        runserver_plus_parser.add_argument(
-            "--nothreading",
-            action="store_true",
-            dest="no_threading",
-            help="Do not run in multithreaded mode.",
-        )
-        runserver_plus_parser.add_argument(
-            "--noreload",
-            action="store_true",
-            dest="no_reloader",
-            help="Tells Django to NOT use the auto-reloader.",
-        )
-        runserver_plus_parser.add_argument(
-            "--pdb",
-            action="store_true",
-            help="Drop into pdb shell at the start of any view.",
-        )
-        runserver_plus_parser.add_argument(
-            "--ipdb",
-            action="store_true",
-            help="Drop into ipdb shell at the start of any view.",
-        )
-        runserver_plus_parser.add_argument(
-            "--pm",
-            action="store_true",
-            help="Drop into (i)pdb shell if an exception is raised in a view.",
-        )
-        runserver_plus_parser.add_argument(
-            "--print-sql",
-            action="store_true",
-            help="Print SQL queries as they're executed.",
-        )
-        runserver_plus_parser.add_argument(
-            "--cert-file", help="Optional SSL certificate file to use for the development server."
-        )
-        runserver_plus_parser.add_argument(
-            "--cert",
-            help="[DEPRECATED] Optional SSL certificate file to use for the development server.",
-        )
-        runserver_plus_parser.add_argument(
-            "--key-file", help="Optional SSL certificate file to use for the development server."
-        )
-        runserver_plus_parser.add_argument(
-            "--reloader-interval",
-            help="Optional SSL certificate file to use for the development server.",
-        )
-        runserver_plus_parser.add_argument(
-            "addrport", nargs="?", help="Optional port number, or ipaddr:port"
-        )
-
-    def handle(self, *_args: Any, **kwargs: Any) -> None:
-        """Perform the command's actions."""
-
-        # Get the subcommand from the kwargs.
-        label = kwargs.get("tailwind")
-        del kwargs["tailwind"]
-
         # Before running the actual subcommand, we need to make sure that the CLI is installed and
         # the config file exists.
         self._download_cli_if_not_exists()
         self._create_tailwind_config_if_not_exists()
 
-        # Start the subcommand.
-        if label == "build":
-            self.build()
-        elif label == "watch":
-            self.watch()
-        elif label == "runserver":
-            kwargs["runserver_cmd"] = "runserver"
-            self.runserver(**kwargs)
-        elif label == "runserver_plus":
-            if importlib.util.find_spec("django_extensions") and importlib.util.find_spec(
-                "werkzeug"
-            ):
-                kwargs["runserver_cmd"] = "runserver_plus"
-                self.runserver(**kwargs)
-            else:
-                msg = (
-                    "Missing dependencies. Follow the instructions found on "
-                    "https://django-tailwind-cli.andrich.me/installation/."
-                )
-                raise CommandError(msg)
-        elif label == "list_templates":
-            self.list_templates()
-
-    def build(self) -> None:
+    @command(help="Build a minified production ready CSS file.")
+    def build(self):
+        build_cmd = [
+            str(self.config.get_full_cli_path()),
+            "--output",
+            str(self.config.get_full_dist_css_path()),
+            "--minify",
+        ]
+        if self.config.src_css is not None:
+            build_cmd.extend(
+                [
+                    "--input",
+                    str(self.config.get_full_src_css_path()),
+                ]
+            )
         try:
-            subprocess.run(self.get_build_cmd(), cwd=settings.BASE_DIR, check=True)  # noqa: S603
+            subprocess.run(build_cmd, cwd=settings.BASE_DIR, check=True)  # noqa: S603
         except KeyboardInterrupt:
-            self.stdout.write(self.style.ERROR("Canceled building production stylesheet."))
+            self._write_error("Canceled building production stylesheet.")
         else:
-            self.stdout.write(
-                self.style.SUCCESS(
-                    f"Built production stylesheet '{self.config.get_full_dist_css_path()}'."
-                )
+            self._write_success(f"Built production stylesheet '{self.config.get_full_dist_css_path()}'.")
+
+    @command(help="Start Tailwind CLI in watch mode during development.")
+    def watch(self):
+        watch_cmd = [
+            str(self.config.get_full_cli_path()),
+            "--output",
+            str(self.config.get_full_dist_css_path()),
+            "--watch",
+        ]
+        if self.config.src_css is not None:
+            watch_cmd.extend(
+                [
+                    "--input",
+                    str(self.config.get_full_src_css_path()),
+                ]
             )
 
-    def watch(self) -> None:
-        """Start Tailwind CLI in watch mode during development."""
         try:
-            subprocess.run(self.get_watch_cmd(), cwd=settings.BASE_DIR, check=True)  # noqa: S603
+            subprocess.run(watch_cmd, cwd=settings.BASE_DIR, check=True)  # noqa: S603
         except KeyboardInterrupt:
-            self.stdout.write(self.style.SUCCESS("Stopped watching for changes."))
+            self._write_success("Stopped watching for changes.")
 
-    @staticmethod
-    def runserver(**kwargs: Any) -> None:  # pragma: no cover
-        """Start the Django development server and the Tailwind CLI in watch mode."""
+    @command(name="list_templates", help="List the templates of your django project.")
+    def list_templates(self):
+        template_files: List[str] = []
+        app_template_dirs = get_app_template_dirs("templates")
+        for app_template_dir in app_template_dirs:
+            template_files += self._list_template_files(app_template_dir)
 
+        for template_dir in settings.TEMPLATES[0]["DIRS"]:
+            template_files += self._list_template_files(template_dir)
+
+        self.stdout.write("\n".join(template_files))
+
+    @command(help="Start the Django development server and the Tailwind CLI in watch mode.")
+    def runserver(
+        self,
+        addrport: Annotated[Optional[str], Argument(help="Optional port number, or ipaddr:port")] = None,
+        *,
+        use_ipv6: Annotated[bool, Option("--ipv6", "-6", help="Tells Django to use an IPv6 address.")] = False,
+        no_threading: Annotated[bool, Option("--nothreading", help="Tells Django to NOT use threading.")] = False,
+        no_static: Annotated[
+            bool, Option("--nostatic", help="Tells Django to NOT automatically serve static files at STATIC_URL.")
+        ] = False,
+        no_reloader: Annotated[bool, Option("--noreload", help="Tells Django to NOT use the auto-reloader.")] = False,
+        skip_checks: Annotated[bool, Option("--skip-checks", help="Skip system checks.")] = False,
+    ):
+        debug_server_cmd = [sys.executable, "manage.py", "runserver"]
+
+        if use_ipv6:
+            debug_server_cmd.append("--ipv6")
+        if no_threading:
+            debug_server_cmd.append("--nothreading")
+        if no_static:
+            debug_server_cmd.append("--nostatic")
+        if no_reloader:
+            debug_server_cmd.append("--noreload")
+        if skip_checks:
+            debug_server_cmd.append("--skip-checks")
+        if addrport:
+            debug_server_cmd.append(addrport)
+
+        self._runserver(debug_server_cmd)
+
+    @command(
+        name="runserver_plus",
+        help="Start the django-extensions runserver_plus development server and the Tailwind CLI in watch mode.",
+    )
+    def runserver_plus(
+        self,
+        addrport: Annotated[Optional[str], Argument(help="Optional port number, or ipaddr:port")] = None,
+        *,
+        use_ipv6: Annotated[bool, Option("--ipv6", "-6", help="Tells Django to use an IPv6 address.")] = False,
+        no_threading: Annotated[bool, Option("--nothreading", help="Tells Django to NOT use threading.")] = False,
+        no_static: Annotated[
+            bool, Option("--nostatic", help="Tells Django to NOT automatically serve static files at STATIC_URL.")
+        ] = False,
+        no_reloader: Annotated[bool, Option("--noreload", help="Tells Django to NOT use the auto-reloader.")] = False,
+        skip_checks: Annotated[bool, Option("--skip-checks", help="Skip system checks.")] = False,
+        pdb: Annotated[bool, Option("--pdb", help="Drop into pdb shell at the start of any view.")] = False,
+        ipdb: Annotated[bool, Option("--ipdb", help="Drop into ipdb shell at the start of any view.")] = False,
+        pm: Annotated[bool, Option("--pm", help="Drop into (i)pdb shell if an exception is raised in a view.")] = False,
+        print_sql: Annotated[bool, Option("--print-sql", help="Print SQL queries as they're executed.")] = False,
+        print_sql_location: Annotated[
+            bool, Option("--print-sql-location", help="Show location in code where SQL query generated from.")
+        ] = False,
+        cert_file: Annotated[
+            Optional[str],
+            Option(
+                help=(
+                    "SSL .crt file path. If not provided path from --key-file will be selected. Either --cert-file or "
+                    "--key-file must be provided to use SSL."
+                )
+            ),
+        ] = None,
+        key_file: Annotated[
+            Optional[str],
+            Option(
+                help=(
+                    "SSL .key file path. If not provided path from --cert-file will be "
+                    "selected. Either --cert-file or --key-file must be provided to use SSL."
+                )
+            ),
+        ] = None,
+    ):
+        if not importlib.util.find_spec("django_extensions") and not importlib.util.find_spec("werkzeug"):
+            msg = (
+                "Missing dependencies. Follow the instructions found on "
+                "https://django-tailwind-cli.andrich.me/installation/."
+            )
+            raise CommandError(msg)
+
+        debug_server_cmd = [sys.executable, "manage.py", "runserver_plus"]
+
+        if use_ipv6:
+            debug_server_cmd.append("--ipv6")
+        if no_threading:
+            debug_server_cmd.append("--nothreading")
+        if no_static:
+            debug_server_cmd.append("--nostatic")
+        if no_reloader:
+            debug_server_cmd.append("--noreload")
+        if skip_checks:
+            debug_server_cmd.append("--skip-checks")
+        if pdb:
+            debug_server_cmd.append("--pdb")
+        if ipdb:
+            debug_server_cmd.append("--ipdb")
+        if pm:
+            debug_server_cmd.append("--pm")
+        if print_sql:
+            debug_server_cmd.append("--print-sql")
+        if print_sql_location:
+            debug_server_cmd.append("--print-sql-location")
+        if cert_file:
+            debug_server_cmd.append(f"--cert-file={cert_file}")
+        if key_file:
+            debug_server_cmd.append(f"--key-file={key_file}")
+        if addrport:
+            debug_server_cmd.append(addrport)
+
+        self._runserver(debug_server_cmd)
+
+    def _runserver(self, debug_server_cmd: List[str]) -> None:
         # Start the watch process in a separate process.
         watch_cmd = [sys.executable, "manage.py", "tailwind", "watch"]
         watch_process = Process(
@@ -218,39 +216,6 @@ class Command(BaseCommand):
         )
 
         # Start the runserver process in the current process.
-        debug_server_cmd = [sys.executable, "manage.py", kwargs["runserver_cmd"]]
-
-        if addrport := kwargs.get("addrport"):
-            debug_server_cmd.append(addrport)
-
-        if kwargs.get("use_ipv6", False):
-            debug_server_cmd.append("--ipv6")
-        if kwargs.get("no_threading", False):
-            debug_server_cmd.append("--nothreading")
-        if kwargs.get("no_reloader", False):
-            debug_server_cmd.append("--noreload")
-        if kwargs.get("skip_checks", False):
-            debug_server_cmd.append("--skip-checks")
-
-        if kwargs.get("print_sql", False):
-            debug_server_cmd.append("--print-sql")
-        if kwargs.get("pdb", False):
-            debug_server_cmd.append("--pdb")
-        if kwargs.get("ipdb", False):
-            debug_server_cmd.append("--ipdb")
-        if kwargs.get("pm", False):
-            debug_server_cmd.append("--pm")
-
-        if cert_file := kwargs.get("cert_file"):
-            debug_server_cmd.append(f"--cert-file={cert_file}")
-        elif cert := kwargs.get("cert"):
-            debug_server_cmd.append(f"--cert-file={cert}")
-        if key_file := kwargs.get("key_file"):
-            debug_server_cmd.append(f"--key-file={key_file}")
-
-        if reloader_interval := kwargs.get("reloader_interval"):
-            debug_server_cmd.append(f"--reloader-interval={reloader_interval}")
-
         debugserver_process = Process(
             target=subprocess.run,
             args=(debug_server_cmd,),
@@ -269,78 +234,18 @@ class Command(BaseCommand):
             watch_process.terminate()
             debugserver_process.terminate()
 
-    def list_templates(self) -> None:
-        template_files: List[str] = []
-        app_template_dirs = get_app_template_dirs("templates")
-        for app_template_dir in app_template_dirs:
-            template_files += self.list_template_files(app_template_dir)
-
-        for template_dir in settings.TEMPLATES[0]["DIRS"]:
-            template_files += self.list_template_files(template_dir)
-
-        self.stdout.write("\n".join(template_files))
-
-    @staticmethod
-    def list_template_files(template_dir: Union[str, Path]) -> List[str]:
-        template_files: List[str] = []
-        for d, _, filenames in os.walk(str(template_dir)):
-            for filename in filenames:
-                if filename.endswith(".html") or filename.endswith(".txt"):
-                    template_files.append(os.path.join(d, filename))
-        return template_files
-
-    def get_build_cmd(self) -> List[str]:
-        """Get the command to build the CSS."""
-        if self.config.src_css is None:
-            return [
-                str(self.config.get_full_cli_path()),
-                "--output",
-                str(self.config.get_full_dist_css_path()),
-                "--minify",
-            ]
-        else:
-            return [
-                str(self.config.get_full_cli_path()),
-                "--input",
-                str(self.config.get_full_src_css_path()),
-                "--output",
-                str(self.config.get_full_dist_css_path()),
-                "--minify",
-            ]
-
-    def get_watch_cmd(self) -> List[str]:
-        """Get the command to watch the CSS."""
-        if self.config.src_css is None:
-            return [
-                str(self.config.get_full_cli_path()),
-                "--output",
-                str(self.config.get_full_dist_css_path()),
-                "--watch",
-            ]
-        else:
-            return [
-                str(self.config.get_full_cli_path()),
-                "--input",
-                str(self.config.get_full_src_css_path()),
-                "--output",
-                str(self.config.get_full_dist_css_path()),
-                "--watch",
-            ]
-
     def _download_cli_if_not_exists(self) -> None:
         dest_file = self.config.get_full_cli_path()
 
         if not dest_file.exists() and self.config.automatic_download:
             download_url = self.config.get_download_url()
             self.stdout.write(self.style.ERROR("Tailwind CSS CLI not found."))
-            self.stdout.write(
-                self.style.WARNING(f"Downloading Tailwind CSS CLI from '{download_url}'")
-            )
+            self.stdout.write(self.style.WARNING(f"Downloading Tailwind CSS CLI from '{download_url}'"))
             dest_file.parent.mkdir(parents=True, exist_ok=True)
             certifi_context = ssl.create_default_context(cafile=certifi.where())
-            with urllib.request.urlopen(  # noqa: S310
-                download_url, context=certifi_context
-            ) as source, dest_file.open(mode="wb") as dest:
+            with urllib.request.urlopen(download_url, context=certifi_context) as source, dest_file.open(  # noqa: S310
+                mode="wb"
+            ) as dest:
                 shutil.copyfileobj(source, dest)
             # make cli executable
             dest_file.chmod(0o755)
@@ -352,9 +257,22 @@ class Command(BaseCommand):
         if not tailwind_config_file.exists():
             self.stdout.write(self.style.ERROR("Tailwind CSS config not found."))
             tailwind_config_file.write_text(DEFAULT_TAILWIND_CONFIG)
-            self.stdout.write(
-                self.style.SUCCESS(f"Created Tailwind CSS config at '{tailwind_config_file}'")
-            )
+            self.stdout.write(self.style.SUCCESS(f"Created Tailwind CSS config at '{tailwind_config_file}'"))
+
+    @staticmethod
+    def _list_template_files(template_dir: Union[str, Path]) -> List[str]:
+        template_files: List[str] = []
+        for d, _, filenames in os.walk(str(template_dir)):
+            for filename in filenames:
+                if filename.endswith(".html") or filename.endswith(".txt"):
+                    template_files.append(os.path.join(d, filename))
+        return template_files
+
+    def _write_error(self, message: str) -> None:
+        self.stdout.write(self.style.ERROR(message))
+
+    def _write_success(self, message: str) -> None:
+        self.stdout.write(self.style.SUCCESS(message))
 
 
 DEFAULT_TAILWIND_CONFIG = """/** @type {import('tailwindcss').Config} */

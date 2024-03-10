@@ -4,7 +4,6 @@ import pytest
 from django.core.management import CommandError, call_command
 
 from django_tailwind_cli.management.commands.tailwind import DEFAULT_TAILWIND_CONFIG
-from django_tailwind_cli.management.commands.tailwind import Command as TailwindCommand
 
 
 @pytest.fixture(autouse=True)
@@ -18,7 +17,7 @@ def configure_settings(mocker):
 
 
 def test_calling_unknown_subcommand():
-    with pytest.raises(CommandError, match="invalid choice: 'not_a_valid_command'"):
+    with pytest.raises(CommandError, match="No such command 'not_a_valid_command'"):
         call_command("tailwind", "not_a_valid_command")
 
 
@@ -111,10 +110,23 @@ def test_build_keyboard_interrupt(settings, tmp_path, mocker, capsys):
     assert "Canceled building production stylesheet." in captured.out
 
 
-def test_get_build_cmd(settings):
-    assert "--input" not in TailwindCommand().get_build_cmd()
+def test_build_without_input_file(settings, tmp_path, mocker):
+    settings.BASE_DIR = tmp_path
+    settings.TAILWIND_CLI_PATH = str(tmp_path)
+    subprocess_run = mocker.patch("subprocess.run")
+    call_command("tailwind", "build")
+    name, args, kwargs = subprocess_run.mock_calls[0]
+    assert "--input" not in args[0]
+
+
+def test_build_with_input_file(settings, tmp_path, mocker):
+    settings.BASE_DIR = tmp_path
+    settings.TAILWIND_CLI_PATH = str(tmp_path)
     settings.TAILWIND_CLI_SRC_CSS = "css/source.css"
-    assert "--input" in TailwindCommand().get_build_cmd()
+    subprocess_run = mocker.patch("subprocess.run")
+    call_command("tailwind", "build")
+    name, args, kwargs = subprocess_run.mock_calls[0]
+    assert "--input" in args[0]
 
 
 def test_watch_subprocess_run_called(settings, tmp_path, mocker):
@@ -159,10 +171,23 @@ def test_watch_keyboard_interrupt(settings, tmp_path, mocker, capsys):
     assert "Stopped watching for changes." in captured.out
 
 
-def test_get_watch_cmd(settings):
-    assert "--input" not in TailwindCommand().get_watch_cmd()
+def test_watch_without_input_file(settings, tmp_path, mocker):
+    settings.BASE_DIR = tmp_path
+    settings.TAILWIND_CLI_PATH = str(tmp_path)
+    subprocess_run = mocker.patch("subprocess.run")
+    call_command("tailwind", "watch")
+    name, args, kwargs = subprocess_run.mock_calls[0]
+    assert "--input" not in args[0]
+
+
+def test_watch_with_input_file(settings, tmp_path, mocker):
+    settings.BASE_DIR = tmp_path
+    settings.TAILWIND_CLI_PATH = str(tmp_path)
     settings.TAILWIND_CLI_SRC_CSS = "css/source.css"
-    assert "--input" in TailwindCommand().get_watch_cmd()
+    subprocess_run = mocker.patch("subprocess.run")
+    call_command("tailwind", "watch")
+    name, args, kwargs = subprocess_run.mock_calls[0]
+    assert "--input" in args[0]
 
 
 def test_runserver():
@@ -174,7 +199,7 @@ def test_runserver_plus_with_django_extensions_installed():
 
 
 def test_runserver_plus_without_django_extensions_installed(mocker):
-    mocker.patch.dict(sys.modules, {"django_extensions": None})
+    mocker.patch.dict(sys.modules, {"django_extensions": None, "werkzeug": None})
     with pytest.raises(CommandError, match="Missing dependencies."):
         call_command("tailwind", "runserver_plus")
 
