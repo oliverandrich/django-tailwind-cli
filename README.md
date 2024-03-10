@@ -69,7 +69,7 @@ Checkout the detailed [installation guide](https://django-tailwind-cli.andrich.m
 
 ## Requirements
 
-Python 3.8 or newer with Django >= 3.2.
+Python 3.9 or newer with Django >= 3.2.
 
 ## Documentation
 

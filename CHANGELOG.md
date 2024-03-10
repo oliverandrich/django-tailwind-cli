@@ -1,8 +1,10 @@
 # Changelog
 
-## Unreleased
+## 2.9.0
 
 - Bumped default Tailwind CLI version to 3.4.1.
+- Reimplemented the management command using [django_typer](https://django-typer.readthedocs.io/en/stable/)
+- Removed Python 3.8 from the list of supported versions.
 
 ## 2.8.1
 
