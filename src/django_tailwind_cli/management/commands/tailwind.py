@@ -36,11 +36,15 @@ class Command(TyperCommand):
 
         # Before running the actual subcommand, we need to make sure that the CLI is installed and
         # the config file exists.
-        self._download_cli_if_not_exists()
+        if self.config.automatic_download:
+            self.download_cli()
         self._create_tailwind_config_if_not_exists()
 
     @command(help="Build a minified production ready CSS file.")
     def build(self):
+        if not self.config.get_full_cli_path().exists():
+            raise CommandError("Tailwind CSS CLI not found.")
+
         build_cmd = [
             str(self.config.get_full_cli_path()),
             "--output",
@@ -63,6 +67,9 @@ class Command(TyperCommand):
 
     @command(help="Start Tailwind CLI in watch mode during development.")
     def watch(self):
+        if not self.config.get_full_cli_path().exists():
+            raise CommandError("Tailwind CSS CLI not found.")
+
         watch_cmd = [
             str(self.config.get_full_cli_path()),
             "--output",
@@ -234,22 +241,27 @@ class Command(TyperCommand):
             watch_process.terminate()
             debugserver_process.terminate()
 
-    def _download_cli_if_not_exists(self) -> None:
+    @command(name="download_cli", help="Download the Tailwind CSS CLI to .")
+    def download_cli(self) -> None:
         dest_file = self.config.get_full_cli_path()
 
-        if not dest_file.exists() and self.config.automatic_download:
-            download_url = self.config.get_download_url()
-            self.stdout.write(self.style.ERROR("Tailwind CSS CLI not found."))
-            self.stdout.write(self.style.WARNING(f"Downloading Tailwind CSS CLI from '{download_url}'"))
-            dest_file.parent.mkdir(parents=True, exist_ok=True)
-            certifi_context = ssl.create_default_context(cafile=certifi.where())
-            with urllib.request.urlopen(download_url, context=certifi_context) as source, dest_file.open(  # noqa: S310
-                mode="wb"
-            ) as dest:
-                shutil.copyfileobj(source, dest)
-            # make cli executable
-            dest_file.chmod(0o755)
-            self.stdout.write(self.style.SUCCESS(f"Downloaded Tailwind CSS CLI to '{dest_file}'"))
+        if dest_file.exists():
+            self._write_success(f"Tailwind CSS CLI already exists at '{dest_file}'")
+            return
+
+        download_url = self.config.get_download_url()
+        self._write_error("Tailwind CSS CLI not found.")
+        self._write_success(f"Downloading Tailwind CSS CLI from '{download_url}'")
+        dest_file.parent.mkdir(parents=True, exist_ok=True)
+        certifi_context = ssl.create_default_context(cafile=certifi.where())
+        with (
+            urllib.request.urlopen(download_url, context=certifi_context) as source,
+            dest_file.open(mode="wb") as dest,  # noqa: S310
+        ):
+            shutil.copyfileobj(source, dest)
+        # make cli executable
+        dest_file.chmod(0o755)
+        self._write_success(f"Downloaded Tailwind CSS CLI to '{dest_file}'")
 
     def _create_tailwind_config_if_not_exists(self) -> None:
         tailwind_config_file = self.config.get_full_config_file_path()
