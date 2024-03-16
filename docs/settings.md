@@ -7,7 +7,8 @@ hide:
 
 ## Settings
 
-The package can be configured by a few settings, which can be overwritten in the `settings.py` of your project.
+The package can be configured by a few settings, which can be overwritten in the `settings.py` of
+your project.
 
 `TAILWIND_CLI_VERSION`
 : **Default**: `"3.4.1"`
@@ -19,9 +20,13 @@ The package can be configured by a few settings, which can be overwritten in the
 
     The path where to store CLI binary on your machine or the path to an manually installed binary.
 
-    The default behaviour is, that `TAILWIND_CLI_PATH` should point to a directory, where `django-tailwind-cli` is allowed to download the official CLI to. Normally, this library tries to manage the tailwind CLI by itself and don't rely on externally installed versions of it.
+    The default behaviour is, that `TAILWIND_CLI_PATH` should point to a directory, where
+    `django-tailwind-cli` is allowed to download the official CLI to. Normally, this library tries
+    to manage the tailwind CLI by itself and don't rely on externally installed versions of it.
 
-    Starting with version **2.7.0** TAILWIND_CLI_PATH can also point to an existing binary, in case you want to install it using some package manager or if you have installed `tailwindcss` globally with `npm` along with some plugins you want to use.
+    Starting with version **2.7.0** TAILWIND_CLI_PATH can also point to an existing binary, in case
+    you want to install it using some package manager or if you have installed `tailwindcss`
+    globally with `npm` along with some plugins you want to use.
 
     !!! warning
 

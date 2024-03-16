@@ -13,37 +13,82 @@ hide:
 
     **No.** The management commands also take care of this step. If no `tailwind.config.js` is present in your project, a new one with sane defaults will be created. Afterwards this file will be used and be customized by you. The default location for the file is the `BASE_DIR` of your project, but you can change this. Take a look at the [settings](settings.md) section.
 
-## During development
+## Management commands
 
-### Use the debug server of this library
+### build
 
-The easiest way to use this library during development is to start the debug server provided by it.
+Run `python manage.py tailwind build` to create an optimized production built of the stylesheet. Afterwards you are ready to deploy. Take care the this command is run before `python manage.py collectstatic` in your build process.
 
-```shell
-python manage.py tailwind runserver
-```
+### download_cli
 
-Optionally you can use `runserver_plus` which requires `django-extensions` to be installed
-```shell
-python manage.py tailwind runserver_plus
-```
+Run `python manage.py tailwind download_cli` to just download the CLI. This commands downloads the correct version of the CLI for your platform and stores it in the path configured by the `TAILWIND_CLI_PATH` setting.
 
-This command starts two processes. One is the standard debug server of Django which is normally started by running `python manage.py runserver or runserver_plus`. The other is the Tailwind CLI in watch mode by running `python manage.py tailwind watch`.
+### list_templates
 
-Two main advantages of using `runserver_plus` are the following:
+Run `python manage.py tailwind list_templates` to find all templates in your django project. This is handy for a setup where you dynamically build the list of files being analyzed by tailwindcss.
 
-- Debug server uses Werkzeug instead of the standard WSGI server for more debugging support.
-- Can also use HTTPS with a self-signed certificate for local development.
+### runserver
 
-### Use the standard debug server along with Tailwind CLI in watch mode
-
-If you prefer to use the standard debug server or have written your own extended debug server, you have to start two seperate processes in different shells or with some kind of process manager. One is of course your debug server and the other is the Tailwind CLI in watch mode, which can be started with the following management command.
+Run `python manage.py tailwind runserver` to start the classic Django debug server in parallel to a tailwind watcher process.
 
 ```shell
-python manage.py tailwind watch
+Usage: ./manage.py tailwind runserver [OPTIONS] [ADDRPORT]
+
+  Start the Django development server and the Tailwind CLI in watch mode.
+
+Arguments:
+  [ADDRPORT]  Optional port number, or ipaddr:port
+
+Options:
+  -6, --ipv6     Tells Django to use an IPv6 address.
+  --nothreading  Tells Django to NOT use threading.
+  --nostatic     Tells Django to NOT automatically serve static files at
+                STATIC_URL.
+  --noreload     Tells Django to NOT use the auto-reloader.
+  --skip-checks  Skip system checks.
+  --help         Show this message and exit.
 ```
 
-### Use of this library with Docker Compose
+### runserver_plus
+
+Run `python manage.py tailwind runserver` to start the extended debug server from the [django-extensions](https://django-extensions.readthedocs.io/en/latest/runserver_plus.html) package in parallel to a tailwind watcher process. It offers some nice additions an interactive debug console, SSL support and so on.
+
+```shell
+Usage: ./manage.py tailwind runserver_plus [OPTIONS] [ADDRPORT]
+
+  Start the django-extensions runserver_plus development server and the
+  Tailwind CLI in watch mode.
+
+Arguments:
+  [ADDRPORT]  Optional port number, or ipaddr:port
+
+Options:
+  -6, --ipv6            Tells Django to use an IPv6 address.
+  --nothreading         Tells Django to NOT use threading.
+  --nostatic            Tells Django to NOT automatically serve static files
+                        at STATIC_URL.
+  --noreload            Tells Django to NOT use the auto-reloader.
+  --skip-checks         Skip system checks.
+  --pdb                 Drop into pdb shell at the start of any view.
+  --ipdb                Drop into ipdb shell at the start of any view.
+  --pm                  Drop into (i)pdb shell if an exception is raised in a
+                        view.
+  --print-sql           Print SQL queries as they're executed.
+  --print-sql-location  Show location in code where SQL query generated from.
+  --cert-file TEXT      SSL .crt file path. If not provided path from --key-
+                        file will be selected. Either --cert-file or --key-
+                        file must be provided to use SSL.
+  --key-file TEXT       SSL .key file path. If not provided path from --cert-
+                        file will be selected. Either --cert-file or --key-
+                        file must be provided to use SSL.
+  --help                Show this message and exit.
+```
+
+### watch
+
+Run `python manage.py tailwind watch` to just start a tailwind watcher process if you prefer to start your debug server in a seperate shell or prefer a different solution than runserver or runserver_plus.
+
+## Use with Docker Compose
 
 When used in the `watch` mode, the Tailwind CLI requires a TTY-enabled environment to function correctly. In a Docker Compose setup, ensure that the container executing the Tailwind style rebuild command (either `python manage.py tailwind runserver` or `python manage.py tailwind watch`, as noted above) is configured with the `tty: true` setting in your `docker-compose.yml`.
 
@@ -57,12 +102,4 @@ web:
 tailwind-sidecar:
   command: python manage.py tailwind watch
   tty: true
-```
-
-## In your build process
-
-To create an optimized production built of the stylesheet run the following command. Afterwards you are ready to deploy. Take care the this command is run before `python manage.py collectstatic`.
-
-```shell
-python manage.py tailwind build
 ```

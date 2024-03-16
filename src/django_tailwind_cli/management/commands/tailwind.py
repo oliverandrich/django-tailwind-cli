@@ -237,7 +237,7 @@ class Command(TyperCommand):
             debugserver_process.start()
             watch_process.join()
             debugserver_process.join()
-        except KeyboardInterrupt:
+        except KeyboardInterrupt:  # pragma: no cover
             watch_process.terminate()
             debugserver_process.terminate()
 
