@@ -5,6 +5,10 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/psf/black)
 ![GitHub](https://img.shields.io/github/license/oliverandrich/django-tailwind-cli?style=flat-square)
 [![Poetry](https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json&style=flat-square)](https://python-poetry.org/)
+![Django Versions](https://img.shields.io/pypi/frameworkversions/django/django-tailwind-cli)
+![Python Versions](https://img.shields.io/pypi/pyversions/django-tailwind-cli)
+[![Downloads](https://static.pepy.tech/badge/django-tailwind-cli)](https://pepy.tech/project/django-tailwind-cli)
+[![Downloads / Month](https://pepy.tech/badge/django-tailwind-cli/month)](<https://pepy.tech/project/django-tailwind-cli>)
 
 This library provides an integration of [Tailwind CSS](https://tailwindcss.com) for Django that is using on the precompiled versions of the [Tailwind CSS CLI](https://tailwindcss.com/blog/standalone-cli).
 

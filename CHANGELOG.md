@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.10.0
+
+- Added `download_cli` management command.
+
 ## 2.9.0
 
 - Bumped default Tailwind CLI version to 3.4.1.
