@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.11.0 (Unreleased)
+
+- Switched default configuration for tailwind to the less opinioated default version.
+
 ## 2.10.0
 
 - Added `download_cli` management command.

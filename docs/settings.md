@@ -60,7 +60,35 @@ your project.
 
 If you don't create a `tailwind.config.js` file yourself, the management commands will create a sane default for you inside the `BASE_DIR` of your project. The default activates all the official plugins for Tailwind CSS and adds a minimal plugin to support some variants for [HTMX](https://htmx.org/).
 
-The default configuration also embraces the nice trick authored by Carlton Gibson in his post [Using Django’s template loaders to configure Tailwind¶](https://noumenal.es/notes/tailwind/django-integration/). The implementation adopts Carlton's implementation to honor the conventions of this project. If you put your `tailwind.config.js` in a different location than your `BASE_DIR`, you have to change this file too.
+### Default version
+
+```javascript title="tailwind.config.js"
+/** @type {import('tailwindcss').Config} */
+const plugin = require("tailwindcss/plugin");
+
+module.exports = {
+  content: ["./templates/**/*.html", "**/templates/**/*.html"],
+  theme: {
+    extend: {},
+  },
+  plugins: [
+    require("@tailwindcss/typography"),
+    require("@tailwindcss/forms"),
+    require("@tailwindcss/aspect-ratio"),
+    require("@tailwindcss/container-queries"),
+    plugin(function ({ addVariant }) {
+      addVariant("htmx-settling", ["&.htmx-settling", ".htmx-settling &"]);
+      addVariant("htmx-request", ["&.htmx-request", ".htmx-request &"]);
+      addVariant("htmx-swapping", ["&.htmx-swapping", ".htmx-swapping &"]);
+      addVariant("htmx-added", ["&.htmx-added", ".htmx-added &"]);
+    }),
+  ],
+};
+```
+
+### Fancier version of `tailwind.config.js`
+
+This configuration also embraces the nice trick authored by Carlton Gibson in his post [Using Django’s template loaders to configure Tailwind¶](https://noumenal.es/notes/tailwind/django-integration/). The implementation adopts Carlton's implementation to honor the conventions of this project. If you put your `tailwind.config.js` in a different location than your `BASE_DIR`, you have to change this file too.
 
 This configuration uses the management command `tailwind list_templates`, which list all the templates files inside your project.
 
@@ -109,32 +137,6 @@ const getTemplateFiles = () => {
 
 module.exports = {
   content: [].concat(getTemplateFiles()),
-  theme: {
-    extend: {},
-  },
-  plugins: [
-    require("@tailwindcss/typography"),
-    require("@tailwindcss/forms"),
-    require("@tailwindcss/aspect-ratio"),
-    require("@tailwindcss/container-queries"),
-    plugin(function ({ addVariant }) {
-      addVariant("htmx-settling", ["&.htmx-settling", ".htmx-settling &"]);
-      addVariant("htmx-request", ["&.htmx-request", ".htmx-request &"]);
-      addVariant("htmx-swapping", ["&.htmx-swapping", ".htmx-swapping &"]);
-      addVariant("htmx-added", ["&.htmx-added", ".htmx-added &"]);
-    }),
-  ],
-};
-```
-
-### Simple Config for Sublime Text and (neo)vim
-
-```javascript title="tailwind.config.js"
-/** @type {import('tailwindcss').Config} */
-const plugin = require("tailwindcss/plugin");
-
-module.exports = {
-  content: ["./templates/**/*.html", "**/templates/**/*.html"],
   theme: {
     extend: {},
   },

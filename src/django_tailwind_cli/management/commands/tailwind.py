@@ -289,40 +289,9 @@ class Command(TyperCommand):
 
 DEFAULT_TAILWIND_CONFIG = """/** @type {import('tailwindcss').Config} */
 const plugin = require("tailwindcss/plugin");
-const { spawnSync } = require("child_process");
-
-// Calls Django to fetch template files
-const getTemplateFiles = () => {
-  const command = "python3";
-  const args = ["manage.py", "tailwind", "list_templates"];
-  // Assumes tailwind.config.js is located in the BASE_DIR of your Django project.
-  const options = { cwd: __dirname };
-
-  const result = spawnSync(command, args, options);
-
-  if (result.error) {
-    throw result.error;
-  }
-
-  if (result.status !== 0) {
-    console.log(result.stdout.toString(), result.stderr.toString());
-    throw new Error(
-      `Django management command exited with code ${result.status}`
-    );
-  }
-
-  const templateFiles = result.stdout
-    .toString()
-    .split("\\n")
-    .map((file) => file.trim())
-    .filter(function (e) {
-      return e;
-    }); // Remove empty strings, including last empty line.
-  return templateFiles;
-};
 
 module.exports = {
-  content: [].concat(getTemplateFiles()),
+  content: ["./templates/**/*.html", "**/templates/**/*.html"],
   theme: {
     extend: {},
   },
