@@ -269,20 +269,20 @@ Django = ">=3.2"
 
 [[package]]
 name = "django-typer"
-version = "1.0.8"
+version = "1.0.9"
 description = "Use Typer to define the CLI for your Django management commands."
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "django_typer-1.0.8-py3-none-any.whl", hash = "sha256:b3a4765d0c29e545f5a9b69ea22391696d8d6bc6422a99a671962d1f3d0fca95"},
-    {file = "django_typer-1.0.8.tar.gz", hash = "sha256:aaa0ea5032f1226e9e07c394d625ba2af8ffd7609941ced834066ee1640f2b34"},
+    {file = "django_typer-1.0.9-py3-none-any.whl", hash = "sha256:6652686e69519e0450f75a5efeb198970c07501f38348cb193708db66f2ebb4f"},
+    {file = "django_typer-1.0.9.tar.gz", hash = "sha256:a77e6b22f02d52fa50319468794bc00c0568b2999f124ade5b8df0f20c5d96af"},
 ]
 
 [package.dependencies]
 click = ">=8.1.0,<9.0.0"
 Django = ">=3.2,<6.0"
 shellingham = ">=1.5.4"
-typer = ">=0.9.0,<=0.11.0"
+typer = ">=0.9.0,<0.13.0"
 typing-extensions = {version = ">=3.7.4.3", markers = "python_version < \"3.10\""}
 
 [package.extras]
