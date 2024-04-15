@@ -269,20 +269,20 @@ Django = ">=3.2"
 
 [[package]]
 name = "django-typer"
-version = "1.0.9"
+version = "1.1.1"
 description = "Use Typer to define the CLI for your Django management commands."
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "django_typer-1.0.9-py3-none-any.whl", hash = "sha256:6652686e69519e0450f75a5efeb198970c07501f38348cb193708db66f2ebb4f"},
-    {file = "django_typer-1.0.9.tar.gz", hash = "sha256:a77e6b22f02d52fa50319468794bc00c0568b2999f124ade5b8df0f20c5d96af"},
+    {file = "django_typer-1.1.1-py3-none-any.whl", hash = "sha256:cd92d0e4ed8940c17c575e5c81caa52b623f88b13ca31f0a3b716779408c21ff"},
+    {file = "django_typer-1.1.1.tar.gz", hash = "sha256:1626fc8a8d718071fa5566d8dcaa5ce4df9663858daa18d1c7a0bdac1d63b2f4"},
 ]
 
 [package.dependencies]
 click = ">=8.1.0,<9.0.0"
 Django = ">=3.2,<6.0"
 shellingham = ">=1.5.4"
-typer = ">=0.9.0,<0.13.0"
+typer-slim = ">=0.12.0,<0.13.0"
 typing-extensions = {version = ">=3.7.4.3", markers = "python_version < \"3.10\""}
 
 [package.extras]
@@ -991,14 +991,14 @@ files = [
 ]
 
 [[package]]
-name = "typer"
-version = "0.11.0"
+name = "typer-slim"
+version = "0.12.3"
 description = "Typer, build great CLIs. Easy to code. Based on Python type hints."
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "typer-0.11.0-py3-none-any.whl", hash = "sha256:049cc47bef39f46b043eddd9165492209fdd9bc7d79afa7ba9cc5cd017caa817"},
-    {file = "typer-0.11.0.tar.gz", hash = "sha256:a6ce173c0f03d3a41b49c0a945874cc489e91f88faabf76517b2b91c670fcde7"},
+    {file = "typer_slim-0.12.3-py3-none-any.whl", hash = "sha256:142c73d91ac1df79a49cec5a1c2210c00b1b4040a91014b539792af5ba81c65c"},
+    {file = "typer_slim-0.12.3.tar.gz", hash = "sha256:633965eb413074aa6c47549d1820832f229709e9a59857a4f57ee82b655602af"},
 ]
 
 [package.dependencies]
@@ -1006,7 +1006,7 @@ click = ">=8.0.0"
 typing-extensions = ">=3.7.4.3"
 
 [package.extras]
-all = ["colorama (>=0.4.3,<0.5.0)", "rich (>=10.11.0,<14.0.0)", "shellingham (>=1.3.0,<2.0.0)"]
+standard = ["rich (>=10.11.0)", "shellingham (>=1.3.0)"]
 
 [[package]]
 name = "types-psycopg2"
