@@ -2,7 +2,7 @@
 
 ## 2.11.0 (Unreleased)
 
-- Switched default configuration for tailwind to the less opinioated default version.
+- Switched default configuration for tailwind to the less opinionated default version.
 
 ## 2.10.0
 
