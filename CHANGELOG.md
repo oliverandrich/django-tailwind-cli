@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.11.0 (Unreleased)
+## 2.11.0
 
 - Switched default configuration for tailwind to the less opinionated default version.
 

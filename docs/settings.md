@@ -98,7 +98,7 @@ This configuration uses the management command `tailwind list_templates`, which 
 
     But it does not work with Sublime Text and the lsp-tailwindcss package or with the various LSP packages for (neo)vim. The reason is, that these intergrations not honoring the active virtual environment when being started. If you have an idea to solve this, patches are welcome.
 
-    **With editors besides VS Code please use the simple config at the end of this page.**
+    **With editors besides VS Code please use the default config.**
 
 ```javascript title="tailwind.config.js"
 /** @type {import('tailwindcss').Config} */
