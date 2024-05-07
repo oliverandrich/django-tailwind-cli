@@ -80,7 +80,26 @@ The documentation can be found at [https://django-tailwind-cli.andrich.me/](http
 
 ## Contributing
 
-If you want to contribute to this project, checkout the [development guide](https://django-tailwind-cli.andrich.me/development/) for details to get your dev environment up and running.
+In order to contribute, this package as no required dependencies besides an installed version of
+Python and pip. But you can use uv to speed up your workflow a bit. The following commands assume that you have already setup a virtual environment and activated it.
+
+### Using pip
+
+```bash
+# Install dependencies
+pip3 install ".[django-extensions,dev,docs]"
+
+# Run nox testrunner
+nox
+```
+
+### Using uv
+
+```bash
+# Install dependencies
+uv pip install -r pyproject.toml --all-extras -e .
+nox --force-venv-backend uv
+```
 
 ## License
 

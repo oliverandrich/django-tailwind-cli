@@ -3,7 +3,7 @@
 import nox
 
 
-@nox.session(venv_backend="uv")
+@nox.session()
 @nox.parametrize(
     "python, django",
     [
@@ -18,6 +18,9 @@ import nox
     ],
 )
 def run_testsuite(session, django):
-    session.install("-r", "pyproject.toml", "--extra", "django-extensions", "--extra", "dev", ".")
+    if session.venv_backend == "uv":
+        session.install("-r", "pyproject.toml", "--extra", "django-extensions", "--extra", "dev", ".")
+    else:
+        session.install(".[django-extensions,dev]")
     session.install(f"django~={django}")
     session.run("pytest")
