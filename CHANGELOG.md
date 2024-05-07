@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.11.1
+
+- Changed project tooling to uv, nox and flit.
+- Bumped default version of tailwindcss to 3.4.3.
+
 ## 2.11.0
 
 - Switched default configuration for tailwind to the less opinionated default version.

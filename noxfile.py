@@ -18,6 +18,6 @@ import nox
     ],
 )
 def run_testsuite(session, django):
-    session.install("-r", "pyproject.toml", "--all-extras", ".")
+    session.install("-r", "pyproject.toml", "--extra", "django-extensions", "--extra", "dev", ".")
     session.install(f"django~={django}")
     session.run("pytest")

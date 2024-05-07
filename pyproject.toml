@@ -41,6 +41,7 @@ dev = [
     "pytest-mock",
     "django-types",
 ]
+docs = ["mkdocs-material"]
 django-extensions = ["django-extensions>=3.2", "werkzeug>=3.0"]
 
 [project.urls]

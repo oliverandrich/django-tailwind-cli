@@ -9,13 +9,13 @@ def configure_settings(settings):
 
 
 def test_default_config(config):
-    assert "3.4.1" == config.tailwind_version
+    assert "3.4.3" == config.tailwind_version
     assert Path("~/.local/bin/").expanduser() == config.cli_path
     assert config.src_css is None
     assert "css/tailwind.css" == config.dist_css
     assert "tailwind.config.js" == config.config_file
-    assert "3.4.1" in config.get_download_url()
-    assert "3.4.1" in str(config.get_full_cli_path())
+    assert "3.4.3" in config.get_download_url()
+    assert "3.4.3" in str(config.get_full_cli_path())
 
 
 def test_validate_settigns(config, settings):
@@ -99,10 +99,10 @@ def test_get_download_url(config, mocker, platform, machine, result):
 @pytest.mark.parametrize(
     "platform,machine,result",
     [
-        ("Windows", "x86_64", "tailwindcss-windows-x64-3.4.1.exe"),
-        ("Windows", "amd64", "tailwindcss-windows-x64-3.4.1.exe"),
-        ("Darwin", "aarch64", "tailwindcss-macos-arm64-3.4.1"),
-        ("Darwin", "arm64", "tailwindcss-macos-arm64-3.4.1"),
+        ("Windows", "x86_64", "tailwindcss-windows-x64-3.4.3.exe"),
+        ("Windows", "amd64", "tailwindcss-windows-x64-3.4.3.exe"),
+        ("Darwin", "aarch64", "tailwindcss-macos-arm64-3.4.3"),
+        ("Darwin", "arm64", "tailwindcss-macos-arm64-3.4.3"),
     ],
 )
 def test_get_full_cli_path(config, mocker, platform, machine, result):

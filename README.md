@@ -4,7 +4,6 @@
 [![PyPI](https://img.shields.io/pypi/v/django-tailwind-cli.svg?style=flat-square)](https://pypi.org/project/django-tailwind-cli/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/psf/black)
 ![GitHub](https://img.shields.io/github/license/oliverandrich/django-tailwind-cli?style=flat-square)
-[![Poetry](https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json&style=flat-square)](https://python-poetry.org/)
 ![Django Versions](https://img.shields.io/pypi/frameworkversions/django/django-tailwind-cli)
 ![Python Versions](https://img.shields.io/pypi/pyversions/django-tailwind-cli)
 [![Downloads](https://static.pepy.tech/badge/django-tailwind-cli)](https://pepy.tech/project/django-tailwind-cli)

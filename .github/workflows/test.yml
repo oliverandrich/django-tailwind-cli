@@ -29,4 +29,4 @@ jobs:
           python -m pip install uv nox
 
       - name: Test with nox
-        run: nox -p ${{ matrix.python-version }}
+        run: nox -p ${{ matrix.python-version }} -s run_testsuite
