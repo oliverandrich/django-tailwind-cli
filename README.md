@@ -80,7 +80,7 @@ The documentation can be found at [https://django-tailwind-cli.andrich.me/](http
 
 ## Contributing
 
-In order to contribute, this package as no required tool dependencies besides an installed version
+In order to contribute, this package has no required tool dependencies besides an installed version
 of Python and pip. But you can use uv to speed up your workflow a bit. The following commands assume
 that you have already setup a virtual environment and activated it.
 
