@@ -46,6 +46,7 @@ test = [
 dev = [
     "django-types",
     "nox",
+    "tomlkit",
     "pre-commit",
     "mkdocs-material",
     "flit",

@@ -1,10 +1,10 @@
 # type: ignore
 
 import nox
-import tomllib
+import tomlkit
 
 with open("pyproject.toml", "rb") as f:
-    project_data = tomllib.load(f)["project"]
+    project_data = tomlkit.parse(f.read())["project"]
 
     # Read supported Python versions from pyproject.toml
     python_versions = []
