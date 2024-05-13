@@ -23,4 +23,4 @@ def run_testsuite(session, django):
     else:
         session.install(".[django-extensions,dev]")
     session.install(f"django~={django}")
-    session.run("pytest")
+    session.run("pytest", "--cov", "--cov-append", "--cov-report=")

@@ -84,17 +84,31 @@ In order to contribute, this package has no required tool dependencies besides a
 of Python and pip. But you can use uv to speed up your workflow a bit. The following commands assume
 that you have already setup a virtual environment and activated it.
 
-### Using pip
+```shell
+# Setup development environment
+just bootstrap
+
+# Upgrade/install all dependencies defined in pyproject.toml
+just upgrade
+
+# Run pre-commit rules on all files
+just lint
+
+# Run test suite
+just test
+```
+
+### Without just, but using pip
 
 ```bash
 # Install dependencies
-pip3 install ".[django-extensions,dev,docs]"
+pip3 install -e ".[django-extensions,dev,docs]"
 
 # Run nox testrunner
 nox
 ```
 
-### Using uv
+### Without just, but using uv
 
 ```bash
 # Install dependencies

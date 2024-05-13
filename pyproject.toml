@@ -34,12 +34,14 @@ dependencies = [
 ]
 [project.optional-dependencies]
 dev = [
+    "django-types",
     "coverage[toml]",
     "pytest",
     "pytest-django",
     "pytest-cov",
     "pytest-mock",
-    "django-types",
+    "nox",
+    "pre-commit",
 ]
 docs = ["mkdocs-material"]
 django-extensions = ["django-extensions>=3.2", "werkzeug>=3.0"]
