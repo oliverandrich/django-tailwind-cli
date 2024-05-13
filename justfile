@@ -32,17 +32,29 @@ VENV_DIRNAME := ".venv"
 
 # upgrade/install all dependencies defined in pyproject.toml
 @upgrade: create_venv
-    $VENV_DIRNAME/bin/python3 -m pip install --upgrade pip uv; \
-    $VENV_DIRNAME/bin/python3 -m uv pip install --upgrade \
+    $VENV_DIRNAME/bin/python -m pip install --upgrade pip uv; \
+    $VENV_DIRNAME/bin/python -m uv pip install --upgrade \
         --requirement pyproject.toml --all-extras -e .;
 
 # run pre-commit rules on all files
 @lint *ARGS: create_venv
-    $VENV_DIRNAME/bin/python3 -m pre_commit run {{ ARGS }} --all-files
+    $VENV_DIRNAME/bin/python -m pre_commit run {{ ARGS }} --all-files
 
 # run test suite
 @test *ARGS: create_venv
-    $VENV_DIRNAME/bin/python3 -m coverage erase
-    $VENV_DIRNAME/bin/python3 -m nox --force-venv-backend uv {{ ARGS }}
-    $VENV_DIRNAME/bin/python3 -m coverage report
-    $VENV_DIRNAME/bin/python3 -m coverage html
+    $VENV_DIRNAME/bin/python -m coverage erase
+    $VENV_DIRNAME/bin/python -m nox --force-venv-backend uv {{ ARGS }}
+    $VENV_DIRNAME/bin/python -m coverage report
+    $VENV_DIRNAME/bin/python -m coverage html
+
+@build-docs:
+    $VENV_DIRNAME/bin/python -m mkdocs build
+
+@publish-docs: build-docs
+    $VENV_DIRNAME/bin/python -m mkdocs gh-deploy --force
+
+@build:
+    $VENV_DIRNAME/bin/python -m flit build
+
+@publish: build
+    $VENV_DIRNAME/bin/python -m flit publish

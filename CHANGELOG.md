@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.12.0
+
+- Reintroduced support for Python 3.8. Seems as I have to support than I want to.
+- Added justfile to ease management of package and dev environment.
+
 ## 2.11.1
 
 - Changed project tooling to uv, nox and flit.

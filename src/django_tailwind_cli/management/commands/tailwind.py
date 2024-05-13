@@ -9,14 +9,14 @@ import sys
 import urllib.request
 from multiprocessing import Process
 from pathlib import Path
-from typing import Annotated, List, Optional, Union
+from typing import List, Optional, Union
 
 import certifi
+import typer
 from django.conf import settings
 from django.core.management.base import CommandError
 from django.template.utils import get_app_template_dirs
 from django_typer import TyperCommand, command, initialize
-from typer import Argument, Option
 
 from django_tailwind_cli.utils import Config
 
@@ -104,15 +104,15 @@ class Command(TyperCommand):
     @command(help="Start the Django development server and the Tailwind CLI in watch mode.")
     def runserver(
         self,
-        addrport: Annotated[Optional[str], Argument(help="Optional port number, or ipaddr:port")] = None,
+        addrport: Optional[str] = typer.Argument(None, help="Optional port number, or ipaddr:port"),
         *,
-        use_ipv6: Annotated[bool, Option("--ipv6", "-6", help="Tells Django to use an IPv6 address.")] = False,
-        no_threading: Annotated[bool, Option("--nothreading", help="Tells Django to NOT use threading.")] = False,
-        no_static: Annotated[
-            bool, Option("--nostatic", help="Tells Django to NOT automatically serve static files at STATIC_URL.")
-        ] = False,
-        no_reloader: Annotated[bool, Option("--noreload", help="Tells Django to NOT use the auto-reloader.")] = False,
-        skip_checks: Annotated[bool, Option("--skip-checks", help="Skip system checks.")] = False,
+        use_ipv6: bool = typer.Option(False, "--ipv6", "-6", help="Tells Django to use an IPv6 address."),
+        no_threading: bool = typer.Option(False, "--nothreading", help="Tells Django to NOT use threading."),
+        no_static: bool = typer.Option(
+            False, "--nostatic", help="Tells Django to NOT automatically serve static files at STATIC_URL."
+        ),
+        no_reloader: bool = typer.Option(False, "--noreload", help="Tells Django to NOT use the auto-reloader."),
+        skip_checks: bool = typer.Option(False, "--skip-checks", help="Skip system checks."),
     ):
         debug_server_cmd = [sys.executable, "manage.py", "runserver"]
 
@@ -137,40 +137,36 @@ class Command(TyperCommand):
     )
     def runserver_plus(
         self,
-        addrport: Annotated[Optional[str], Argument(help="Optional port number, or ipaddr:port")] = None,
+        addrport: Optional[str] = typer.Argument(None, help="Optional port number, or ipaddr:port"),
         *,
-        use_ipv6: Annotated[bool, Option("--ipv6", "-6", help="Tells Django to use an IPv6 address.")] = False,
-        no_threading: Annotated[bool, Option("--nothreading", help="Tells Django to NOT use threading.")] = False,
-        no_static: Annotated[
-            bool, Option("--nostatic", help="Tells Django to NOT automatically serve static files at STATIC_URL.")
-        ] = False,
-        no_reloader: Annotated[bool, Option("--noreload", help="Tells Django to NOT use the auto-reloader.")] = False,
-        skip_checks: Annotated[bool, Option("--skip-checks", help="Skip system checks.")] = False,
-        pdb: Annotated[bool, Option("--pdb", help="Drop into pdb shell at the start of any view.")] = False,
-        ipdb: Annotated[bool, Option("--ipdb", help="Drop into ipdb shell at the start of any view.")] = False,
-        pm: Annotated[bool, Option("--pm", help="Drop into (i)pdb shell if an exception is raised in a view.")] = False,
-        print_sql: Annotated[bool, Option("--print-sql", help="Print SQL queries as they're executed.")] = False,
-        print_sql_location: Annotated[
-            bool, Option("--print-sql-location", help="Show location in code where SQL query generated from.")
-        ] = False,
-        cert_file: Annotated[
-            Optional[str],
-            Option(
-                help=(
-                    "SSL .crt file path. If not provided path from --key-file will be selected. Either --cert-file or "
-                    "--key-file must be provided to use SSL."
-                )
+        use_ipv6: bool = typer.Option(False, "--ipv6", "-6", help="Tells Django to use an IPv6 address."),
+        no_threading: bool = typer.Option(False, "--nothreading", help="Tells Django to NOT use threading."),
+        no_static: bool = typer.Option(
+            False, "--nostatic", help="Tells Django to NOT automatically serve static files at STATIC_URL."
+        ),
+        no_reloader: bool = typer.Option(False, "--noreload", help="Tells Django to NOT use the auto-reloader."),
+        skip_checks: bool = typer.Option(False, "--skip-checks", help="Skip system checks."),
+        pdb: bool = typer.Option(False, "--pdb", help="Drop into pdb shell at the start of any view."),
+        ipdb: bool = typer.Option(False, "--ipdb", help="Drop into ipdb shell at the start of any view."),
+        pm: bool = typer.Option(False, "--pm", help="Drop into (i)pdb shell if an exception is raised in a view."),
+        print_sql: bool = typer.Option(False, "--print-sql", help="Print SQL queries as they're executed."),
+        print_sql_location: bool = typer.Option(
+            False, "--print-sql-location", help="Show location in code where SQL query generated from."
+        ),
+        cert_file: Optional[str] = typer.Option(
+            None,
+            help=(
+                "SSL .crt file path. If not provided path from --key-file will be selected. Either --cert-file or "
+                "--key-file must be provided to use SSL."
             ),
-        ] = None,
-        key_file: Annotated[
-            Optional[str],
-            Option(
-                help=(
-                    "SSL .key file path. If not provided path from --cert-file will be "
-                    "selected. Either --cert-file or --key-file must be provided to use SSL."
-                )
+        ),
+        key_file: Optional[str] = typer.Option(
+            None,
+            help=(
+                "SSL .key file path. If not provided path from --cert-file will be "
+                "selected. Either --cert-file or --key-file must be provided to use SSL."
             ),
-        ] = None,
+        ),
     ):
         if not importlib.util.find_spec("django_extensions") and not importlib.util.find_spec("werkzeug"):
             msg = (
@@ -254,11 +250,9 @@ class Command(TyperCommand):
         self._write_success(f"Downloading Tailwind CSS CLI from '{download_url}'")
         dest_file.parent.mkdir(parents=True, exist_ok=True)
         certifi_context = ssl.create_default_context(cafile=certifi.where())
-        with (
-            urllib.request.urlopen(download_url, context=certifi_context) as source,
-            dest_file.open(mode="wb") as dest,  # noqa: S310
-        ):
-            shutil.copyfileobj(source, dest)
+        with urllib.request.urlopen(download_url, context=certifi_context) as source:
+            with dest_file.open(mode="wb") as dest:
+                shutil.copyfileobj(source, dest)
         # make cli executable
         dest_file.chmod(0o755)
         self._write_success(f"Downloaded Tailwind CSS CLI to '{dest_file}'")

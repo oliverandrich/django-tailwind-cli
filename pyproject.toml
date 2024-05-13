@@ -13,6 +13,7 @@ classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -26,25 +27,30 @@ classifiers = [
     "Framework :: Django :: 5.0",
 ]
 dynamic = ["version"]
-requires-python = ">=3.9"
+requires-python = ">=3.8"
 dependencies = [
     "django>=3.2",
     "certifi>=2023.7.22,<2025.0.0",
     "django-typer>=1.1.2",
 ]
 [project.optional-dependencies]
-dev = [
-    "django-types",
-    "coverage[toml]",
+django-extensions = ["django-extensions>=3.2", "werkzeug>=3.0"]
+test = [
     "pytest",
     "pytest-django",
     "pytest-cov",
     "pytest-mock",
+    "pytest-randomly",
+    "django_tailwind_cli[django-extensions]",
+]
+dev = [
+    "django-types",
     "nox",
     "pre-commit",
+    "mkdocs-material",
+    "flit",
+    "django_tailwind_cli[test]",
 ]
-docs = ["mkdocs-material"]
-django-extensions = ["django-extensions>=3.2", "werkzeug>=3.0"]
 
 [project.urls]
 Home = "https://django-tailwind-cli.andrich.me/"
@@ -53,12 +59,13 @@ Repository = "https://github.com/oliverandrich/django-tailwind-cli"
 
 # Black
 [tool.black]
-target-version = ["py39"]
+target-version = ["py38"]
 line-length = 120
 skip-string-normalization = true
 exclude = '''
 /(
     \.git
+  | \.nox
   | \.tox
   | \.venv
   | _build
@@ -77,7 +84,7 @@ ignore = ["./tests/**/*"]
 
 # Ruff
 [tool.ruff]
-target-version = "py39"
+target-version = "py38"
 line-length = 120
 select = [
     "A",   # flake8-builtins
@@ -128,11 +135,8 @@ markers = ["mock_network_and_subprocess"]
 
 # Coverage
 [tool.coverage.run]
-source = ["django_tailwind_cli", "tests"]
+source = ["django_tailwind_cli"]
 branch = true
-
-[tool.coverage.paths]
-source = ["src", ".tox/**/site-packages"]
 
 [tool.coverage.report]
 exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
