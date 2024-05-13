@@ -1,9 +1,9 @@
 name: Publish
 
 on:
-  tag:
-    types:
-      - created
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
   publish:
