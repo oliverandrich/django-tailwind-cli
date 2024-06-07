@@ -16,7 +16,7 @@ import typer
 from django.conf import settings
 from django.core.management.base import CommandError
 from django.template.utils import get_app_template_dirs
-from django_typer import TyperCommand, command, initialize
+from django_typer.management import TyperCommand, command, initialize
 
 from django_tailwind_cli.utils import Config
 
