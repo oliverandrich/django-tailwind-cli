@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.13.0
+
+- [#127](https://github.com/oliverandrich/django-tailwind-cli/pull/127)
+  by [@bckohan](https://github.com/bckohan) upgrade django-typer and fixed future incompatibilities with django-typer 3.0.
+- moved to tox for testing.
+- Added Python 3.13 to the test matrix.
+- Added Django 5.1a1 to the test matrix.
+
 ## 2.12.0
 
 - Reintroduced support for Python 3.8. Seems as I have to support than I want to.
