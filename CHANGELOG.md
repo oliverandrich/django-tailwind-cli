@@ -7,6 +7,7 @@
 - moved to tox for testing.
 - Added Python 3.13 to the test matrix.
 - Added Django 5.1a1 to the test matrix.
+- Bumped default version of tailwindcss to 3.4.4.
 
 ## 2.12.0
 
