@@ -52,7 +52,7 @@ dev = [
     "pre-commit",
     "mkdocs-material",
     "flit",
-    "django_tailwind_cli[test]",
+    "django_tailwind_cli[test]"
 ]
 
 [project.urls]
