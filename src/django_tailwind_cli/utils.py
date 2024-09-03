@@ -43,6 +43,12 @@ class Config:
     def config_file(self) -> str:
         return getattr(settings, "TAILWIND_CLI_CONFIG_FILE", "tailwind.config.js")
 
+    @property
+    def src_repo(self) -> str:
+        return getattr(
+            settings, "TAILWIND_CLI_SRC_REPO", "tailwindlabs/tailwindcss"
+        )
+
     @staticmethod
     def validate_settings() -> None:
         """Validate the settings."""
@@ -70,7 +76,7 @@ class Config:
         system, machine = self.get_system_and_machine()
         extension = ".exe" if system == "windows" else ""
         return (
-            "https://github.com/tailwindlabs/tailwindcss/releases/download/"
+            f"https://github.com/{self.src_repo}/releases/download/"
             f"v{self.tailwind_version}/tailwindcss-{system}-{machine}{extension}"
         )
 
