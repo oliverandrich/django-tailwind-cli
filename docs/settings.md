@@ -11,7 +11,7 @@ The package can be configured by a few settings, which can be overwritten in the
 your project.
 
 `TAILWIND_CLI_VERSION`
-: **Default**: `"3.4.4"`
+: **Default**: `"3.4.10"`
 
     This defines the version of the CLI and of Tailwind CSS you want to use in your project.
 
@@ -42,7 +42,7 @@ your project.
     !!! warning
 
        If you use this option, ensure that you update the `TAILWIND_CLI_VERSION` to match the version of the customized CLI you are using.
-       
+
 `TAILWIND_CLI_AUTOMATIC_DOWNLOAD`
 : **Default**: `True`
 
