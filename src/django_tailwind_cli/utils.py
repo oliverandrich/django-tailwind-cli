@@ -18,7 +18,7 @@ class Config:
 
     @property
     def tailwind_version(self) -> str:
-        return getattr(settings, "TAILWIND_CLI_VERSION", "3.4.4")
+        return getattr(settings, "TAILWIND_CLI_VERSION", "3.4.10")
 
     @property
     def cli_path(self) -> Union[Path, None]:
@@ -45,9 +45,7 @@ class Config:
 
     @property
     def src_repo(self) -> str:
-        return getattr(
-            settings, "TAILWIND_CLI_SRC_REPO", "tailwindlabs/tailwindcss"
-        )
+        return getattr(settings, "TAILWIND_CLI_SRC_REPO", "tailwindlabs/tailwindcss")
 
     @staticmethod
     def validate_settings() -> None:

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.14.0
+
+- [#129](https://github.com/oliverandrich/django-tailwind-cli/pull/129) by [@Tobi-De](https://github.com/Tobi-De) add a setting to allow for custom tailwind source repo
+- Bumped default version of tailwindcss to 3.4.10.
+
 ## 2.13.0
 
 - [#127](https://github.com/oliverandrich/django-tailwind-cli/pull/127)
