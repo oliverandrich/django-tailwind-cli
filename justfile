@@ -42,13 +42,7 @@ VENV_DIRNAME := ".venv"
 
 # run test suite
 @test *ARGS: create_venv
-    $VENV_DIRNAME/bin/python -m pytest {{ ARGS }}
-
-# run test suite with coverage
-@coverage *ARGS: create_venv
-    $VENV_DIRNAME/bin/python -m coverage erase
-    $VENV_DIRNAME/bin/python -m pytest --cov --cov-append {{ ARGS }}
-    $VENV_DIRNAME/bin/python -m coverage html
+    $VENV_DIRNAME/bin/python -m tox {{ ARGS }}
 
 @build-docs:
     $VENV_DIRNAME/bin/python -m mkdocs build

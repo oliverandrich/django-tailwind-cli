@@ -72,7 +72,7 @@ Checkout the detailed [installation guide](https://django-tailwind-cli.andrich.m
 
 ## Requirements
 
-Python 3.9 or newer with Django >= 3.2.
+Python 3.8 or newer with Django >= 3.2.
 
 ## Documentation
 
@@ -104,8 +104,8 @@ just test
 # Install dependencies
 pip3 install -e ".[django-extensions,dev,docs]"
 
-# Run nox testrunner
-nox
+# Run tox testrunner
+tox
 ```
 
 ### Without just, but using uv
@@ -114,8 +114,8 @@ nox
 # Install dependencies
 uv pip install -r pyproject.toml --all-extras -e .
 
-# Run nox testrunner
-nox --force-venv-backend uv
+# Run tox testrunner
+tox
 ```
 
 ## License
