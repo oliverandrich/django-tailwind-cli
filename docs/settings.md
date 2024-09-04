@@ -34,6 +34,15 @@ your project.
 
         In case you want to use the new behaviour, it is highly recommended to also set the new setting `TAILWIND_CLI_AUTOMATIC_DOWNLOAD` to `False`.
 
+`TAILWIND_CLI_SRC_REPO`
+: **Default**: `"tailwindlabs/tailwindcss"`
+
+    Specifies the repository from which the CLI is downloaded. This is useful if you are using a customized version of the CLI, such as [tailwind-cli-extra](https://github.com/dobicinaitis/tailwind-cli-extra/tree/v1.7.12).
+
+    !!! warning
+
+       If you use this option, ensure that you update the `TAILWIND_CLI_VERSION` to match the version of the customized CLI you are using.
+       
 `TAILWIND_CLI_AUTOMATIC_DOWNLOAD`
 : **Default**: `True`
 
