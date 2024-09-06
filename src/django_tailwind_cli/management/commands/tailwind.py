@@ -240,9 +240,10 @@ class Command(TyperCommand):
     @command(name="download_cli", help="Download the Tailwind CSS CLI to .")
     def download_cli(self) -> None:
         dest_file = self.config.get_full_cli_path()
+        extra_msg = "" if self.config.src_repo == self.config.default_src_repo else f" from '{self.config.src_repo}'"
 
         if dest_file.exists():
-            self._write_success(f"Tailwind CSS CLI already exists at '{dest_file}'")
+            self._write_success(f"Tailwind CSS CLI already exists at '{dest_file}'{extra_msg}")
             return
 
         download_url = self.config.get_download_url()
@@ -255,7 +256,7 @@ class Command(TyperCommand):
                 shutil.copyfileobj(source, dest)
         # make cli executable
         dest_file.chmod(0o755)
-        self._write_success(f"Downloaded Tailwind CSS CLI to '{dest_file}'")
+        self._write_success(f"Downloaded Tailwind CSS CLI to '{dest_file}'{extra_msg}")
 
     def _create_tailwind_config_if_not_exists(self) -> None:
         tailwind_config_file = self.config.get_full_config_file_path()

@@ -37,11 +37,26 @@ your project.
 `TAILWIND_CLI_SRC_REPO`
 : **Default**: `"tailwindlabs/tailwindcss"`
 
-    Specifies the repository from which the CLI is downloaded. This is useful if you are using a customized version of the CLI, such as [tailwind-cli-extra](https://github.com/dobicinaitis/tailwind-cli-extra/tree/v1.7.12).
+    Specifies the repository from which the CLI is downloaded. This is useful if you are using a customized version of the CLI, such as [tailwind-cli-extra](https://github.com/dobicinaitis/tailwind-cli-extra).
 
     !!! warning
 
-       If you use this option, ensure that you update the `TAILWIND_CLI_VERSION` to match the version of the customized CLI you are using.
+        If you use this option, ensure that you update the `TAILWIND_CLI_VERSION` to match the version of the customized CLI you are using. Additionally, you may need to update the `TAILWIND_CLI_ASSET_NAME` if the asset name is different. See the example below.
+
+`TAILWIND_CLI_ASSET_NAME`:
+: **Default**: `"tailwindcss"`
+
+    Specifies the name of the asset to download from the repository. This option is particularly useful if the customized repository you are using has a different name for the Tailwind CLI asset. For example, the asset name for [tailwind-cli-extra](https://github.com/dobicinaitis/tailwind-cli-extra/releases/latest/) is `tailwindcss-extra`.
+
+    !!! Note
+
+        Here is a full example of using a custom repository and asset name:
+
+        ```python
+        TAILWIND_CLI_SRC_REPO = "dobicinaitis/tailwind-cli-extra"
+        TAILWIND_CLI_ASSET_NAME = "tailwindcss-extra"
+        TAILWIND_CLI_VERSION = "1.7.12"
+        ```
 
 `TAILWIND_CLI_AUTOMATIC_DOWNLOAD`
 : **Default**: `True`

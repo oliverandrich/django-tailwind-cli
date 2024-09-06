@@ -16,6 +16,8 @@ from django.conf import settings
 class Config:
     """Configuration for the Tailwind CSS CLI."""
 
+    default_src_repo = "tailwindlabs/tailwindcss"
+
     @property
     def tailwind_version(self) -> str:
         return getattr(settings, "TAILWIND_CLI_VERSION", "3.4.10")
@@ -45,7 +47,11 @@ class Config:
 
     @property
     def src_repo(self) -> str:
-        return getattr(settings, "TAILWIND_CLI_SRC_REPO", "tailwindlabs/tailwindcss")
+        return getattr(settings, "TAILWIND_CLI_SRC_REPO", self.default_src_repo)
+
+    @property
+    def asset_name(self) -> str:
+        return getattr(settings, "TAILWIND_CLI_ASSET_NAME", "tailwindcss")
 
     @staticmethod
     def validate_settings() -> None:
@@ -75,7 +81,7 @@ class Config:
         extension = ".exe" if system == "windows" else ""
         return (
             f"https://github.com/{self.src_repo}/releases/download/"
-            f"v{self.tailwind_version}/tailwindcss-{system}-{machine}{extension}"
+            f"v{self.tailwind_version}/{self.asset_name}-{system}-{machine}{extension}"
         )
 
     def get_full_cli_path(self) -> Path:
