@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.15.0
+
+- [#130](https://github.com/oliverandrich/django-tailwind-cli/pull/130) by [@Tobi-De](https://github.com/Tobi-De) extended the support for custom tailwind cli builds. See `TAILWIND_CLI_SRC_REPO` and `TAILWIND_CLI_ASSET_NAME` in the documentation.
+
 ## 2.14.0
 
 - [#129](https://github.com/oliverandrich/django-tailwind-cli/pull/129) by [@Tobi-De](https://github.com/Tobi-De) add a setting to allow for custom tailwind source repo
