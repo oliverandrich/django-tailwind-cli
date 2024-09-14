@@ -1,9 +1,5 @@
-[build-system]
-requires = ["flit_core >=3.2,<4"]
-build-backend = "flit_core.buildapi"
-
 [project]
-name = "django_tailwind_cli"
+name = "django-tailwind-cli"
 description = "Django and Tailwind integration based on the prebuilt Tailwind CSS CLI."
 authors = [{ name = "Oliver Andrich", email = "oliver@andrich.me" }]
 readme = "README.md"
@@ -13,7 +9,6 @@ classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -22,42 +17,39 @@ classifiers = [
     "Topic :: Software Development :: Libraries",
     "Topic :: Utilities",
     "Environment :: Web Environment",
-    "Framework :: Django :: 3.2",
     "Framework :: Django :: 4.2",
     "Framework :: Django :: 5.0",
     "Framework :: Django :: 5.1",
 ]
-dynamic = ["version"]
-requires-python = ">=3.8"
+version = "2.15.0"
+requires-python = ">=3.9"
 dependencies = [
-    "django>=3.2",
+    "django>=4.2",
     "certifi>=2023.7.22,<2025.0.0",
     "django-typer>=2.1.2",
 ]
+
 [project.optional-dependencies]
 django-extensions = ["django-extensions>=3.2", "werkzeug>=3.0"]
-test = [
-    "pytest",
-    "pytest-django",
-    "pytest-cov",
-    "pytest-mock",
-    "pytest-randomly",
-    "django_tailwind_cli[django-extensions]",
-]
-dev = [
-    "django-types",
-    "tox",
-    "tox-uv",
-    "pre-commit",
-    "mkdocs-material",
-    "flit",
-    "django_tailwind_cli[test]",
-]
 
 [project.urls]
 Home = "https://django-tailwind-cli.andrich.me/"
 Documentation = "https://django-tailwind-cli.andrich.me/"
 Repository = "https://github.com/oliverandrich/django-tailwind-cli"
+
+[tool.uv]
+dev-dependencies = [
+    "django-types>=0.19.1",
+    "pytest-cov>=5.0.0",
+    "pytest-django>=4.9.0",
+    "pytest-mock>=3.14.0",
+    "pytest-randomly>=3.15.0",
+    "pytest>=8.3.3",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 # Black
 [tool.black]
@@ -67,7 +59,6 @@ skip-string-normalization = true
 exclude = '''
 /(
     \.git
-  | \.nox
   | \.tox
   | \.venv
   | _build

@@ -8,50 +8,49 @@ VENV_DIRNAME := ".venv"
 
 # setup development environment
 @bootstrap:
-    if [ -x .venv ]; then \
+    if [ -x $VENV_DIRNAME ]; then \
         echo "Already bootstraped. Exiting."; \
         exit; \
     fi
 
-    if `which -s direnv`; then \
-        echo "Creating .envrc and activating direnv"; \
-        echo "export VIRTUAL_ENV=.venv" > .envrc; \
-        echo "layout python3" >> .envrc; \
-        direnv allow; \
-    else \
-        echo "Creating virtual env in .venv"; \
-        just create_venv; \
-    fi
+    echo "Creating virtual env in .venv"
+    just create_venv
 
     echo "Installing dependencies"
     just upgrade
 
 # create a virtual environment
 @create_venv:
-    [ -d .venv ] || python3 -m venv $VENV_DIRNAME; \
+    [ -d $VENV_DIRNAME ] || uv venv $VENV_DIRNAME
+
+# build release
+@build:
+    uv build
+
+# publish release
+@publish: build
+    uvx twine upload dist/*
 
 # upgrade/install all dependencies defined in pyproject.toml
 @upgrade: create_venv
-    $VENV_DIRNAME/bin/python -m pip install --upgrade pip uv; \
-    $VENV_DIRNAME/bin/python -m uv pip install --upgrade \
-        --requirement pyproject.toml --all-extras -e .;
+    uv sync --all-extras
 
 # run pre-commit rules on all files
-@lint *ARGS: create_venv
-    $VENV_DIRNAME/bin/python -m pre_commit run {{ ARGS }} --all-files
+@lint: create_venv
+    uvx --with pre-commit-uv pre-commit run --all-files
 
 # run test suite
-@test *ARGS: create_venv
-    $VENV_DIRNAME/bin/python -m tox {{ ARGS }}
+@test: create_venv
+    uvx --with tox-uv tox
 
+# serve docs during development
+@serve-docs:
+    uvx --with mkdocs-material mkdocs serve
+
+# build documenation
 @build-docs:
-    $VENV_DIRNAME/bin/python -m mkdocs build
+    uvx --with mkdocs-material mkdocs build
 
+# publish documentation on github
 @publish-docs: build-docs
-    $VENV_DIRNAME/bin/python -m mkdocs gh-deploy --force
-
-@build:
-    $VENV_DIRNAME/bin/python -m flit build
-
-@publish: build
-    $VENV_DIRNAME/bin/python -m flit publish
+    uvx --with mkdocs-material mkdocs gh-deploy --force
