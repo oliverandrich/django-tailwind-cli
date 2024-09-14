@@ -25,10 +25,5 @@ jobs:
       - name: Install and setup uv
         uses: hynek/setup-cached-uv@v2
 
-      - name: Install dependencies
-        run: |
-          uv venv
-          uv pip install tox tox-uv tox-gh-actions
-
       - name: Test with tox
-        run: uv run tox
+        run: uvx --with tox-uv --with tox-gh-actions tox
