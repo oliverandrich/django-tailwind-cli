@@ -16,8 +16,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install and setup uv
-        uses: hynek/setup-cached-uv@v2
+      - name: Install uv
+        uses: astral-sh/setup-uv@v2
 
       - name: Build
         run: uv build

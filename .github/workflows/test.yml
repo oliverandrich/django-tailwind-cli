@@ -22,8 +22,8 @@ jobs:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
 
-      - name: Install and setup uv
-        uses: hynek/setup-cached-uv@v2
+      - name: Install uv
+        uses: astral-sh/setup-uv@v2
 
       - name: Test with tox
         run: uvx --with tox-uv --with tox-gh-actions tox
