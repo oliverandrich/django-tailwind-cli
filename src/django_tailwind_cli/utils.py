@@ -20,7 +20,7 @@ class Config:
 
     @property
     def tailwind_version(self) -> str:
-        return getattr(settings, "TAILWIND_CLI_VERSION", "3.4.10")
+        return getattr(settings, "TAILWIND_CLI_VERSION", "3.4.11")
 
     @property
     def cli_path(self) -> Union[Path, None]:

@@ -3,6 +3,7 @@
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/oliverandrich/django-tailwind-cli/test.yml?style=flat-square)
 [![PyPI](https://img.shields.io/pypi/v/django-tailwind-cli.svg?style=flat-square)](https://pypi.org/project/django-tailwind-cli/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/psf/black)
+[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 ![GitHub](https://img.shields.io/github/license/oliverandrich/django-tailwind-cli?style=flat-square)
 ![Django Versions](https://img.shields.io/pypi/frameworkversions/django/django-tailwind-cli)
 ![Python Versions](https://img.shields.io/pypi/pyversions/django-tailwind-cli)
@@ -72,7 +73,7 @@ Checkout the detailed [installation guide](https://django-tailwind-cli.andrich.m
 
 ## Requirements
 
-Python 3.8 or newer with Django >= 3.2.
+Python 3.9 or newer with Django >= 4.2.
 
 ## Documentation
 
@@ -80,9 +81,7 @@ The documentation can be found at [https://django-tailwind-cli.andrich.me/](http
 
 ## Contributing
 
-In order to contribute, this package has no required tool dependencies besides an installed version
-of Python and pip. But you can use uv to speed up your workflow a bit. The following commands assume
-that you have already setup a virtual environment and activated it.
+This package requires [uv](https://docs.astral.sh/uv/) for dependency management and tooling. So you have to [install it](https://docs.astral.sh/uv/getting-started/installation/) first. [just](https://github.com/casey/just) is used as a handy command runner to save some typing on the command line. Do yourself a favor and install it too.
 
 ```shell
 # Setup development environment
@@ -98,24 +97,17 @@ just lint
 just test
 ```
 
-### Without just, but using pip
-
-```bash
-# Install dependencies
-pip3 install -e ".[django-extensions,dev,docs]"
-
-# Run tox testrunner
-tox
-```
-
 ### Without just, but using uv
 
 ```bash
+# Create venv
+uv venv
+
 # Install dependencies
-uv pip install -r pyproject.toml --all-extras -e .
+uv sync --all-extras
 
 # Run tox testrunner
-tox
+uvx --with tox-uv tox
 ```
 
 ## License

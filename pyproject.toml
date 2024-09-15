@@ -21,7 +21,7 @@ classifiers = [
     "Framework :: Django :: 5.0",
     "Framework :: Django :: 5.1",
 ]
-version = "2.15.0"
+dynamic = ["version"]
 requires-python = ">=3.9"
 dependencies = [
     "django>=4.2",
@@ -48,8 +48,11 @@ dev-dependencies = [
 ]
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
 
 # Black
 [tool.black]

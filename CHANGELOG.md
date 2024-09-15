@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.16.0
+
+- Set the minimum supported version of Python to 3.9.
+- Set the minimum supported version of Django to 4.2.
+- Switched the tooling completely to [uv](https://docs.astral.sh/uv/).
+- Bumped the default version of Tailwind CSS to 3.4.11.
+
 ## 2.15.0
 
 - [#130](https://github.com/oliverandrich/django-tailwind-cli/pull/130) by [@Tobi-De](https://github.com/Tobi-De) extended the support for custom tailwind cli builds. See `TAILWIND_CLI_SRC_REPO` and `TAILWIND_CLI_ASSET_NAME` in the documentation.

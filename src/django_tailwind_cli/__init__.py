@@ -1,1 +1,3 @@
-__version__ = "2.15.0"
+from importlib.metadata import version
+
+__version__ = version("django-tailwind-cli")
