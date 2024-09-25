@@ -29,7 +29,7 @@ VENV_DIRNAME := ".venv"
 
 # publish release
 @publish: build
-    uvx twine upload dist/*
+    uv publish
 
 # upgrade/install all dependencies defined in pyproject.toml
 @upgrade: create_venv

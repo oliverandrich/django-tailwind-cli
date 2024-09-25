@@ -22,15 +22,11 @@ jobs:
       - name: Build
         run: uv build
 
-      - name: Check
-        run: uvx twine check dist/*
-
       - name: Publish
         run: |
-          uvx twine upload dist/*
+          uv publish
         env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_TOKEN }}
 
       - name: Build documentation
         run: uvx --with mkdocs-material mkdocs build
