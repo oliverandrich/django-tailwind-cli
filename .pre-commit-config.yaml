@@ -3,7 +3,7 @@ default_language_version:
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v4.6.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -16,28 +16,34 @@ repos:
       - id: check-json
 
   - repo: https://github.com/psf/black
-    rev: 24.2.0
+    rev: 24.8.0
     hooks:
       - id: black
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: "v0.3.2"
+    rev: "v0.6.8"
     hooks:
       - id: ruff
 
   - repo: https://github.com/RobertCraigie/pyright-python
-    rev: v1.1.353
+    rev: v1.1.382.post0
     hooks:
       - id: pyright
 
-  - repo: https://github.com/rtts/djhtml
-    rev: 3.0.6
+  - repo: https://github.com/adamchainz/djade-pre-commit
+    rev: "1.0.0"
     hooks:
-      - id: djhtml
-        args:
-          - --tabwidth=4
+    -   id: djade
+        args: [--target-version, "4.2"]
 
-  - repo: https://github.com/thibaudcolas/curlylint
-    rev: "v0.13.1"
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.17.0
     hooks:
-      - id: curlylint
+    - id: pyupgrade
+      args: [--py39-plus]
+
+  - repo: https://github.com/adamchainz/django-upgrade
+    rev: "1.21.0"
+    hooks:
+    - id: django-upgrade
+      args: [--target-version, "4.2"]

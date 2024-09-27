@@ -8,7 +8,7 @@ the various paths.
 import os
 import platform
 from pathlib import Path
-from typing import Tuple, Union
+from typing import Union
 
 from django.conf import settings
 
@@ -61,7 +61,7 @@ class Config:
             raise ValueError(msg)
 
     @staticmethod
-    def get_system_and_machine() -> Tuple[str, str]:
+    def get_system_and_machine() -> tuple[str, str]:
         """Get the system and machine name."""
         system = platform.system().lower()
         if system == "darwin":

@@ -9,7 +9,7 @@ import sys
 import urllib.request
 from multiprocessing import Process
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 import certifi
 import typer
@@ -91,7 +91,7 @@ class Command(TyperCommand):
 
     @command(name="list_templates", help="List the templates of your django project.")
     def list_templates(self):
-        template_files: List[str] = []
+        template_files: list[str] = []
         app_template_dirs = get_app_template_dirs("templates")
         for app_template_dir in app_template_dirs:
             template_files += self._list_template_files(app_template_dir)
@@ -206,7 +206,7 @@ class Command(TyperCommand):
 
         self._runserver(debug_server_cmd)
 
-    def _runserver(self, debug_server_cmd: List[str]) -> None:
+    def _runserver(self, debug_server_cmd: list[str]) -> None:
         # Start the watch process in a separate process.
         watch_cmd = [sys.executable, "manage.py", "tailwind", "watch"]
         watch_process = Process(
@@ -267,8 +267,8 @@ class Command(TyperCommand):
             self.stdout.write(self.style.SUCCESS(f"Created Tailwind CSS config at '{tailwind_config_file}'"))
 
     @staticmethod
-    def _list_template_files(template_dir: Union[str, Path]) -> List[str]:
-        template_files: List[str] = []
+    def _list_template_files(template_dir: Union[str, Path]) -> list[str]:
+        template_files: list[str] = []
         for d, _, filenames in os.walk(str(template_dir)):
             for filename in filenames:
                 if filename.endswith(".html") or filename.endswith(".txt"):
