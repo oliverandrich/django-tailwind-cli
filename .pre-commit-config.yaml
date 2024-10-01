@@ -15,15 +15,11 @@ repos:
       - id: check-symlinks
       - id: check-json
 
-  - repo: https://github.com/psf/black
-    rev: 24.8.0
-    hooks:
-      - id: black
-
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     rev: "v0.6.8"
     hooks:
       - id: ruff
+      - id: ruff-format
 
   - repo: https://github.com/RobertCraigie/pyright-python
     rev: v1.1.382.post0
