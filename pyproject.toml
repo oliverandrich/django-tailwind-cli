@@ -27,6 +27,7 @@ dependencies = [
     "django>=4.2",
     "certifi>=2023.7.22,<2025.0.0",
     "django-typer>=2.1.2",
+    "django-appconf>=1.0.6",
 ]
 
 [project.optional-dependencies]
@@ -44,6 +45,7 @@ dev-dependencies = [
     "pytest-django>=4.9.0",
     "pytest-mock>=3.14.0",
     "pytest-randomly>=3.15.0",
+    "pytest-sugar>=1.0.0",
     "pytest>=8.3.3",
 ]
 
@@ -57,7 +59,7 @@ source = "vcs"
 # Black
 [tool.black]
 target-version = ["py38"]
-line-length = 120
+line-length = 100
 skip-string-normalization = true
 exclude = '''
 /(
@@ -75,13 +77,13 @@ exclude = '''
 [tool.pyright]
 venvPath = "."
 venv = ".venv"
-typeCheckingMode = "strict"
+typeCheckingMode = "basic"
 ignore = ["./tests/**/*"]
 
 # Ruff
 [tool.ruff]
 target-version = "py38"
-line-length = 120
+line-length = 100
 select = [
     "A",   # flake8-builtins
     "ARG", # flake8-unused-arguments

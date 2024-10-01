@@ -3,6 +3,7 @@ import sys
 import pytest
 from django.core.management import CommandError, call_command
 
+from django_tailwind_cli import utils
 from django_tailwind_cli.management.commands.tailwind import DEFAULT_TAILWIND_CONFIG
 
 
@@ -31,60 +32,60 @@ def test_invalid_configuration(settings):
         call_command("tailwind", "build")
 
 
-def test_download_cli(settings, tmp_path, config):
+def test_download_cli(settings, tmp_path):
     settings.BASE_DIR = tmp_path
     settings.TAILWIND_CLI_PATH = str(tmp_path)
-    assert not config.get_full_cli_path().exists()
+    assert not utils.get_full_cli_path().exists()
     call_command("tailwind", "download_cli")
-    assert config.get_full_cli_path().exists()
+    assert utils.get_full_cli_path().exists()
 
 
-def test_download_cli_without_tailwind_cli_path(settings, tmp_path, config):
+def test_download_cli_without_tailwind_cli_path(settings, tmp_path):
     settings.BASE_DIR = tmp_path
     settings.TAILWIND_CLI_PATH = None
-    assert not config.get_full_cli_path().exists()
+    assert not utils.get_full_cli_path().exists()
     call_command("tailwind", "download_cli")
-    assert config.get_full_cli_path().exists()
+    assert utils.get_full_cli_path().exists()
 
 
-def test_automatic_download_enabled(settings, tmp_path, config):
+def test_automatic_download_enabled(settings, tmp_path):
     settings.BASE_DIR = tmp_path
     settings.TAILWIND_CLI_PATH = str(tmp_path)
     settings.TAILWIND_CLI_AUTOMATIC_DOWNLOAD = True
-    assert not config.get_full_cli_path().exists()
+    assert not utils.get_full_cli_path().exists()
     call_command("tailwind", "build")
-    assert config.get_full_cli_path().exists()
+    assert utils.get_full_cli_path().exists()
 
 
-def test_automatic_download_disabled(settings, tmp_path, config):
+def test_automatic_download_disabled(settings, tmp_path):
     settings.BASE_DIR = tmp_path
     settings.TAILWIND_CLI_PATH = str(tmp_path)
     settings.TAILWIND_CLI_AUTOMATIC_DOWNLOAD = False
-    assert not config.get_full_cli_path().exists()
+    assert not utils.get_full_cli_path().exists()
     with pytest.raises(CommandError, match="Tailwind CSS CLI not found."):
         call_command("tailwind", "build")
     with pytest.raises(CommandError, match="Tailwind CSS CLI not found."):
         call_command("tailwind", "watch")
-    assert not config.get_full_cli_path().exists()
+    assert not utils.get_full_cli_path().exists()
 
 
-def test_create_tailwind_config_if_non_exists(settings, tmp_path, config):
+def test_create_tailwind_config_if_non_exists(settings, tmp_path):
     settings.BASE_DIR = tmp_path
     settings.TAILWIND_CLI_PATH = str(tmp_path)
-    assert not config.get_full_config_file_path().exists()
+    assert not utils.get_full_config_file_path().exists()
     call_command("tailwind", "build")
-    assert config.get_full_cli_path().exists()
-    assert DEFAULT_TAILWIND_CONFIG == config.get_full_config_file_path().read_text()
+    assert utils.get_full_cli_path().exists()
+    assert DEFAULT_TAILWIND_CONFIG == utils.get_full_config_file_path().read_text()
 
 
-def test_with_existing_tailwind_config(settings, tmp_path, config):
+def test_with_existing_tailwind_config(settings, tmp_path):
     settings.BASE_DIR = tmp_path
     settings.TAILWIND_CLI_PATH = str(tmp_path)
-    config.get_full_config_file_path().write_text("module.exports = {}")
+    utils.get_full_config_file_path().write_text("module.exports = {}")
     call_command("tailwind", "build")
-    assert config.get_full_config_file_path().exists()
-    assert "module.exports = {}" == config.get_full_config_file_path().read_text()
-    assert DEFAULT_TAILWIND_CONFIG != config.get_full_config_file_path().read_text()
+    assert utils.get_full_config_file_path().exists()
+    assert "module.exports = {}" == utils.get_full_config_file_path().read_text()
+    assert DEFAULT_TAILWIND_CONFIG != utils.get_full_config_file_path().read_text()
 
 
 def test_build_subprocess_run_called(settings, tmp_path, mocker):

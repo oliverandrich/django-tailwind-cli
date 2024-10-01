@@ -41,6 +41,10 @@ VENV_DIRNAME := ".venv"
 
 # run test suite
 @test: create_venv
+    uv run pytest --cov --cov-report=html --cov-report=term
+
+# run test suite
+@test-all: create_venv
     uvx --with tox-uv tox
 
 # serve docs during development

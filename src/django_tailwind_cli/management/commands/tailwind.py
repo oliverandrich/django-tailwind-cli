@@ -13,12 +13,12 @@ from typing import Optional, Union
 
 import certifi
 import typer
-from django.conf import settings
 from django.core.management.base import CommandError
 from django.template.utils import get_app_template_dirs
 from django_typer.management import TyperCommand, command, initialize
 
-from django_tailwind_cli.utils import Config
+from django_tailwind_cli import utils
+from django_tailwind_cli.conf import DEFAULT_SRC_REPO, settings
 
 
 class Command(TyperCommand):
@@ -27,35 +27,34 @@ class Command(TyperCommand):
     @initialize()
     def init(self):
         # Get the config from the settings and validate it.
-        self.config = Config()
         try:
-            self.config.validate_settings()
+            utils.validate_settings()
         except Exception as e:
             msg = "Configuration error"
             raise CommandError(msg) from e
 
         # Before running the actual subcommand, we need to make sure that the CLI is installed and
         # the config file exists.
-        if self.config.automatic_download:
+        if settings.TAILWIND_CLI_AUTOMATIC_DOWNLOAD:
             self.download_cli()
         self._create_tailwind_config_if_not_exists()
 
     @command(help="Build a minified production ready CSS file.")
     def build(self):
-        if not self.config.get_full_cli_path().exists():
+        if not utils.get_full_cli_path().exists():
             raise CommandError("Tailwind CSS CLI not found.")
 
         build_cmd = [
-            str(self.config.get_full_cli_path()),
+            str(utils.get_full_cli_path()),
             "--output",
-            str(self.config.get_full_dist_css_path()),
+            str(utils.get_full_dist_css_path()),
             "--minify",
         ]
-        if self.config.src_css is not None:
+        if settings.TAILWIND_CLI_SRC_CSS is not None:
             build_cmd.extend(
                 [
                     "--input",
-                    str(self.config.get_full_src_css_path()),
+                    str(utils.get_full_src_css_path()),
                 ]
             )
         try:
@@ -63,24 +62,24 @@ class Command(TyperCommand):
         except KeyboardInterrupt:
             self._write_error("Canceled building production stylesheet.")
         else:
-            self._write_success(f"Built production stylesheet '{self.config.get_full_dist_css_path()}'.")
+            self._write_success(f"Built production stylesheet '{utils.get_full_dist_css_path()}'.")
 
     @command(help="Start Tailwind CLI in watch mode during development.")
     def watch(self):
-        if not self.config.get_full_cli_path().exists():
+        if not utils.get_full_cli_path().exists():
             raise CommandError("Tailwind CSS CLI not found.")
 
         watch_cmd = [
-            str(self.config.get_full_cli_path()),
+            str(utils.get_full_cli_path()),
             "--output",
-            str(self.config.get_full_dist_css_path()),
+            str(utils.get_full_dist_css_path()),
             "--watch",
         ]
-        if self.config.src_css is not None:
+        if settings.TAILWIND_CLI_SRC_CSS is not None:
             watch_cmd.extend(
                 [
                     "--input",
-                    str(self.config.get_full_src_css_path()),
+                    str(utils.get_full_src_css_path()),
                 ]
             )
 
@@ -106,12 +105,20 @@ class Command(TyperCommand):
         self,
         addrport: Optional[str] = typer.Argument(None, help="Optional port number, or ipaddr:port"),
         *,
-        use_ipv6: bool = typer.Option(False, "--ipv6", "-6", help="Tells Django to use an IPv6 address."),
-        no_threading: bool = typer.Option(False, "--nothreading", help="Tells Django to NOT use threading."),
-        no_static: bool = typer.Option(
-            False, "--nostatic", help="Tells Django to NOT automatically serve static files at STATIC_URL."
+        use_ipv6: bool = typer.Option(
+            False, "--ipv6", "-6", help="Tells Django to use an IPv6 address."
         ),
-        no_reloader: bool = typer.Option(False, "--noreload", help="Tells Django to NOT use the auto-reloader."),
+        no_threading: bool = typer.Option(
+            False, "--nothreading", help="Tells Django to NOT use threading."
+        ),
+        no_static: bool = typer.Option(
+            False,
+            "--nostatic",
+            help="Tells Django to NOT automatically serve static files at STATIC_URL.",
+        ),
+        no_reloader: bool = typer.Option(
+            False, "--noreload", help="Tells Django to NOT use the auto-reloader."
+        ),
         skip_checks: bool = typer.Option(False, "--skip-checks", help="Skip system checks."),
     ):
         debug_server_cmd = [sys.executable, "manage.py", "runserver"]
@@ -133,31 +140,52 @@ class Command(TyperCommand):
 
     @command(
         name="runserver_plus",
-        help="Start the django-extensions runserver_plus development server and the Tailwind CLI in watch mode.",
+        help=(
+            "Start the django-extensions runserver_plus development "
+            "server and the Tailwind CLI in watch mode."
+        ),
     )
     def runserver_plus(
         self,
         addrport: Optional[str] = typer.Argument(None, help="Optional port number, or ipaddr:port"),
         *,
-        use_ipv6: bool = typer.Option(False, "--ipv6", "-6", help="Tells Django to use an IPv6 address."),
-        no_threading: bool = typer.Option(False, "--nothreading", help="Tells Django to NOT use threading."),
-        no_static: bool = typer.Option(
-            False, "--nostatic", help="Tells Django to NOT automatically serve static files at STATIC_URL."
+        use_ipv6: bool = typer.Option(
+            False, "--ipv6", "-6", help="Tells Django to use an IPv6 address."
         ),
-        no_reloader: bool = typer.Option(False, "--noreload", help="Tells Django to NOT use the auto-reloader."),
+        no_threading: bool = typer.Option(
+            False, "--nothreading", help="Tells Django to NOT use threading."
+        ),
+        no_static: bool = typer.Option(
+            False,
+            "--nostatic",
+            help="Tells Django to NOT automatically serve static files at STATIC_URL.",
+        ),
+        no_reloader: bool = typer.Option(
+            False, "--noreload", help="Tells Django to NOT use the auto-reloader."
+        ),
         skip_checks: bool = typer.Option(False, "--skip-checks", help="Skip system checks."),
-        pdb: bool = typer.Option(False, "--pdb", help="Drop into pdb shell at the start of any view."),
-        ipdb: bool = typer.Option(False, "--ipdb", help="Drop into ipdb shell at the start of any view."),
-        pm: bool = typer.Option(False, "--pm", help="Drop into (i)pdb shell if an exception is raised in a view."),
-        print_sql: bool = typer.Option(False, "--print-sql", help="Print SQL queries as they're executed."),
+        pdb: bool = typer.Option(
+            False, "--pdb", help="Drop into pdb shell at the start of any view."
+        ),
+        ipdb: bool = typer.Option(
+            False, "--ipdb", help="Drop into ipdb shell at the start of any view."
+        ),
+        pm: bool = typer.Option(
+            False, "--pm", help="Drop into (i)pdb shell if an exception is raised in a view."
+        ),
+        print_sql: bool = typer.Option(
+            False, "--print-sql", help="Print SQL queries as they're executed."
+        ),
         print_sql_location: bool = typer.Option(
-            False, "--print-sql-location", help="Show location in code where SQL query generated from."
+            False,
+            "--print-sql-location",
+            help="Show location in code where SQL query generated from.",
         ),
         cert_file: Optional[str] = typer.Option(
             None,
             help=(
-                "SSL .crt file path. If not provided path from --key-file will be selected. Either --cert-file or "
-                "--key-file must be provided to use SSL."
+                "SSL .crt file path. If not provided path from --key-file will be selected. "
+                "Either --cert-file or --key-file must be provided to use SSL."
             ),
         ),
         key_file: Optional[str] = typer.Option(
@@ -168,7 +196,9 @@ class Command(TyperCommand):
             ),
         ),
     ):
-        if not importlib.util.find_spec("django_extensions") and not importlib.util.find_spec("werkzeug"):
+        if not importlib.util.find_spec("django_extensions") and not importlib.util.find_spec(
+            "werkzeug"
+        ):
             msg = (
                 "Missing dependencies. Follow the instructions found on "
                 "https://django-tailwind-cli.andrich.me/installation/."
@@ -239,14 +269,18 @@ class Command(TyperCommand):
 
     @command(name="download_cli", help="Download the Tailwind CSS CLI to .")
     def download_cli(self) -> None:
-        dest_file = self.config.get_full_cli_path()
-        extra_msg = "" if self.config.src_repo == self.config.default_src_repo else f" from '{self.config.src_repo}'"
+        dest_file = utils.get_full_cli_path()
+        extra_msg = (
+            ""
+            if settings.TAILWIND_CLI_SRC_REPO == DEFAULT_SRC_REPO
+            else f" from '{settings.TAILWIND_CLI_SRC_REPO}'"
+        )
 
         if dest_file.exists():
             self._write_success(f"Tailwind CSS CLI already exists at '{dest_file}'{extra_msg}")
             return
 
-        download_url = self.config.get_download_url()
+        download_url = utils.get_download_url()
         self._write_error("Tailwind CSS CLI not found.")
         self._write_success(f"Downloading Tailwind CSS CLI from '{download_url}'")
         dest_file.parent.mkdir(parents=True, exist_ok=True)
@@ -259,12 +293,14 @@ class Command(TyperCommand):
         self._write_success(f"Downloaded Tailwind CSS CLI to '{dest_file}'{extra_msg}")
 
     def _create_tailwind_config_if_not_exists(self) -> None:
-        tailwind_config_file = self.config.get_full_config_file_path()
+        tailwind_config_file = utils.get_full_config_file_path()
 
         if not tailwind_config_file.exists():
             self.stdout.write(self.style.ERROR("Tailwind CSS config not found."))
             tailwind_config_file.write_text(DEFAULT_TAILWIND_CONFIG)
-            self.stdout.write(self.style.SUCCESS(f"Created Tailwind CSS config at '{tailwind_config_file}'"))
+            self.stdout.write(
+                self.style.SUCCESS(f"Created Tailwind CSS config at '{tailwind_config_file}'")
+            )
 
     @staticmethod
     def _list_template_files(template_dir: Union[str, Path]) -> list[str]:
