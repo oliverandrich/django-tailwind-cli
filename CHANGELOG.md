@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.17.0
+
+- Internal refactoring. Config class has been replaced with django-appconfig and some function in the django_tailwind_cli.utils package.
+- uv is used for publishing too.
+- Updated tooling configuration.
+
 ## 2.16.0
 
 - Set the minimum supported version of Python to 3.9.
