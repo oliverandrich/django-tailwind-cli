@@ -134,13 +134,21 @@ ban-relative-imports = "all"
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "tests.settings"
 pythonpath = [".", "src"]
-django_find_project = false
 markers = ["mock_network_and_subprocess"]
 
 # Coverage
 [tool.coverage.run]
-source = ["django_tailwind_cli"]
+source = ["src"]
 branch = true
+parallel = true
 
 [tool.coverage.report]
-exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "raise NotImplementedError",
+    "pass",
+    "if __name__ == .__main__.:",
+]
