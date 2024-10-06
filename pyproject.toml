@@ -134,13 +134,14 @@ ban-relative-imports = "all"
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "tests.settings"
 pythonpath = [".", "src"]
-markers = ["mock_network_and_subprocess"]
+testpaths = ["tests"]
 
 # Coverage
 [tool.coverage.run]
 source = ["src"]
 branch = true
 parallel = true
+omit = ["*/migrations/*", "*/tests/*", "*/conftest.py"]
 
 [tool.coverage.report]
 show_missing = true
