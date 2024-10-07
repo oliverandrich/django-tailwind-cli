@@ -674,7 +674,7 @@
 <p>with optional <code>django-extensions</code> and <code>Werkezeug</code> libraries to use the <code>runserver_plus</code> command.</p>
 <div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>django-tailwind-cli<span class="o">[</span>django-extensions<span class="o">]</span>
 </code></pre></div>
-<ol>
+<ol start="2">
 <li>Add <code>django_tailwind_cli</code> to <code>INSTALLED_APPS</code> in <code>settings.py</code>.</li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">[</span>
@@ -689,12 +689,12 @@
     <span class="s2">&quot;django_extensions,</span>
 <span class="p">]</span>
 </code></pre></div>
-<ol>
+<ol start="3">
 <li>Configure the <code>STATICFILES_DIRS</code> parameter in your <code>settings.py</code> if not already configured.</li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="n">STATICFILES_DIRS</span> <span class="o">=</span> <span class="p">[</span><span class="n">BASE_DIR</span> <span class="o">/</span> <span class="s2">&quot;assets&quot;</span><span class="p">]</span>
 </code></pre></div>
-<ol>
+<ol start="4">
 <li>Add template code.</li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="cp">{%</span> <span class="k">load</span> <span class="nv">tailwind_cli</span> <span class="cp">%}</span>
@@ -705,7 +705,7 @@
   ...
 <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
 </code></pre></div>
-<ol>
+<ol start="5">
 <li>Start the debug server or start the Tailwind CLI in watch mode.</li>
 </ol>
 <div class="highlight"><pre><span></span><code>python<span class="w"> </span>manage.py<span class="w"> </span>tailwind<span class="w"> </span>runserver
@@ -725,7 +725,7 @@
 </ol>
 <div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>django-browser-reload
 </code></pre></div>
-<ol>
+<ol start="2">
 <li>
 <p>Ensure you have <code>django.contrib.staticfiles</code> in your <code>INSTALLED_APPS</code>.</p>
 </li>
@@ -739,7 +739,7 @@
     <span class="o">...</span><span class="p">,</span>
 <span class="p">]</span>
 </code></pre></div>
-<ol>
+<ol start="4">
 <li>Include the app URL’s in your root URLconf(s).</li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">include</span><span class="p">,</span> <span class="n">path</span>
@@ -749,7 +749,7 @@
     <span class="n">path</span><span class="p">(</span><span class="s2">&quot;__reload__/&quot;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">&quot;django_browser_reload.urls&quot;</span><span class="p">)),</span>
 <span class="p">]</span>
 </code></pre></div>
-<ol>
+<ol start="5">
 <li>Add the middleware.</li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="n">MIDDLEWARE</span> <span class="o">=</span> <span class="p">[</span>
