@@ -201,7 +201,7 @@ class Command(TyperCommand):
         ):
             msg = (
                 "Missing dependencies. Follow the instructions found on "
-                "https://django-tailwind-cli.andrich.me/installation/."
+                "https://django-tailwind-cli.rtfd.io.me/installation/."
             )
             raise CommandError(msg)
 
