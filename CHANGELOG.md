@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.18.1
+
+- Fixed the URLs for PyPI.
+
 ## 2.18.0
 
 - Added Python 3.13 support.
