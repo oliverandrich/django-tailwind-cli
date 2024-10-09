@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.18.0
+
+- Added Python 3.13 support.
+- Moved documentation from django-tailwind-cli.andrich.me -> django-tailwind-cli.rtfd.io
+- Documentation fixes.
+
 ## 2.17.0
 
 - Internal refactoring. Config class has been replaced with django-appconfig and some function in the django_tailwind_cli.utils package.
