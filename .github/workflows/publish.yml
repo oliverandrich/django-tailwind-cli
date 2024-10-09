@@ -28,8 +28,5 @@ jobs:
         env:
           UV_PUBLISH_TOKEN: ${{ secrets.PYPI_TOKEN }}
 
-      - name: Build documentation
-        run: uvx --with mkdocs-material mkdocs build
-
-      - name: Publish documentation
-        run: uvx --with mkdocs-material mkdocs gh-deploy --force
+      - name: Release
+        uses: softprops/action-gh-release@v2
